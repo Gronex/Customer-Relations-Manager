@@ -16,7 +16,7 @@ namespace Infrastructure.DataAccess
 {
     public class ApplicationContext : IdentityDbContext<User>
     {
-        public ApplicationContext() : base("DefaultConnection", throwIfV1Schema: false)
+        public ApplicationContext() : base("DefaultConnection")
         {
             
         }

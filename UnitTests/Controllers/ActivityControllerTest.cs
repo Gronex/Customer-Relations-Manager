@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
-using AngularJSWebApiEmpty.Controllers;
+using customer_relations_manager.Controllers;
 using Core.DomainModels.Activities;
 using UnitTests.Stubs;
 using Xunit;

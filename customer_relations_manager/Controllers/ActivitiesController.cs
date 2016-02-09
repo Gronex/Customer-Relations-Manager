@@ -1,25 +1,17 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Core.DomainModels.Activities;
 using Core.DomainServices;
-using Infrastructure.DataAccess;
 
-namespace AngularJSWebApiEmpty.Controllers
+namespace customer_relations_manager.Controllers
 {
     public class ActivitiesController : ApiController
     {
         private readonly IUnitOfWork _uow;
         private readonly IActivityRepository _repo;
-
+        
         public ActivitiesController(IUnitOfWork uow, IActivityRepository repo)
         {
             _uow = uow;
