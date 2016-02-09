@@ -9,7 +9,8 @@ namespace Core.DomainServices
 {
     public interface IActivityRepository
     {
-        IEnumerable<Activity> GetAll();
+        IQueryable<Activity> GetAll();
         Activity GetById(int id);
+        Task<Activity> GetByIdAsync(int id);
     }
 }

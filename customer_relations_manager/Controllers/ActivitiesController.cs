@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -10,25 +10,34 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Core.DomainModels.Activities;
+using Core.DomainServices;
 using Infrastructure.DataAccess;
 
 namespace AngularJSWebApiEmpty.Controllers
 {
     public class ActivitiesController : ApiController
     {
-        private ApplicationContext db = new ApplicationContext();
+        private readonly IUnitOfWork _uow;
+        private readonly IActivityRepository _repo;
+
+        public ActivitiesController(IUnitOfWork uow, IActivityRepository repo)
+        {
+            _uow = uow;
+            _repo = repo;
+        }
 
         // GET: api/Activities
-        public IQueryable<Activity> GetActivities()
+        public IEnumerable<Activity> GetActivities()
         {
-            return db.Activities;
+            //TODO: map to dto
+            return _repo.GetAll();
         }
 
         // GET: api/Activities/5
         [ResponseType(typeof(Activity))]
         public async Task<IHttpActionResult> GetActivity(int id)
         {
-            Activity activity = await db.Activities.FindAsync(id);
+            var activity = await _repo.GetByIdAsync(id);
             if (activity == null)
             {
                 return NotFound();
@@ -36,7 +45,7 @@ namespace AngularJSWebApiEmpty.Controllers
 
             return Ok(activity);
         }
-
+        /*
         // PUT: api/Activities/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutActivity(int id, Activity activity)
@@ -116,5 +125,6 @@ namespace AngularJSWebApiEmpty.Controllers
         {
             return db.Activities.Count(e => e.Id == id) > 0;
         }
+        */
     }
 }

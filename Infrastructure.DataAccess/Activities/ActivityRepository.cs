@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,19 +11,26 @@ namespace Infrastructure.DataAccess.Activities
 {
     public class ActivityRepository : IActivityRepository
     {
-        public ActivityRepository()
+        private readonly ApplicationContext _context;
+
+        public ActivityRepository(ApplicationContext context)
         {
-            
+            _context = context;
         }
 
-        public IEnumerable<Activity> GetAll()
+        public IQueryable<Activity> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Activities;
         }
 
         public Activity GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Activities.SingleOrDefault(a => a.Id == id);
+        }
+
+        public Task<Activity> GetByIdAsync(int id)
+        {
+            return _context.Activities.SingleOrDefaultAsync(a => a.Id == id);
         }
     }
 }
