@@ -7,6 +7,7 @@ using Core.DomainServices;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize]
     public class ActivitiesController : ApiController
     {
         private readonly IUnitOfWork _uow;
