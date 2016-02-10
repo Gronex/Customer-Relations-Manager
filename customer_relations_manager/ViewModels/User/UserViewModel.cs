@@ -1,24 +1,24 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Core.DomainModels.Users;
 
-namespace customer_relations_manager.ViewModels.Authentication
+namespace customer_relations_manager.ViewModels.User
 {
-    public class RegisterViewModel
+    public class UserViewModel
     {
+        public string Id { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-
-        [Required]
-        public string Password { get; set; }
-
-        [Required]
-        [Compare(nameof(Password))]
-        public string ConfirmPassword { get; set; }
-
+        
         [Required]
         public string FirstName { get; set; }
 
         [Required]
         public string LastName { get; set; }
+
+        [Required]
+        public UserRole Role { get; set; }
     }
 }

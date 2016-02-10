@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Core.DomainModels.Activities;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class ActivitiesController : ApiController
     {
         private readonly IUnitOfWork _uow;

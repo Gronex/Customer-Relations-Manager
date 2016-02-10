@@ -12,9 +12,9 @@ namespace Core.DomainModels.Users
 {
     public enum UserRole
     {
-        Super,
+        Standard,
         Executive,
-        Standard
+        Super,
     }
 
     public class User : IdentityUser
