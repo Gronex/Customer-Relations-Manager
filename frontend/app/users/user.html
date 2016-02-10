@@ -1,0 +1,25 @@
+<h1>Editing {{vm.user.name}}</h1>
+
+<form class="col s12">
+  <div input-field>
+    <input type="text" ng-model="vm.user.firstName">
+    <label>First Name</label>
+  </div>
+  <div input-field>
+    <input type="text" ng-model="vm.user.lastName">
+    <label>Last Name</label>
+  </div>
+  <div input-field>
+    <input ng-disabled="vm.editing" type="text" ng-model="vm.user.email">
+    <label>Email</label>
+  </div>
+  <select ng-model="vm.user.role" material-select>
+    <option ng-repeat="role in vm.roles">{{role}}</option>
+  </select>
+  <button type="button" class="btn waves-effect wave-light" ng-click="vm.save()">Save
+    <i class="material-icons right">save</i>
+  </button>
+  <button type="button" class="btn waves-effect wave-light" ng-click="vm.cancel()">Back
+    <i class="material-icons right">cancel</i>
+  </button>
+</form>

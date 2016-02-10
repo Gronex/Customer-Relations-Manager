@@ -8,6 +8,7 @@ using System.Web.Routing;
 using customer_relations_manager.App_Start;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace customer_relations_manager
 {
@@ -26,6 +27,8 @@ namespace customer_relations_manager
         {
             var jsonSetting = new JsonSerializerSettings();
             jsonSetting.Converters.Add(new StringEnumConverter());
+            jsonSetting.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            
             config.Formatters.JsonFormatter.SerializerSettings = jsonSetting;
         }
     }

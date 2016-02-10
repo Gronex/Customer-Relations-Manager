@@ -1,0 +1,20 @@
+<h1>Users</h1>
+<table class="highlight">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="user in vm.users" ui-sref="User({id: user.id})">
+      <td>{{user.name}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.role}}</td>
+    </tr>
+  </tbody>
+</table>
+<button type="button" class="btn waves-effect wave-light" ui-sref="User({id: 'new'})" >Create new
+  <i class="material-icons right">person add</i>
+</button>

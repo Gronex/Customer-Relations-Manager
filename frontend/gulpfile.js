@@ -40,6 +40,17 @@ gulp.task("move:libs", function () {
     .pipe(gulp.dest(fullDest));
 });
 
+gulp.task("watch", ["move"], function () {
+  var everything = paths.js.concat(
+    paths.html,
+    paths.css,
+    paths.libs,
+    paths.index
+  );
+
+  gulp.watch(everything, ["move"]);
+});
+
 gulp.task("move", ["move:js", "move:html", "move:css", "move:libs", "move:index"]);
 
-gulp.task("default", ["move"]);
+gulp.task("default", ["watch"]);

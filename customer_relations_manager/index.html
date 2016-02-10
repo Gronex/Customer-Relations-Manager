@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-
-<head>
+<html>
+  <head>
     <title>Customer Relations Manager</title>
 
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="view/bower_components/materialize/dist/css/materialize.min.css"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="view/bower_components/angular-materialize/css/style.css"  media="screen,projection"/>
     <style src="view/content/css/style.css"></style>
 
@@ -13,15 +14,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <script src="view/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="view/bower_components/materialize/dist/js/materialize.min.js"></script>
+
+    <!-- Angular things -->
     <script src="view/bower_components/angular/angular.min.js"></script>
     <script src="view/bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="view/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="view/bower_components/angular-materialize/src/angular-materialize.js"></script>
+
+
     <script src="view/app/app.js"></script>
-</head>
+
+    <!-- Services -->
+    <script src="view/app/services/dataservice.service.js"></script>
+
+    <!-- Directives -->
+    <script src="view/app/components/administrate-user.directive.js"></script>
+
+    <!-- Controllers -->
+    <script src="view/app/users/users.controller.js"></script>
+    <script src="view/app/users/user.controller.js"></script>
+
+  </head>
+
   <body ng-app="app">
-    <div ui-view></div>
-    <a ui-sref="state1">State 1</a>
-    <a ui-sref="state2">State 2</a>
+    <nav>
+      <div class="container nav-wrapper">
+        <a href="#" class="brand-logo">IT-minds CRM</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a ui-sref="Users">Users</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div ui-view></div>
+    </div>
   </body>
 </html>
