@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var del = require('del');
 
 var paths = {
   js: ["scripts/**/*.js", "app/**/*.js"],
@@ -10,6 +11,10 @@ var paths = {
 
 var dest = "../customer_relations_manager";
 var fullDest = dest + "/view";
+
+gulp.task("clean", function () {
+  del([fullDest], {force: true});
+});
 
 gulp.task("move:js", function () {
   return gulp.src(paths.js, {base: "./"})
@@ -40,7 +45,7 @@ gulp.task("move:libs", function () {
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("watch", ["move"], function () {
+gulp.task("watch", ["clean", "move"], function () {
   var everything = paths.js.concat(
     paths.html,
     paths.css,
@@ -48,9 +53,9 @@ gulp.task("watch", ["move"], function () {
     paths.index
   );
 
-  gulp.watch(everything, ["move"]);
+  gulp.watch(everything, ["clean", "move"]);
 });
 
 gulp.task("move", ["move:js", "move:html", "move:css", "move:libs", "move:index"]);
 
-gulp.task("default", ["watch"]);
+gulp.task("default", ["clean", "watch"]);
