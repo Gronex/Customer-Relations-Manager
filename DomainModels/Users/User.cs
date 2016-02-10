@@ -10,6 +10,13 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Core.DomainModels.Users
 {
+    public enum UserRole
+    {
+        Super,
+        Executive,
+        Standard
+    }
+
     public class User : IdentityUser
     {
         [Required]
