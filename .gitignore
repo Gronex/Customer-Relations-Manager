@@ -172,6 +172,8 @@ ClientBin/
 *.pfx
 *.publishsettings
 node_modules/
+bower_components/
+customer_relations_manager/view/
 orleans.codegen.cs
 
 # RIA/Silverlight projects

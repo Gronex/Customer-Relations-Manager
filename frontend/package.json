@@ -1,0 +1,15 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mads Slotsbo",
+  "license": "ISC",
+  "devDependencies": {
+    "bower": "^1.7.7",
+    "gulp": "^3.9.1"
+  }
+}
