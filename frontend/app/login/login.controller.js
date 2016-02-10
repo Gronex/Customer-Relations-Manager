@@ -2,24 +2,19 @@
   'use strict';
 
   angular
-    .module('app')
+    .module('CRM')
     .controller('Login', Login);
 
-  Users.$inject = ['dataservice', '$state'];
-  function Users(dataservice, $state){
+  Login.$inject = ['dataservice', '$state'];
+  function Login(dataservice, $state){
     var vm = this;
     vm.userName = "";
     vm.password = "";
 
     vm.login = login;
 
-    activate();
-
-    function activate() {
-    }
-
     function login() {
-      return dataservice.login()
+      return dataservice.login(vm.userName, vm.password)
         .then(function () {
           $state.go("Home");
         });

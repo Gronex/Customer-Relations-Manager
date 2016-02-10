@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('app')
+    .module('CRM')
     .controller('User', User);
 
   User.$inject = ['dataservice', "$log", "$stateParams", '$state'];

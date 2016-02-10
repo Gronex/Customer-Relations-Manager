@@ -21,6 +21,7 @@
     <script src="view/bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="view/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="view/bower_components/angular-materialize/src/angular-materialize.js"></script>
+    <script src="view/bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
 
 
     <script src="view/app/app.js"></script>
@@ -32,22 +33,27 @@
     <script src="view/app/components/administrate-user.directive.js"></script>
 
     <!-- Controllers -->
+    <script src="view/app/app.controller.js"></script>
     <script src="view/app/users/users.controller.js"></script>
     <script src="view/app/users/user.controller.js"></script>
+    <script src="view/app/login/login.controller.js"></script>
 
   </head>
 
-  <body ng-app="app">
-    <nav>
-      <div class="container nav-wrapper">
-        <a href="#" class="brand-logo">IT-minds CRM</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li><a ui-sref="Users">Users</a></li>
-        </ul>
+  <body ng-app="CRM">
+    <div ng-controller="App">
+      <nav>
+        <div class="container nav-wrapper">
+          <a href="#" class="brand-logo">IT-minds CRM</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a ui-sref="Users">Users</a></li>
+            <li><a ui-sref="Login">Log in</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="container">
+        <div ui-view></div>
       </div>
-    </nav>
-    <div class="container">
-      <div ui-view></div>
     </div>
   </body>
 </html>

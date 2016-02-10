@@ -1,13 +1,14 @@
 (function(){
   angular
-    .module('app')
+    .module('CRM')
     .factory('dataservice', dataservice);
 
-  dataservice.$inject = ["$http", '$log'];
-  function dataservice($http, $log) {
-    config();
+  dataservice.$inject = ["$http", '$log', 'localStorageService'];
+  function dataservice($http, $log, localStorageService) {
 
     return {
+      configToken: configToken,
+
       login: login,
 
       getUsers: getUsers,
@@ -16,12 +17,30 @@
       createUser: createUser
     };
 
-    function login() {
-
+    function configToken(token) {
+      if(!token){
+        token = localStorageService.get("token");
+        if(token === undefined) return false;
+        $log.info("User loaded");
+      }
+      $http.defaults.headers.common.Authorization = "Bearer " + token;
+      return true;
     }
 
-    function config() {
-      $http.defaults.headers.common.Authorization = "Bearer l8jK3JrNSqEdcTuPCtXnKrwG3ef4lFg5BZjC9fC8gE4tyu1FcKz_Wz2Vu2a8QTOdtDvwQ7zcbofZgJY4dWLRkVqmWuwQUGwR4ufs6_eXde8heZsZyM-YlIux_Jgnd-xT8GDmU7K039Rw5csZ5ThE4VBbCkIL_r8dDbtZzLpG3Uw0Wm4ocaFqdgJdB0jm01ED8OILbXWnpWwZMgVnI3EM_lpVuLwdinZjNNcby8NtZhnRukACpOnI1DBUv0feGgihDywaGc-_8H2tPa05rMAHED2glGX0bBDxuKLUTFQ00cS2_DAp0zWMkJwd2Y70lmPH3iSCWId0DGy9jrpOPjuYtTZEBMKBTNe8HKx_thGitIHKhVEAhiWLmz9v9a71UxwhbGUZPtxYCroswJVpnwMDc8ArcJ7qYH9Yrn8rnZJ-BKFnjnCo3kRrDn4oFKRw31ekOufUD-R-0Lzt_3deTF_Hb5EqU7HIbbYUjld7lyBsMe3Y5dHd80eK_EGR7srBc6pwN3RoYhX46Cnt9aFu-nEPfJ-m73Mc1PlWqTobTLDVxzhxkmEHqM0o965qOSDBx7QB";
+    function login(userName, password) {
+      return $http({
+        method: 'POST',
+        url: "api/token",
+        data: $.param({
+          "grant_type": "password",
+          "username": userName,
+          "password": password
+        }),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(function (response) {
+        localStorageService.set("token", response.data["access_token"]);
+        configToken(response.data["access_token"]);
+      });
     }
 
     function getUsers() {

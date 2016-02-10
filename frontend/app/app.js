@@ -1,14 +1,15 @@
 ﻿(function () {
   'use strict';
 
-  angular.module('app', [
+  angular.module('CRM', [
     // Angular modules
     'ngAnimate',
     // Custom modules
 
     // 3rd Party Modules
     'ui.router',
-    'ui.materialize'
+    'ui.materialize',
+    'LocalStorageModule'
   ]).config(RouteConfig);
 
   function RouteConfig($stateProvider, $urlRouterProvider) {
@@ -31,6 +32,12 @@
         url: "/users/:id",
         templateUrl: "view/app/users/user.html",
         controller: "User",
+        controllerAs: 'vm'
+      })
+      .state("Login", {
+        url: "/login",
+        templateUrl: "view/app/login/login.html",
+        controller: "Login",
         controllerAs: 'vm'
       });
   }
