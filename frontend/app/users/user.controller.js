@@ -10,10 +10,11 @@
     var vm = this;
     vm.user = {};
     vm.roles = ["Standard", "Executive", "Super"];
+    vm.editing = true;
 
     vm.save = save;
     vm.cancel = cancel;
-    vm.editing = true;
+    vm.remove = remove;
 
     activate();
 
@@ -53,6 +54,13 @@
 
     function cancel() {
       $state.go("Users");
+    }
+
+    function remove() {
+      dataservice.deleteUser($stateParams.id)
+      .then(function () {
+        $state.go("Users");
+      });
     }
   }
 })();

@@ -53,7 +53,7 @@ gulp.task("watch", ["clean", "move"], function () {
     paths.index
   );
 
-  gulp.watch(everything, ["clean", "move"]);
+  gulp.watch(everything, ["move"]);
 });
 
 gulp.task("move", ["move:js", "move:html", "move:css", "move:libs", "move:index"]);

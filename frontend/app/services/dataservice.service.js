@@ -14,7 +14,8 @@
       getUsers: getUsers,
       getUser: getUser,
       updateUser: updateUser,
-      createUser: createUser
+      createUser: createUser,
+      deleteUser: deleteUser
     };
 
     function configToken(token) {
@@ -99,6 +100,21 @@
       function createUserFailed(error) {
         $log.error(error.data);
         $log.error('XHR Failed for createUser.' + error.data);
+      }
+    }
+
+    function deleteUser(id) {
+      return $http.delete('/api/users/'+id)
+        .then(deleteUserComplete)
+        .catch(deleteUserFailed);
+
+      function deleteUserComplete(response) {
+        return response.data;
+      }
+
+      function deleteUserFailed(error) {
+        $log.error(error.data);
+        $log.error('XHR Failed for deleteUser.' + error.data);
       }
     }
   }
