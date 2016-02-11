@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.UI.WebControls;
-using customer_relations_manager.ViewModels.User;
+using customer_relations_manager.ViewModels;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Microsoft.AspNet.Identity;
@@ -15,7 +15,7 @@ using Microsoft.Owin.Security;
 namespace customer_relations_manager.Controllers
 {
     [Authorize(Roles = nameof(UserRole.Super))]
-    public class UsersController : ApiController
+    public class UsersController : CrmApiController
     {
         // Standard asp.net classes to manage users.
         private readonly ApplicationUserManager _userManager;
@@ -78,8 +78,7 @@ namespace customer_relations_manager.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Post(UserViewModel model)
         {
-            var modelErrors = string.Join(", ", ModelState.Values.SelectMany(ms => ms.Errors.Select(e => e.ErrorMessage)));
-            if (!ModelState.IsValid) return BadRequest($"Invalid model\n {modelErrors}");
+            if (!ModelState.IsValid) return GetModelErrorResponse();
 
             model.Email = model.Email.ToLower();
 
@@ -113,8 +112,7 @@ namespace customer_relations_manager.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> Put(string id, UserViewModel model)
         {
-            var modelErrors = string.Join(", ", ModelState.Values.SelectMany(ms => ms.Errors.Select(e => e.ErrorMessage)));
-            if (!ModelState.IsValid) return BadRequest($"Invalid model\n {modelErrors}");
+            if (!ModelState.IsValid) return GetModelErrorResponse();
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();

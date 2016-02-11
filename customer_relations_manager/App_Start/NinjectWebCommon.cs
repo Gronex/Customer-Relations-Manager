@@ -1,3 +1,4 @@
+using AutoMapper;
 using Core.DomainServices;
 using Infrastructure.DataAccess;
 using Infrastructure.DataAccess.Activities;
@@ -69,8 +70,12 @@ namespace customer_relations_manager.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            var mapperConfig = AutomapperConfig.ConfigMappings();
+
+
             kernel.Bind<ApplicationContext>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            kernel.Bind<IMapper>().ToConstant(mapperConfig.CreateMapper());
 
             // Identity
             kernel.Bind(typeof(IUserStore<>)).To(typeof(UserStore<>)).InRequestScope().WithConstructorArgument("context", kernel.Get<ApplicationContext>());

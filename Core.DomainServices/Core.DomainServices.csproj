@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="IActivityRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="IUserGroupRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

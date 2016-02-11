@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Web.Http.Results;
 using customer_relations_manager;
 using customer_relations_manager.Controllers;
-using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.Users;
 using Microsoft.AspNet.Identity;
 using NSubstitute;
@@ -16,12 +15,12 @@ using Xunit;
 
 namespace UnitTests.Controllers
 {
-    public class UserControllerTest
+    public class UsersControllerTest
     {
         private readonly UsersController _controller;
         private readonly IEnumerable<UserRole> _allRoles;
 
-        public UserControllerTest()
+        public UsersControllerTest()
         {
             _controller = new UsersController(null, new UnitOfWorkStub());
             

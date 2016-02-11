@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Core.DomainModels.Users;
 
-namespace customer_relations_manager.ViewModels.User
+namespace customer_relations_manager.ViewModels
 {
     public class UserViewModel
     {

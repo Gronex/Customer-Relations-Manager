@@ -11,10 +11,10 @@ using Xunit;
 
 namespace UnitTests.Controllers
 {
-    public class ActivityControllerTest
+    public class ActivitesControllerTest
     {
         private readonly ActivitiesController _controller;
-        public ActivityControllerTest()
+        public ActivitesControllerTest()
         {
             _controller = new ActivitiesController(new UnitOfWorkStub(), new ActivityRepoStub());
         }
