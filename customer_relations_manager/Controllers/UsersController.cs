@@ -33,20 +33,22 @@ namespace customer_relations_manager.Controllers
         {
             var users = _userManager.Users.ToList();
 
-            var userModels = users.Select(u =>
-            {
-                var roles = _userManager.GetRoles(u.Id);
-                //Selects the highest value of the roles the user has, resulting in the most rights
-                var role = roles.Select(r => Enum.Parse(typeof (UserRole), r)).OfType<UserRole>().Max();
-                return new UserViewModel
+            var userModels = users
+                .Where(u => u.Active)
+                .Select(u =>
                 {
-                    Id = u.Id,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Email = u.Email,
-                    Role = role
-                };
-            });
+                    var roles = _userManager.GetRoles(u.Id);
+                    //Selects the highest value of the roles the user has, resulting in the most rights
+                    var role = roles.Select(r => Enum.Parse(typeof (UserRole), r)).OfType<UserRole>().Max();
+                    return new UserViewModel
+                    {
+                        Id = u.Id,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        Email = u.Email,
+                        Role = role
+                    };
+                });
             
             return Ok(userModels);
         }
@@ -80,19 +82,27 @@ namespace customer_relations_manager.Controllers
             if (!ModelState.IsValid) return BadRequest($"Invalid model\n {modelErrors}");
 
             model.Email = model.Email.ToLower();
-            var user = new User { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName};
 
-            var result = await _userManager.CreateAsync(user, "Password1"); //TODO: Dont set default, but let users choose after email link
-            if (!result.Succeeded)
-                return BadRequest(string.Join(", ", result.Errors));
+            // Find existing, or create new
+            var user = await _userManager.FindByEmailAsync(model.Email) 
+                ?? new User { UserName = model.Email, Email = model.Email, Active = true};
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            if (user.Active)
+            {
+                var result = await _userManager.CreateAsync(user, "Password1");
+                    //TODO: Dont set default, but let users choose after email link
+                if (!result.Succeeded)
+                    return BadRequest(string.Join(", ", result.Errors));
+            }
+            user.Active = true;
             
             // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
             // Send an email with this link
             // var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
-            var roles = CalculateNewRoles(model.Role);
-
-            await _userManager.AddToRolesAsync(user.Id, roles.Select(r => r.ToString()).ToArray());
+            var roles = CalculateNewRoles(model.Role).Select(r => r.ToString()).ToList();
+            roles.ForEach(role => _userManager.AddToRole(user.Id, role));
             _uow.Save();
 
             model.Id = user.Id;
@@ -127,7 +137,21 @@ namespace customer_relations_manager.Controllers
             _uow.Save();
             return Ok();
         }
-        
+
+        // DELETE: api/users/{id}
+        [HttpDelete]
+        public void RemoveUser(string id)
+        {
+            var user = _userManager.FindById(id);
+            if (user == null) return;
+
+            user.Active = false;
+            var roles = _userManager.GetRoles(id).ToArray();
+            _userManager.RemoveFromRoles(id, roles);
+
+            _uow.Save();
+        }
+
         public IEnumerable<UserRole> CalculateNewRoles(UserRole targetRole)
         {
             var roles = new List<UserRole>();

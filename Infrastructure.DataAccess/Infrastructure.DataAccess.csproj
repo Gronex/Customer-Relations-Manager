@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201602091102004_Initial.Designer.cs">
       <DependentUpon>201602091102004_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602111353143_UserActiveStatusAdded.cs" />
+    <Compile Include="Migrations\201602111353143_UserActiveStatusAdded.Designer.cs">
+      <DependentUpon>201602111353143_UserActiveStatusAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitOfWork.cs" />
@@ -92,6 +96,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201602091102004_Initial.resx">
       <DependentUpon>201602091102004_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602111353143_UserActiveStatusAdded.resx">
+      <DependentUpon>201602111353143_UserActiveStatusAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

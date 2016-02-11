@@ -64,7 +64,7 @@ namespace Infrastructure.DataAccess
             modelBuilder.Entity<Opportunity>().Property(o => o.Description).HasMaxLength(500);
 
             modelBuilder.Entity<Opportunity>().HasRequired(o => o.Owner).WithMany(u => u.Opportunities).WillCascadeOnDelete(false);
-
+            
             base.OnModelCreating(modelBuilder);
         }
     }

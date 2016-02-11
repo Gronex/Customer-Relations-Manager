@@ -19,10 +19,13 @@ namespace Core.DomainModels.Users
 
     public class User : IdentityUser
     {
+
         [Required]
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+        
+        public bool Active { get; set; }
 
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";
