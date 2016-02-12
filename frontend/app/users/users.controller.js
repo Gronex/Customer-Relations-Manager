@@ -17,7 +17,8 @@
     }
 
     function getUsers() {
-      return dataservice.getUsers()
+      return dataservice.users
+        .getAll()
         .then(function (data) {
           vm.users = data;
           return vm.users;

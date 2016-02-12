@@ -11,16 +11,8 @@
 
       login: login,
 
-      getUsers: getUsers,
-      getUser: getUser,
-      updateUser: updateUser,
-      createUser: createUser,
-      deleteUser: deleteUser,
-
-      getUserGroups: getUserGroups,
-      createUserGroup: createUserGroup,
-      deleteUserGroup: deleteUserGroup,
-      updateUserGroup: updateUserGroup
+      users: createResource("/api/users"),
+      userGroups: createResource("/api/usergroups")
     };
 
     function configToken(token) {
@@ -49,49 +41,39 @@
       });
     }
 
-    function getUsers() {
-      return $http.get('/api/users')
-        .then(returnData, handleError);
-    }
+    function createResource(url) {
+      return {
+        getAll: getAll,
+        getById: getById,
+        create: create,
+        update: update,
+        remove: remove
+      };
 
-    function getUser(id) {
-      return $http.get('/api/users/' + id)
-        .then(returnData, handleError);
-    }
+      function getAll() {
+        return $http.get(url)
+          .then(returnData, handleError);
+      }
 
-    function updateUser(id, user) {
-      return $http.put('/api/users/' + id, user)
-        .then(returnData, handleError);
-    }
+      function getById(id) {
+        return $http.get(url + "/" + id)
+          .then(returnData, handleError);
+      }
 
-    function createUser(id, user) {
-      return $http.post('/api/users', user)
-        .then(returnData, handleError);
-    }
+      function create(data) {
+        return $http.post(url, data)
+          .then(returnData, handleError);
+      }
 
-    function deleteUser(id) {
-      return $http.delete('/api/users/'+id)
-        .then(returnData, handleError);
-    }
+      function update(id, data) {
+        return $http.put(url + "/" + id, data)
+          .then(returnData, handleError);
+      }
 
-    function getUserGroups() {
-      return $http.get('/api/usergroups')
-        .then(returnData, handleError);
-    }
-
-    function createUserGroup(group) {
-      return $http.post('/api/usergroups', group)
-        .then(returnData, handleError);
-    }
-
-    function deleteUserGroup(id) {
-      return $http.delete('/api/usergroups/' + id)
-        .then(returnData, handleError);
-    }
-
-    function updateUserGroup(id, group) {
-      return $http.put('/api/usergroups/' + id, group)
-        .then(returnData, handleError);
+      function remove(id) {
+        return $http.delete(url + "/" + id)
+          .then(returnData, handleError);
+      }
     }
 
     function handleError(err) {

@@ -24,7 +24,8 @@
     }
 
     function getGroups() {
-      dataservice.getUserGroups()
+      dataservice.userGroups
+        .getAll()
         .then(function (groups) {
           vm.groups = groups;
           return vm.groups;
@@ -33,7 +34,8 @@
 
     function create() {
       vm.group.errMsg = undefined;
-      dataservice.createUserGroup(vm.group)
+      dataservice.userGroups
+        .create(vm.group)
         .then(function (group) {
           vm.groups.push(group);
           vm.group.name = "";
@@ -43,16 +45,16 @@
     function save(group) {
       group.errMsg = undefined;
       if(group.saved || group.saved == undefined) return;
-      dataservice
-        .updateUserGroup(group.id, group)
+      dataservice.userGroups
+        .update(group.id, group)
         .then(function () {
           group.saved = true;
         }, function (err) { handleError(err, group); });
     }
 
     function remove(id) {
-      dataservice
-        .deleteUserGroup(id)
+      dataservice.userGroups
+        .remove(id)
         .then(function () {
           vm.groups = [];
           getGroups();

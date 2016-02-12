@@ -30,7 +30,8 @@
     }
 
     function getUser(id) {
-      dataservice.getUser(id)
+      dataservice.users
+        .getById(id)
         .then(function (data) {
           vm.user = data;
           return vm.user;
@@ -39,16 +40,18 @@
 
     function save() {
       if(vm.editing){
-        dataservice.updateUser($stateParams.id, vm.user)
-        .then(function () {
-          $state.go("Users");
-        });
+        dataservice.users
+          .update($stateParams.id, vm.user)
+          .then(function () {
+            $state.go("Users");
+          });
       }
       else{
-        dataservice.createUser($stateParams.id, vm.user)
-        .then(function () {
-          $state.go("Users");
-        });
+        dataservice.users
+          .create($stateParams.id, vm.user)
+          .then(function () {
+            $state.go("Users");
+          });
       }
     }
 
@@ -57,10 +60,11 @@
     }
 
     function remove() {
-      dataservice.deleteUser($stateParams.id)
-      .then(function () {
-        $state.go("Users");
-      });
+      dataservice.users
+        .remove($stateParams.id)
+        .then(function () {
+          $state.go("Users");
+        });
     }
   }
 })();
