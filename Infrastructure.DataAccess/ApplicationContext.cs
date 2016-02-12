@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,11 @@ namespace Infrastructure.DataAccess
 {
     public class ApplicationContext : IdentityDbContext<User>
     {
+        public ApplicationContext(DbConnection connection) : base(connection, true)
+        {
+            
+        }
+
         public ApplicationContext() : base("DefaultConnection")
         {
             
@@ -43,7 +49,8 @@ namespace Infrastructure.DataAccess
         {
             // The DateTime type in .NET has the same range and precision as datetime2 in SQL Server.
             // Configure DateTime type to use SQL server datetime2 instead.
-            modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
+            //TODO: re-add after testing
+            // modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
 
             // Multi column keys
             modelBuilder.Entity<UserGroupUser>()

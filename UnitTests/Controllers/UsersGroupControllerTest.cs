@@ -7,6 +7,7 @@ using customer_relations_manager.Controllers;
 using customer_relations_manager.ViewModels;
 using Core.DomainModels.UserGroups;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 using NSubstitute;
 using NSubstitute.Core.Arguments;
 using Xunit;

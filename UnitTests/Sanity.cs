@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Sdk;
 
 namespace UnitTests
 {
@@ -15,7 +16,7 @@ namespace UnitTests
             Assert.Equal(42, 42);
         }
 
-        [Fact]
+        [Fact(Skip = "Only to make sure tests can fail")]
         public void FailingTest()
         {
             Assert.Equal(42, 40);

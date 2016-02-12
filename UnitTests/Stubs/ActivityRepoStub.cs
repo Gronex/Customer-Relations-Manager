@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 
 namespace UnitTests.Stubs
 {

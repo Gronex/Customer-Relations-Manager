@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.UserGroups;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 
 namespace Infrastructure.DataAccess
 {
@@ -37,10 +38,11 @@ namespace Infrastructure.DataAccess
 
         public UserGroup Update(int id, UserGroup group)
         {
-            if (!_context.UserGroups.Any(ug => ug.Id == id)) return null;
-            group.Id = id;
-            var dbGroup = _context.UserGroups.Attach(group);
-            _context.Entry(group).State = EntityState.Modified;
+            var dbGroup = _context.UserGroups.SingleOrDefault(ug => ug.Id == id);
+            if (dbGroup == null) return null;
+            dbGroup.Name = group.Name;
+            
+            _context.Entry(dbGroup).Property(g => g.Name).IsModified = true;
 
             return dbGroup;
         }
@@ -48,6 +50,7 @@ namespace Infrastructure.DataAccess
         public void Delete(int id)
         {
             var dbGroup = GetById(id);
+            if (dbGroup == null) return;
 
             if (_context.Entry(dbGroup).State == EntityState.Detached)
                 _context.UserGroups.Attach(dbGroup);

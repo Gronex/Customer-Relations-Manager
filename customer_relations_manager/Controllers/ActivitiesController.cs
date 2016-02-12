@@ -5,6 +5,7 @@ using System.Web.Http.Description;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {

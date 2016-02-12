@@ -10,6 +10,7 @@ using customer_relations_manager.ViewModels;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers

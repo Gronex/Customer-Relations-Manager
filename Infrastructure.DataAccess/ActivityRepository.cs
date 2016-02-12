@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 
 namespace Infrastructure.DataAccess
 {

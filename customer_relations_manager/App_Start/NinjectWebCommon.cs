@@ -1,5 +1,6 @@
 using AutoMapper;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
