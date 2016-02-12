@@ -78,7 +78,7 @@ namespace customer_relations_manager.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Post(UserViewModel model)
         {
-            if (!ModelState.IsValid) return GetModelErrorResponse();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             model.Email = model.Email.ToLower();
 
@@ -112,7 +112,7 @@ namespace customer_relations_manager.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> Put(string id, UserViewModel model)
         {
-            if (!ModelState.IsValid) return GetModelErrorResponse();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();

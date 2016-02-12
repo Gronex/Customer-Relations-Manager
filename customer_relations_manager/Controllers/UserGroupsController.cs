@@ -10,6 +10,7 @@ using customer_relations_manager.ViewModels;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
@@ -33,7 +34,7 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         public IEnumerable<UserGroupViewModel> Get()
         {
-            var inDb = _repo.GetAll();
+            var inDb = _repo.GetAll().ToList();
 
             return inDb.Select(ug => _mapper.Map<UserGroupViewModel>(ug));
         }
@@ -50,22 +51,36 @@ namespace customer_relations_manager.Controllers
         [HttpPost]
         public IHttpActionResult Post(UserGroupViewModel model)
         {
-            if (!ModelState.IsValid) return GetModelErrorResponse();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = _repo.Create(_mapper.Map<UserGroup>(model));
-            _uow.Save();
+            try
+            {
+                _uow.Save();
+            }
+            catch (DuplicateKeyException)
+            {
+                return Duplicate(model);
+            }
             return Created(result.Id.ToString(), _mapper.Map<UserGroupViewModel>(result));
         }
 
         [HttpPut]
         public IHttpActionResult Put(int id, UserGroupViewModel model)
         {
-            if (!ModelState.IsValid) return GetModelErrorResponse();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             var updated = _repo.Update(id, _mapper.Map<UserGroup>(model));
             if(updated == null) return NotFound();
 
-            _uow.Save();
-            return Ok(_mapper.Map<UserGroup>(model));
+            try
+            {
+                _uow.Save();
+            }
+            catch (DuplicateKeyException)
+            {
+                return Duplicate(model);
+            }
+            return Ok(_mapper.Map<UserGroupViewModel>(updated));
         }
 
         [HttpDelete]

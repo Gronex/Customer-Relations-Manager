@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace customer_relations_manager.Controllers
 {
     public abstract class CrmApiController : ApiController
     {
-        protected IHttpActionResult GetModelErrorResponse()
+
+        protected IHttpActionResult Duplicate<T>(T model)
         {
-            var modelErrors = string.Join(",\n", ModelState.Values.SelectMany(ms => ms.Errors.Select(e => e.ErrorMessage)));
-            return BadRequest($"Invalid model\n {modelErrors}");
+            var result = new NegotiatedContentResult<T>(HttpStatusCode.Conflict, model, this);
+            return result;
         }
     }
 }

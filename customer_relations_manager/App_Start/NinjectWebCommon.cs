@@ -1,7 +1,6 @@
 using AutoMapper;
 using Core.DomainServices;
 using Infrastructure.DataAccess;
-using Infrastructure.DataAccess.Activities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -84,6 +83,7 @@ namespace customer_relations_manager.App_Start
 
 
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
+            kernel.Bind<IUserGroupRepository>().To<UserGroupRepository>();
         }        
     }
 }

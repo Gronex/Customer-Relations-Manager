@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
 using Core.DomainServices;
 
-namespace Infrastructure.DataAccess.Activities
+namespace Infrastructure.DataAccess
 {
     public class ActivityRepository : IActivityRepository
     {

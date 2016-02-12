@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainServices;
+using Infrastructure.DataAccess.Exceptions;
 
 namespace Infrastructure.DataAccess
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
+        public static int SqlDuplicateKeyException { get; } = 2601;
+
         private readonly DbContext _context;
 
         public UnitOfWork(ApplicationContext context)
@@ -31,9 +36,17 @@ namespace Infrastructure.DataAccess
                 {
                     foreach (var validationError in validationErrors.ValidationErrors)
                     {
-                        Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                        Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName,
+                            validationError.ErrorMessage);
                     }
                 }
+                throw;
+            }
+            catch (DbUpdateException ex) when ((ex.InnerException?.InnerException as SqlException)?.Number == SqlDuplicateKeyException)
+            {
+                //Should not be able to be null since the when should be able to catch it
+                if (ex.InnerException != null)
+                    throw new DuplicateKeyException(ex.InnerException.InnerException.Message);
                 throw;
             }
         }
