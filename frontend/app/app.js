@@ -29,9 +29,15 @@
         controllerAs: 'vm'
       })
       .state("User", {
-        url: "/users/:id",
+        url: "/users/{id}",
         templateUrl: "view/app/users/user.html",
         controller: "User",
+        controllerAs: 'vm'
+      })
+      .state("UserGroups", {
+        url: "/groups",
+        templateUrl: "view/app/user-groups/user-groups.html",
+        controller: "UserGroups",
         controllerAs: 'vm'
       })
       .state("Login", {

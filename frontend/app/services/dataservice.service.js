@@ -3,8 +3,8 @@
     .module('CRM')
     .factory('dataservice', dataservice);
 
-  dataservice.$inject = ["$http", '$log', 'localStorageService'];
-  function dataservice($http, $log, localStorageService) {
+  dataservice.$inject = ["$http", '$q', '$log', 'localStorageService'];
+  function dataservice($http, $q, $log, localStorageService) {
 
     return {
       configToken: configToken,
@@ -15,7 +15,12 @@
       getUser: getUser,
       updateUser: updateUser,
       createUser: createUser,
-      deleteUser: deleteUser
+      deleteUser: deleteUser,
+
+      getUserGroups: getUserGroups,
+      createUserGroup: createUserGroup,
+      deleteUserGroup: deleteUserGroup,
+      updateUserGroup: updateUserGroup
     };
 
     function configToken(token) {
@@ -46,76 +51,56 @@
 
     function getUsers() {
       return $http.get('/api/users')
-        .then(getUsersComplete)
-        .catch(getUsersFailed);
-
-      function getUsersComplete(response) {
-        return response.data;
-      }
-
-      function getUsersFailed(error) {
-        $log.error('XHR Failed for getUsers.' + error.data);
-      }
+        .then(returnData, handleError);
     }
 
     function getUser(id) {
       return $http.get('/api/users/' + id)
-        .then(getUserComplete)
-        .catch(getUserFailed);
-
-      function getUserComplete(response) {
-        return response.data;
-      }
-
-      function getUserFailed(error) {
-        $log.error(error.data);
-        $log.error('XHR Failed for getUser.' + error.data);
-      }
+        .then(returnData, handleError);
     }
 
     function updateUser(id, user) {
       return $http.put('/api/users/' + id, user)
-        .then(updateUserComplete)
-        .catch(updateUserFailed);
-
-      function updateUserComplete(response) {
-        return response.data;
-      }
-
-      function updateUserFailed(error) {
-        $log.error(error.data);
-        $log.error('XHR Failed for updateUser.' + error.data);
-      }
+        .then(returnData, handleError);
     }
 
     function createUser(id, user) {
       return $http.post('/api/users', user)
-        .then(createUserComplete)
-        .catch(createUserFailed);
-
-      function createUserComplete(response) {
-        return response.data;
-      }
-
-      function createUserFailed(error) {
-        $log.error(error.data);
-        $log.error('XHR Failed for createUser.' + error.data);
-      }
+        .then(returnData, handleError);
     }
 
     function deleteUser(id) {
       return $http.delete('/api/users/'+id)
-        .then(deleteUserComplete)
-        .catch(deleteUserFailed);
+        .then(returnData, handleError);
+    }
 
-      function deleteUserComplete(response) {
-        return response.data;
-      }
+    function getUserGroups() {
+      return $http.get('/api/usergroups')
+        .then(returnData, handleError);
+    }
 
-      function deleteUserFailed(error) {
-        $log.error(error.data);
-        $log.error('XHR Failed for deleteUser.' + error.data);
-      }
+    function createUserGroup(group) {
+      return $http.post('/api/usergroups', group)
+        .then(returnData, handleError);
+    }
+
+    function deleteUserGroup(id) {
+      return $http.delete('/api/usergroups/' + id)
+        .then(returnData, handleError);
+    }
+
+    function updateUserGroup(id, group) {
+      return $http.put('/api/usergroups/' + id, group)
+        .then(returnData, handleError);
+    }
+
+    function handleError(err) {
+      $log.error("XHR Failed with code: '" + err.status + "' on '" + err.config.method + " " + err.config.url + "'");
+      return $q.reject(err);
+    }
+
+    function returnData(response) {
+      return response.data;
     }
   }
 })();
