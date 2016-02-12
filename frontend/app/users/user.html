@@ -23,10 +23,13 @@
   <button type="button" class="btn waves-effect wave-light" ng-click="vm.cancel()">Back
     <i class="material-icons right">cancel</i>
   </button>
-  <button ng-if="vm.editing" type="button" class="btn waves-effect wave-light right" ng-click="vm.remove()">Remove
+  <button ng-if="vm.editing" type="button" class="btn waves-effect wave-light red lighten-2 right" ng-click="vm.remove()">Remove
     <i class="material-icons right">remove_circle_outline</i>
   </button>
 </form>
+
+<hr>
+
 <div input-field>
   <input
   typeahead-on-select="vm.onGroupSelect($item)"
