@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Comments;
+using Core.DomainModels.UserGroups;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -35,6 +36,8 @@ namespace Core.DomainModels.Users
         public virtual ICollection<ProductionGoal> Goals { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
         public virtual ICollection<Opportunity.Opportunity> Opportunities { get; set; }
+
+        public virtual ICollection<UserGroupUser> Groups { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 

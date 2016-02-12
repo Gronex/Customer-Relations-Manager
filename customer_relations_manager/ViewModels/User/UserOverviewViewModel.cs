@@ -1,16 +1,20 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 using Core.DomainModels.Users;
 
-namespace customer_relations_manager.ViewModels
+namespace customer_relations_manager.ViewModels.User
 {
-    public class UserViewModel
+    public class UserOverviewViewModel
     {
         public string Id { get; set; }
 
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        
+
         [Required]
         public string FirstName { get; set; }
 

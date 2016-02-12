@@ -27,3 +27,20 @@
     <i class="material-icons right">remove_circle_outline</i>
   </button>
 </form>
+<div input-field>
+  <input
+  typeahead-on-select="vm.onGroupSelect($item)"
+  type="text"
+  ng-model="vm.group"
+  uib-typeahead="group.name for group in vm.groups | filter:$viewValue | limitTo:8"
+  class="form-control">
+  <label>Add groups</label>
+</div>
+
+<ul class="collection">
+  <li class="collection-item dismissable" ng-repeat="group in vm.user.groups">
+    <button class="btn waves-effect wave-light btn-flat" type="button" ng-click="vm.removeGroup(group)">
+      <i class="material-icons left">remove_group</i>
+    </button>{{group.name}}
+  </li>
+</ul>

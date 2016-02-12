@@ -62,7 +62,6 @@
     }
 
     function handleError(err, target) {
-      console.debug(err);
       switch (err.status) {
         case 400:
 

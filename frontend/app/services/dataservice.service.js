@@ -43,11 +43,11 @@
 
     function createResource(url) {
       return {
-        getAll: getAll,
-        getById: getById,
-        create: create,
-        update: update,
-        remove: remove
+        getAll:   getAll,
+        getById:  getById,
+        create:   create,
+        update:   update,
+        remove:   remove
       };
 
       function getAll() {

@@ -5,9 +5,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.UI.WebControls;
+using AutoMapper;
 using customer_relations_manager.ViewModels;
+using customer_relations_manager.ViewModels.User;
+using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -20,11 +24,15 @@ namespace customer_relations_manager.Controllers
         // Standard asp.net classes to manage users.
         private readonly ApplicationUserManager _userManager;
         private readonly IUnitOfWork _uow;
+        private readonly IMapper _mapper;
 
-        public UsersController(ApplicationUserManager userManager, IUnitOfWork uow)
+        public UsersController(ApplicationUserManager userManager, 
+            IUnitOfWork uow,
+            IMapper mapper)
         {
             _userManager = userManager;
             _uow = uow;
+            _mapper = mapper;
         }
 
         // GET: api/users
@@ -40,14 +48,8 @@ namespace customer_relations_manager.Controllers
                     var roles = _userManager.GetRoles(u.Id);
                     //Selects the highest value of the roles the user has, resulting in the most rights
                     var role = roles.Select(r => Enum.Parse(typeof (UserRole), r)).OfType<UserRole>().Max();
-                    return new UserViewModel
-                    {
-                        Id = u.Id,
-                        FirstName = u.FirstName,
-                        LastName = u.LastName,
-                        Email = u.Email,
-                        Role = role
-                    };
+                    return _mapper.Map<User, UserOverviewViewModel>(u,
+                        opts => opts.AfterMap((_, res) => res.Role = role));
                 });
             
             return Ok(userModels);
@@ -64,14 +66,10 @@ namespace customer_relations_manager.Controllers
             //Selects the highest value of the roles the user has, resulting in the most rights
             var role = roles.Select(r => Enum.Parse(typeof(UserRole), r)).OfType<UserRole>().Max();
 
-            return Ok(new UserViewModel
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Role = role
-            });
+            var userModel = _mapper.Map<User, UserViewModel>(user,
+                opts => opts.AfterMap((_, res) => res.Role = role));
+
+            return Ok(userModel);
         }
 
         // POST: api/users
@@ -87,6 +85,9 @@ namespace customer_relations_manager.Controllers
                 ?? new User { UserName = model.Email, Email = model.Email, Active = true};
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
+
+            UpdateUserGroups(model, user);
+
             if (user.Active)
             {
                 var result = await _userManager.CreateAsync(user, "Password1");
@@ -120,6 +121,8 @@ namespace customer_relations_manager.Controllers
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
 
+            UpdateUserGroups(model, user);
+
             var userRoles = _userManager.GetRoles(id)
                 .Select(r => Enum.Parse(typeof (UserRole), r))
                 .OfType<UserRole>()
@@ -148,6 +151,23 @@ namespace customer_relations_manager.Controllers
             _userManager.RemoveFromRoles(id, roles);
 
             _uow.Save();
+        }
+
+        private static void UpdateUserGroups(UserViewModel model, User user)
+        {
+
+            var newGroupIds = model.Groups.Select(g => g.Id).ToList();
+
+            user.Groups
+                .Where(g => !newGroupIds.Contains(g.UserGroupId))
+                .ToList()
+                .ForEach(grp => user.Groups.Remove(grp));
+            var groupsToBeAddedTo = newGroupIds.Except(user.Groups.Select(g => g.UserGroupId));
+            
+            foreach (var grp in groupsToBeAddedTo)
+            {
+                user.Groups.Add(new UserGroupUser { User = user, UserGroupId = grp });
+            }
         }
 
         public IEnumerable<UserRole> CalculateNewRoles(UserRole targetRole)

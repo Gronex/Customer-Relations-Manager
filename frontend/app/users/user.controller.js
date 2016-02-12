@@ -11,26 +11,44 @@
     vm.user = {};
     vm.roles = ["Standard", "Executive", "Super"];
     vm.editing = true;
+    vm.groups = [];
 
     vm.save = save;
     vm.cancel = cancel;
     vm.remove = remove;
+    vm.onGroupSelect = onGroupSelect;
+    vm.removeGroup = removeGroup;
 
     activate();
 
     function activate() {
-      if($stateParams.id !== "new")
-        getUser($stateParams.id);
-      else {
-        vm.editing = false;
-        vm.user = {
-          role: vm.roles[0]
-        };
-      }
+      getGroups().then(function () {
+        if($stateParams.id !== "new")
+          getUser($stateParams.id).then(function () {
+            vm.groups = _.differenceBy(vm.groups,vm.user.groups, function (r) {
+              return r.id;
+            });
+          });
+        else {
+          vm.editing = false;
+          vm.user = {
+            role: vm.roles[0]
+          };
+        }
+      });
+    }
+
+    function getGroups() {
+      return dataservice.userGroups
+        .getAll()
+        .then(function (data) {
+          vm.groups = data;
+          return vm.groups;
+        });
     }
 
     function getUser(id) {
-      dataservice.users
+      return dataservice.users
         .getById(id)
         .then(function (data) {
           vm.user = data;
@@ -65,6 +83,17 @@
         .then(function () {
           $state.go("Users");
         });
+    }
+
+    function removeGroup(group) {
+      vm.user.groups = vm.user.groups.filter(function (g) { return g.id != group.id;});
+      vm.groups.push(group);
+    }
+
+    function onGroupSelect(grp) {
+      vm.user.groups.push(grp);
+      vm.groups = vm.groups.filter(function (g) {return g.id != grp.id;});
+      vm.group = "";
     }
   }
 })();

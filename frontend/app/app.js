@@ -9,6 +9,7 @@
     // 3rd Party Modules
     'ui.router',
     'ui.materialize',
+    'ui.bootstrap',
     'LocalStorageModule'
   ]).config(RouteConfig);
 
