@@ -83,6 +83,7 @@ namespace customer_relations_manager.App_Start
             kernel.Bind<ApplicationUserManager>().ToMethod(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
 
 
+            kernel.Bind(typeof (IGenericRepository<>)).To(typeof (GenericRepository<>));
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
             kernel.Bind<IUserGroupRepository>().To<UserGroupRepository>();
         }        
