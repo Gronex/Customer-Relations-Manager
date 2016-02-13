@@ -110,6 +110,7 @@
     <Compile Include="Controllers\ActivitesControllerTest.cs" />
     <Compile Include="Controllers\UsersControllerTest.cs" />
     <Compile Include="Controllers\UsersGroupControllerTest.cs" />
+    <Compile Include="Repositories\GenericRepositoryTest.cs" />
     <Compile Include="Repositories\UserGroupRepositoryTest.cs" />
     <Compile Include="Sanity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

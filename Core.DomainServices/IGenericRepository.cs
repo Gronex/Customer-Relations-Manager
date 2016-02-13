@@ -19,8 +19,8 @@ namespace Core.DomainServices
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="orderBy"></param>
-        /// <param name="page"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page">User with Page size, requires orderby to be set</param>
+        /// <param name="pageSize">used with page, requires orderby to be set</param>
         /// <returns></returns>
         IQueryable<T> Get(
             Expression<Func<T, bool>> filter = null,
