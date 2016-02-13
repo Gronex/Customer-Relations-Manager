@@ -13,10 +13,12 @@ namespace Infrastructure.DataAccess
     public class UserGroupRepository : IUserGroupRepository
     {
         private readonly ApplicationContext _context;
+        private readonly IGenericRepository<UserGroup> _repo;
 
-        public UserGroupRepository(ApplicationContext context)
+        public UserGroupRepository(ApplicationContext context, IGenericRepository<UserGroup> repo)
         {
             _context = context;
+            _repo = repo;
         }
 
         public IQueryable<UserGroup> GetAll()
@@ -26,35 +28,25 @@ namespace Infrastructure.DataAccess
 
         public UserGroup GetById(int id)
         {
-            return _context.UserGroups.SingleOrDefault(ug => ug.Id == id);
+            return _repo.GetByKey(id);
         }
 
         public UserGroup Create(UserGroup group)
         {
-            var dbGroup = _context.UserGroups.Add(group);
-
-            return dbGroup;
+            return _context.UserGroups.Add(group);
         }
 
         public UserGroup Update(int id, UserGroup group)
         {
-            var dbGroup = _context.UserGroups.SingleOrDefault(ug => ug.Id == id);
-            if (dbGroup == null) return null;
-            dbGroup.Name = group.Name;
-            
-            _context.Entry(dbGroup).Property(g => g.Name).IsModified = true;
-
-            return dbGroup;
+            return _repo.Update(ug =>
+            {
+                ug.Name = group.Name;
+            }, id);
         }
 
         public void Delete(int id)
         {
-            var dbGroup = GetById(id);
-            if (dbGroup == null) return;
-
-            if (_context.Entry(dbGroup).State == EntityState.Detached)
-                _context.UserGroups.Attach(dbGroup);
-            _context.UserGroups.Remove(dbGroup);
+            _repo.DeleteByKey(id);
         }
     }
 }

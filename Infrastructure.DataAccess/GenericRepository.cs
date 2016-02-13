@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using Core.DomainModels.UserGroups;
 using Core.DomainServices;
 
 namespace Infrastructure.DataAccess
@@ -54,19 +57,15 @@ namespace Infrastructure.DataAccess
             _dbSet.Remove(entity);
         }
         
-        public T Update(Func<T, T> updateFunction, params object[] key)
+        public T Update(Action<T> updateFunction, params object[] key)
         {
             var dbEntity = _dbSet.Find(key);
             if (dbEntity == null) return null;
 
-            var updated = updateFunction(dbEntity);
-
-            foreach(var prop in typeof(T).GetProperties().Where(p => p.Name != "Id"))
-            {
-                _context.Entry(updated).Property(prop.Name).IsModified = true;
-            }
-
-            return updated;
+            updateFunction(dbEntity);
+            _context.Entry(dbEntity).State = EntityState.Modified;
+            
+            return dbEntity;
         }
 
         private IQueryable<T> FilterLogic(

@@ -49,7 +49,7 @@ namespace Infrastructure.DataAccess
         {
             // The DateTime type in .NET has the same range and precision as datetime2 in SQL Server.
             // Configure DateTime type to use SQL server datetime2 instead.
-            //TODO: re-add after testing
+            // TODO: Cannot be there when testing 
             modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
 
             // Multi column keys

@@ -31,7 +31,7 @@ namespace UnitTests.Repositories
                 new UserGroup { Name = "Test Group5" }
             });
             _context.SaveChanges();
-            _repo = new UserGroupRepository(_context);
+            _repo = new UserGroupRepository(_context, new GenericRepository<UserGroup>(_context));
         }
 
         [Fact]
