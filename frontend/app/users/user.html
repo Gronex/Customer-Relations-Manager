@@ -47,3 +47,21 @@
     </button>{{group.name}}
   </li>
 </ul>
+
+<form class="col s12">
+  <div class="row">
+    <div input-field class="col s2">
+      <input type="number" ng-minlength="4" min="2000" ng-model="vm.goal.year">
+      <label>Year</label>
+    </div>
+    <div input-field class="col s1">
+      <input type="number" max="12" ng-minlength="1" min="1" ng-model="vm.goal.month">
+      <label>Month</label>
+    </div>
+    <div input-field class="col s4">
+      <input min="0" type="number" ng-model="vm.goal.goal">
+      <label>Goal</label>
+    </div>
+    <button ng-click="vm.addGoal()" type="submit" class="btn-floating btn-large waves-effect waves-light green"><i class="material-icons">add</i></button>
+  </div>
+</form>

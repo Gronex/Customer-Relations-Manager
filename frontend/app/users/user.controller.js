@@ -8,20 +8,30 @@
   User.$inject = ['dataservice', "$log", "$stateParams", '$state'];
   function User(dataservice, $log, $stateParams, $state){
     var vm = this;
+
+
     vm.user = {};
     vm.roles = ["Standard", "Executive", "Super"];
     vm.editing = true;
     vm.groups = [];
+    vm.goal = {};
+    vm.goals = [];
 
     vm.save = save;
     vm.cancel = cancel;
     vm.remove = remove;
     vm.onGroupSelect = onGroupSelect;
     vm.removeGroup = removeGroup;
+    vm.addGoal = addGoal;
 
     activate();
 
     function activate() {
+      resetGoal();
+      if($stateParams.id !== "new"){
+        getUserGoals($stateParams.id);
+      }
+
       getGroups().then(function () {
         if($stateParams.id !== "new")
           getUser($stateParams.id).then(function () {
@@ -94,6 +104,28 @@
       vm.user.groups.push(grp);
       vm.groups = vm.groups.filter(function (g) {return g.id != grp.id;});
       vm.group = "";
+    }
+
+    function getUserGoals(id) {
+      dataservice.goals.getAll({userId: id})
+        .then(function (data) {
+          vm.goals = data;
+          return vm.goals;
+        });
+    }
+
+    function addGoal() {
+      console.log(vm.goal);
+      resetGoal();
+    }
+
+    function resetGoal() {
+      var today = new Date();
+      vm.goal = {
+        month: today.getMonth()+1,
+        year: today.getFullYear(),
+        goal: 0
+      };
     }
   }
 })();
