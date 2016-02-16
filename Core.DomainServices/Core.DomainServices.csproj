@@ -61,6 +61,7 @@
     <Compile Include="IGenericRepository.cs" />
     <Compile Include="Repositories\IActivityRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Repositories\IGoalRepository.cs" />
     <Compile Include="Repositories\IUserGroupRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -16,14 +16,15 @@ namespace customer_relations_manager.App_Start
         {
             var config = new MapperConfiguration(cfg =>
             {
+                // Plain maps are just done
+                cfg.CreateMissingTypeMaps = true;
+
                 cfg.CreateMap<User, UserViewModel>()
                     .ForMember(vm => vm.Groups, o => o.MapFrom(u => u.Groups.Select(g => g.UserGroup)))
                     .ReverseMap()
                     .ForMember(u => u.UserName, o => o.MapFrom(vm => vm.Email));
                 cfg.CreateMap<User, UserOverviewViewModel>().ReverseMap()
                     .ForMember(u => u.UserName, o => o.MapFrom(vm => vm.Email));
-
-                cfg.CreateMap<UserGroup, UserGroupViewModel>().ReverseMap();
             });
 
             return config;

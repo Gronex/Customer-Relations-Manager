@@ -20,6 +20,12 @@ namespace customer_relations_manager
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            routes.MapHttpRoute(
+                name: "UserApi",
+                routeTemplate: "api/users/{userId}/{controller}/{id}",
+                defaults: new {id = RouteParameter.Optional }
+            );
         }
     }
 }
