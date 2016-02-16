@@ -23,6 +23,7 @@
     vm.onGroupSelect = onGroupSelect;
     vm.removeGroup = removeGroup;
     vm.addGoal = addGoal;
+    vm.removeGoal = removeGoal;
 
     activate();
 
@@ -42,7 +43,8 @@
         else {
           vm.editing = false;
           vm.user = {
-            role: vm.roles[0]
+            role: vm.roles[0],
+            groups: []
           };
         }
       });
@@ -109,14 +111,30 @@
     function getUserGoals(id) {
       dataservice.goals.getAll({userId: id})
         .then(function (data) {
-          vm.goals = data;
+          vm.goals = _.orderBy(data, ['year', 'month']);
           return vm.goals;
         });
     }
 
     function addGoal() {
-      console.log(vm.goal);
+      vm.goal.errMsg = undefined;
+      dataservice.goals.create(vm.goal, {userId: $stateParams.id}).
+        then(function (data) {
+          vm.goals.push(data);
+          vm.goals = _.orderBy(vm.goals, ['year', 'month']);
+        }, function (err) {
+          if(err.status === 409)
+            vm.goal.errMsg = "For a single user there can only be one goal per month";
+        });
       resetGoal();
+    }
+
+    function removeGoal(goal) {
+      dataservice.goals
+        .remove(goal.id, {userId: $stateParams.id})
+        .then(function () {
+          vm.goals = vm.goals.filter(function (g) { return g.id != goal.id;});
+        });
     }
 
     function resetGoal() {

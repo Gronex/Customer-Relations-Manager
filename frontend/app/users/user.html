@@ -2,13 +2,15 @@
 <h1 ng-if="!vm.editing">Creating new user</h1>
 
 <form class="col s12">
-  <div input-field>
-    <input type="text" ng-model="vm.user.firstName">
-    <label>First Name</label>
-  </div>
-  <div input-field>
-    <input type="text" ng-model="vm.user.lastName">
-    <label>Last Name</label>
+  <div class="row">
+    <div input-field class="col s6">
+      <input type="text" ng-model="vm.user.firstName">
+      <label>First Name</label>
+    </div>
+    <div input-field class="col s6">
+      <input type="text" ng-model="vm.user.lastName">
+      <label>Last Name</label>
+    </div>
   </div>
   <div input-field>
     <input ng-disabled="vm.editing" type="text" ng-model="vm.user.email">
@@ -48,20 +50,62 @@
   </li>
 </ul>
 
-<form class="col s12">
-  <div class="row">
-    <div input-field class="col s2">
-      <input type="number" ng-minlength="4" min="2000" ng-model="vm.goal.year">
-      <label>Year</label>
-    </div>
-    <div input-field class="col s1">
-      <input type="number" max="12" ng-minlength="1" min="1" ng-model="vm.goal.month">
-      <label>Month</label>
-    </div>
-    <div input-field class="col s4">
-      <input min="0" type="number" ng-model="vm.goal.goal">
-      <label>Goal</label>
-    </div>
-    <button ng-click="vm.addGoal()" type="submit" class="btn-floating btn-large waves-effect waves-light green"><i class="material-icons">add</i></button>
+<button ng-disabled="!vm.editing" class="waves-effect waves-light btn modal-trigger" modal href="#goalModal">User goals</button>
+
+<div id="goalModal" class="modal">
+  <div class="modal-content">
+    <h2>Goals for {{vm.user.name}}</h2>
+    <p class="red-text text-darken-2" ng-if="vm.goal.errMsg">
+      {{vm.goal.errMsg}}
+    </p>
+    <form class="col s12">
+      <div class="row">
+        <div input-field class="col s2">
+          <input type="number" ng-minlength="4" min="2000" ng-model="vm.goal.year">
+          <label>Year</label>
+        </div>
+        <div input-field class="col s1">
+          <input type="number" max="12" ng-minlength="1" min="1" ng-model="vm.goal.month">
+          <label>Month</label>
+        </div>
+        <div input-field class="col s4">
+          <input min="0" type="number" ng-model="vm.goal.goal">
+          <label>Goal</label>
+        </div>
+        <button ng-click="vm.addGoal()" type="submit" class="btn-floating btn-large waves-effect waves-light green"><i class="material-icons">add</i></button>
+      </div>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <td>Year</td>
+          <td>Month</td>
+          <td>Goal</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="goal in vm.goals">
+          <td>
+            {{goal.year}}
+          </td>
+          <td>
+            {{goal.month}}
+          </td>
+          <td>
+            {{goal.goal}}
+          </td>
+          <td>
+            <button
+              class="btn-floating btn-small waves-effect waves-light red"
+              ng-click="vm.removeGoal(goal)">
+              <i class="material-icons">remove</i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</form>
+  <div class="modal-footer">
+    <button class="btn modal-action modal-close waves-effect waves-green">Close</button>
+  </div>
+</div>

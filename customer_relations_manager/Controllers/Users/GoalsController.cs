@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -7,6 +8,7 @@ using customer_relations_manager.ViewModels.Goal;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers.Users
 {
@@ -58,7 +60,14 @@ namespace customer_relations_manager.Controllers.Users
             if(dbData == null)
                 return NotFound();
 
-            _uow.Save();
+            try
+            {
+                _uow.Save();
+            }
+            catch (DuplicateKeyException)
+            {
+                return Duplicate(model);
+            }
             return Created(dbData.Id.ToString(), _mapper.Map<GoalViewModel>(dbData));
         }
 
@@ -72,8 +81,14 @@ namespace customer_relations_manager.Controllers.Users
             var dbData = _repo.Update(userId, id, data);
             if (dbData == null)
                 return NotFound();
-
-            _uow.Save();
+            try
+            {
+                _uow.Save();
+            }
+            catch (DuplicateKeyException)
+            {
+                return Duplicate(model);
+            }
             return Ok(_mapper.Map<GoalViewModel>(dbData));
         }
         
