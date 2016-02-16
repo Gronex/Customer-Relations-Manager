@@ -6,13 +6,16 @@
   dataservice.$inject = ["$http", '$q', '$log', 'localStorageService'];
   function dataservice($http, $q, $log, localStorageService) {
 
+    var pathRegex = /\{(.*?)\}/g;
+
     return {
       configToken: configToken,
 
       login: login,
 
       users: createResource("/api/users"),
-      userGroups: createResource("/api/usergroups")
+      userGroups: createResource("/api/usergroups"),
+      goals: createResource("/api/users/{userId}/goals")
     };
 
     function configToken(token) {
@@ -50,29 +53,38 @@
         remove:   remove
       };
 
-      function getAll() {
-        return $http.get(url)
+      function getAll(args) {
+        return $http.get(getUrl(url, args))
           .then(returnData, handleError);
       }
 
-      function getById(id) {
-        return $http.get(url + "/" + id)
+      function getById(id, args) {
+        return $http.get(getUrl(url, args) + "/" + id)
           .then(returnData, handleError);
       }
 
-      function create(data) {
-        return $http.post(url, data)
+      function create(data, args) {
+        return $http.post(getUrl(url, args), data)
           .then(returnData, handleError);
       }
 
-      function update(id, data) {
-        return $http.put(url + "/" + id, data)
+      function update(id, data, args) {
+        return $http.put(getUrl(url, args) + "/" + id, data)
           .then(returnData, handleError);
       }
 
-      function remove(id) {
-        return $http.delete(url + "/" + id)
+      function remove(id, args) {
+        return $http.delete(getUrl(url, args) + "/" + id)
           .then(returnData, handleError);
+      }
+
+      function getUrl(urlToUpdate, args) {
+        if(!pathRegex.test(urlToUpdate)) return urlToUpdate;
+
+        return urlToUpdate.replace(pathRegex, function (match, key) {
+          return args[key];
+        });
+
       }
     }
 
