@@ -31,6 +31,7 @@
 
     <!-- Services -->
     <script src="view/app/services/dataservice.service.js"></script>
+    <script src="view/app/services/authorization.service.js"></script>
 
     <!-- Directives -->
 
@@ -44,20 +45,25 @@
   </head>
 
   <body ng-app="CRM">
-    <div ng-controller="App">
+    <div ng-controller="App as vm">
       <nav>
         <div class="container nav-wrapper">
           <a href="#" class="brand-logo">IT-minds CRM</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a ui-sref="Users">Users</a></li>
             <li><a ui-sref="UserGroups">Groups</a></li>
-            <li><a ui-sref="Login">Log in</a></li>
+            <li ng-if="!vm.user"><a ui-sref="Login">Log in</a></li>
+            <li ng-if="vm.user"><a class="dropdown-button" data-activates="UserDropdown" dropdown>{{vm.user.name}}<i class="material-icons right">arrow_drop_down</i></a></li>
           </ul>
         </div>
       </nav>
       <div class="container">
         <div ui-view></div>
       </div>
+      <!-- Dropdown Structure -->
+      <ul id="UserDropdown" class="dropdown-content">
+        <li><a ng-click="vm.logout()">LogOut</a></li>
+      </ul>
     </div>
   </body>
 </html>

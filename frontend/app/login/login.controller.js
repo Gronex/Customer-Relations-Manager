@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('Login', Login);
 
-  Login.$inject = ['dataservice', '$state'];
-  function Login(dataservice, $state){
+  Login.$inject = ['dataservice', 'authorization', '$state'];
+  function Login(dataservice, authorization, $state){
     var vm = this;
     vm.userName = "";
     vm.password = "";

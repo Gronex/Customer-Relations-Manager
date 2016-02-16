@@ -3,30 +3,18 @@
     .module('CRM')
     .factory('dataservice', dataservice);
 
-  dataservice.$inject = ["$http", '$q', '$log', 'localStorageService'];
-  function dataservice($http, $q, $log, localStorageService) {
+  dataservice.$inject = ["$http", '$q', '$log', 'authorization'];
+  function dataservice($http, $q, $log, authorization) {
 
     var pathRegex = /\{(.*?)\}/g;
 
     return {
-      configToken: configToken,
-
       login: login,
 
       users: createResource("/api/users"),
       userGroups: createResource("/api/usergroups"),
       goals: createResource("/api/users/{userId}/goals")
     };
-
-    function configToken(token) {
-      if(!token){
-        token = localStorageService.get("token");
-        if(token === undefined) return false;
-        $log.info("User loaded");
-      }
-      $http.defaults.headers.common.Authorization = "Bearer " + token;
-      return true;
-    }
 
     function login(userName, password) {
       return $http({
@@ -39,8 +27,8 @@
         }),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function (response) {
-        localStorageService.set("token", response.data["access_token"]);
-        configToken(response.data["access_token"]);
+        authorization.configToken(response.data["access_token"]);
+        return authorization.configUser(response.data);
       });
     }
 

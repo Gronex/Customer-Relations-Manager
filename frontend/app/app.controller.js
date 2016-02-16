@@ -5,14 +5,24 @@
     .module('CRM')
     .controller('App', App);
 
-  App.$inject = ['dataservice'];
-  function App(dataservice){
-  //  var vm = this;
+  App.$inject = ['authorization'];
+  function App(authorization){
+    var vm = this;
+
+    vm.user;
+    vm.logout = logout;
 
     activate();
 
     function activate() {
-      dataservice.configToken();
+      if(authorization.configToken()){
+        vm.user = authorization.getUser();
+      }
+    }
+
+    function logout() {
+      authorization.logout();
+      vm.user = undefined;
     }
 
   }
