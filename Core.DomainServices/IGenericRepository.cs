@@ -55,6 +55,12 @@ namespace Core.DomainServices
         void DeleteByKey(params object[] key);
 
         /// <summary>
+        /// Removes single entity that matches selector
+        /// </summary>
+        /// <param name="selector">function used in single or default</param>
+        void DeleteBy(Expression<Func<T, bool>> selector);
+
+        /// <summary>
         /// Updates a model in the database
         /// </summary>
         /// <param name="updateFunction">A function updating the model, 
@@ -62,5 +68,14 @@ namespace Core.DomainServices
         /// <param name="key">Key to use for finding the element in the database</param>
         /// <returns>The updated entity, or null if it was not found</returns>
         T Update(Action<T> updateFunction, params object[] key);
+
+        /// <summary>
+        /// Updates a model in the database
+        /// </summary>
+        /// <param name="updateFunction">A function updating the model, 
+        /// taking the database model as the argument</param>
+        /// <param name="selector">selector to for finding the single element in the database</param>
+        /// <returns>The updated entity, or null if it was not found</returns>
+        T UpdateBy(Action<T> updateFunction, Expression<Func<T, bool>> selector);
     }
 }

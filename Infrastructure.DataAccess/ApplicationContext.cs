@@ -34,6 +34,7 @@ namespace Infrastructure.DataAccess
         
         public DbSet<Opportunity> Opportunities { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
+        public DbSet<ProductionGoal> Goals { get; set; }
         public DbSet<OpportunityCategory> OpportunityCategories { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityCategory> ActivityCategories { get; set; }

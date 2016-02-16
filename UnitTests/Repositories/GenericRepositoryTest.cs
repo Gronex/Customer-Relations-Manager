@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Core.DomainModels.UserGroups;
 using Core.DomainServices;
 using Infrastructure.DataAccess;
+using Infrastructure.DataAccess.Repositories;
 using Xunit;
 
 namespace UnitTests.Repositories

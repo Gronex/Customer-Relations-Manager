@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core.DomainModels.UserGroups;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 
-namespace Infrastructure.DataAccess
+namespace Infrastructure.DataAccess.Repositories
 {
     public class UserGroupRepository : IUserGroupRepository
     {

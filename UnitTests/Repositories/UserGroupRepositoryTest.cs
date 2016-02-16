@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.DomainModels.UserGroups;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess;
+using Infrastructure.DataAccess.Repositories;
 using NSubstitute;
 using Xunit;
 
@@ -45,7 +46,7 @@ namespace UnitTests.Repositories
         }
 
         [Fact]
-        public void GetAllReturnsFullTrustAssembliesSectionList()
+        public void GetAllReturnsFullList()
         {
             var result = _repo.GetAll();
             
