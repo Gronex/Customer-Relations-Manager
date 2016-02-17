@@ -33,14 +33,8 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Opportunity Create(Opportunity model, string userName)
         {
-            if (model.Owner == null)
-            {
-                model.Owner = _context.Users.SingleOrDefault(u => u.UserName == userName);
-            }
-            else
-            {
-                model.Owner = _context.Users.SingleOrDefault(u => u.Id == model.Owner.Id);
-            }
+            model.Owner = model.Owner == null ? _context.Users.SingleOrDefault(u => u.UserName == userName) 
+                : _context.Users.SingleOrDefault(u => u.Id == model.Owner.Id);
 
             if (model.Owner == null)  return null;
 
@@ -87,15 +81,26 @@ namespace Infrastructure.DataAccess.Repositories
                 o.Name = model.Name;
                 o.Description = model.Description;
                 o.Amount = model.Amount;
-                o.Category = model.Category;
-                o.Company = model.Company;
                 o.Department = o.Department;
-                o.EndDate = model.EndDate.Date;
-                o.StartDate = model.StartDate.Date;
-                o.ExpectedClose = model.ExpectedClose.Date;
-                o.Owner = model.Owner;
+                o.EndDate = model.EndDate;
+                o.StartDate = model.StartDate;
+                o.ExpectedClose = model.ExpectedClose;
                 o.HourlyPrice = model.HourlyPrice;
-                o.Stage = model.Stage;
+
+                if (model.Company.Id != o.CompanyId)
+                {
+                    o.Company = model.Company.Id > 0 
+                        ? _context.Companies.SingleOrDefault(c => c.Id == model.Company.Id) 
+                        : _context.Companies.Add(model.Company);
+                }
+
+                if (model.Owner.Id != o.OwnerId)
+                {
+                    o.Owner = _context.Users.SingleOrDefault(u => u.Id == model.Owner.Id);
+                }
+
+                // o.Category = model.Category;
+                //o.Stage = model.Stage;
             }, id);
         }
 
