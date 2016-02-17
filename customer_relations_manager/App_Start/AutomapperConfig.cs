@@ -4,8 +4,9 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using customer_relations_manager.ViewModels;
-using customer_relations_manager.ViewModels.Goal;
+using customer_relations_manager.ViewModels.Company;
 using customer_relations_manager.ViewModels.User;
+using Core.DomainModels.Customers;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 
@@ -27,6 +28,8 @@ namespace customer_relations_manager.App_Start
                 
                 cfg.CreateMap<UserGroup, UserGroupViewModel>().ReverseMap();
                 cfg.CreateMap<ProductionGoal, GoalViewModel>().ReverseMap();
+                cfg.CreateMap<Company, CompanyViewModel>().ReverseMap();
+                cfg.CreateMap<Company, CompanyOverviewViewModel>().ReverseMap();
             });
 
             return config;

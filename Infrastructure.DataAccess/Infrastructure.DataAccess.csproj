@@ -65,6 +65,7 @@
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateKeyException.cs" />
+    <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Migrations\201602091102004_Initial.cs" />
     <Compile Include="Migrations\201602091102004_Initial.Designer.cs">

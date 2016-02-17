@@ -9,7 +9,6 @@ using customer_relations_manager.App_Start;
 using customer_relations_manager.Controllers;
 using customer_relations_manager.Controllers.Users;
 using customer_relations_manager.ViewModels;
-using customer_relations_manager.ViewModels.Goal;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
