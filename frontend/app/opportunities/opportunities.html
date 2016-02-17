@@ -1,0 +1,31 @@
+<h1>Opportunities</h1>
+
+<table class="striped">
+  <thead>
+    <tr>
+      <td>Name</td>
+      <td>Company</td>
+      <td>Owner</td>
+      <td>Start</td>
+      <td>End</td>
+      <td>Close</td>
+      <td>Amount</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="opportunity in vm.opportunities">
+      <td>{{opportunity.name}}</td>
+      <td>{{opportunity.companyName}}</td>
+      <td>{{opportunity.ownerName}}</td>
+      <td>{{opportunity.startDate}}</td>
+      <td>{{opportunity.endDate}}</td>
+      <td>{{opportunity.expectedClose}}</td>
+      <td>{{opportunity.amount}}</td>
+      <td>
+        <a ui-sref="Home" class="btn-floating red">
+          <i class="material-icons">mode_edit</i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

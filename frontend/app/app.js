@@ -53,6 +53,12 @@
         controller: "Company",
         controllerAs: 'vm'
       })
+      .state("Opportunities", {
+        url: "/opportunities",
+        templateUrl: "view/app/opportunities/opportunities.html",
+        controller: "Opportunities",
+        controllerAs: 'vm'
+      })
       .state("Login", {
         url: "/login",
         templateUrl: "view/app/login/login.html",

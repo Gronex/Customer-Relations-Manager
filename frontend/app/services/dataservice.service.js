@@ -14,7 +14,8 @@
       users: createResource("/api/users"),
       userGroups: createResource("/api/usergroups"),
       goals: createResource("/api/users/{userId}/goals"),
-      companies: createResource("/api/companies")
+      companies: createResource("/api/companies"),
+      opportunities: createResource("api/opportunities")
     };
 
     function login(userName, password) {
