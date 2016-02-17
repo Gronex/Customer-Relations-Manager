@@ -21,7 +21,8 @@
     // Now set up the states
     $stateProvider
       .state('Home', {
-        url: "/"
+        url: "/",
+        template: "<h1>Hello world</h1>"
       })
       .state('Users', {
         url: "/users",
