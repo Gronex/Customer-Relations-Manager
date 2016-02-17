@@ -11,6 +11,7 @@ using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize]
     public class CompaniesController : CrmApiController
     {
         private readonly ICompanyRepository _repo;
