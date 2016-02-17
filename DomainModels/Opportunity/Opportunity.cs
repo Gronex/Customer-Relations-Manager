@@ -11,6 +11,10 @@ namespace Core.DomainModels.Opportunity
 {
     public class Opportunity
     {
+        public Opportunity()
+        {
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -47,8 +51,8 @@ namespace Core.DomainModels.Opportunity
         public int StageId { get; set; }
         public virtual Stage Stage { get; set; }
 
-        public virtual ICollection<UserGroupOpportunity> UserGroups { get; set; }
-        public virtual ICollection<OpportunityComment> Comments { get; set; }
+        public virtual ICollection<UserGroupOpportunity> UserGroups { get; set; } = new HashSet<UserGroupOpportunity>();
+        public virtual ICollection<OpportunityComment> Comments { get; set; } = new HashSet<OpportunityComment>();
 
     }
 }

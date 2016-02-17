@@ -63,6 +63,7 @@
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Repositories\ICompanyRepository.cs" />
     <Compile Include="Repositories\IGoalRepository.cs" />
+    <Compile Include="Repositories\IOpportunityRepository.cs" />
     <Compile Include="Repositories\IUserGroupRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

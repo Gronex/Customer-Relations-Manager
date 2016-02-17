@@ -5,8 +5,10 @@ using System.Web;
 using AutoMapper;
 using customer_relations_manager.ViewModels;
 using customer_relations_manager.ViewModels.Company;
+using customer_relations_manager.ViewModels.Opportunity;
 using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.Customers;
+using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 
@@ -30,6 +32,13 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<ProductionGoal, GoalViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyOverviewViewModel>().ReverseMap();
+                cfg.CreateMap<Opportunity, OpportunityViewModel>()
+                    .ForMember(vm => vm.Groups, c => c.MapFrom(o => o.UserGroups.Select(ug => ug.UserGroup)))
+                    .ReverseMap()
+                    .ForMember(vm => vm.StartDate, c => c.MapFrom(o => o.StartDate.Value.Date))
+                    .ForMember(vm => vm.EndDate, c => c.MapFrom(o => o.EndDate.Value.Date))
+                    .ForMember(vm => vm.ExpectedClose, c => c.MapFrom(o => o.ExpectedClose.Value.Date));
+                cfg.CreateMap<Opportunity, OpportunityOverviewViewMode>().ReverseMap();
             });
 
             return config;

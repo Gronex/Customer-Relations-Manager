@@ -89,6 +89,7 @@ namespace customer_relations_manager.App_Start
             kernel.Bind<IUserGroupRepository>().To<UserGroupRepository>();
             kernel.Bind<IGoalRepository>().To<GoalRepository>();
             kernel.Bind<ICompanyRepository>().To<CompanyRepository>();
+            kernel.Bind<IOpportunityRepository>().To<OpportunityRepository>();
         }        
     }
 }
