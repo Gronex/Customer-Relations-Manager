@@ -41,6 +41,8 @@
     <script src="view/app/users/user.controller.js"></script>
     <script src="view/app/login/login.controller.js"></script>
     <script src="view/app/user-groups/user-groups.controller.js"></script>
+    <script src="view/app/companies/companies.controller.js"></script>
+    <script src="view/app/companies/company.controller.js"></script>
 
   </head>
 
@@ -50,6 +52,7 @@
         <div class="container nav-wrapper">
           <a href="#" class="brand-logo">IT-minds CRM</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a ui-sref="Companies">Companies</a></li>
             <li><a ui-sref="Users">Users</a></li>
             <li><a ui-sref="UserGroups">Groups</a></li>
             <li ng-if="!vm.user"><a ui-sref="Login">Log in</a></li>

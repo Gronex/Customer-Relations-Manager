@@ -13,7 +13,8 @@
 
       users: createResource("/api/users"),
       userGroups: createResource("/api/usergroups"),
-      goals: createResource("/api/users/{userId}/goals")
+      goals: createResource("/api/users/{userId}/goals"),
+      companies: createResource("/api/companies")
     };
 
     function login(userName, password) {

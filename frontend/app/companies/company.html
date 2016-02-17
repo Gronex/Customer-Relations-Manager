@@ -1,0 +1,36 @@
+<h1 ng-if="vm.editing">Editing {{vm.company.name}}</h1>
+<h1 ng-if="!vm.editing">Create new Company</h1>
+
+<form class="col s12" ng-submit="vm.save()">
+  <div input-field>
+    <input type="text" ng-model="vm.company.name" required>
+    <label>Name</label>
+  </div>
+  <div input-field>
+    <input type="text" ng-model="vm.company.address">
+    <label>Address</label>
+  </div>
+  <div class="row">
+    <div class="col s6" input-field>
+      <input type="text" ng-model="vm.company.city">
+      <label>City</label>
+    </div>
+    <div class="col s6" input-field>
+      <input type="number" min="0" ng-model="vm.company.postalCode">
+      <label>Postal code</label>
+    </div>
+  </div>
+  <div input-field>
+    <input type="text" ng-model="vm.company.country">
+    <label>Country</label>
+  </div>
+  <div input-field>
+    <input type="text" ng-model="vm.company.webSite">
+    <label>Website</label>
+  </div>
+  <button class="btn waves-effect wave-light" type="submit"><i class="material-icons right">save</i>Save</button>
+  <a ui-sref="Companies" class="btn waves-effect wave-light"><i class="material-icons right">arrow_back</i>Back</a>
+  <button ng-if="vm.editing" class="btn waves-effect wave-light red right" type="button" ng-click="vm.remove()">
+    <i class="material-icons right">remove_circle_outline</i>Remove
+  </button>
+</form>

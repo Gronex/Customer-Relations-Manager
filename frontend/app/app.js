@@ -41,6 +41,18 @@
         controller: "UserGroups",
         controllerAs: 'vm'
       })
+      .state("Companies", {
+        url: "/companies",
+        templateUrl: "view/app/companies/companies.html",
+        controller: "Companies",
+        controllerAs: 'vm'
+      })
+      .state("Company", {
+        url: "/companies/{id}",
+        templateUrl: "view/app/companies/company.html",
+        controller: "Company",
+        controllerAs: 'vm'
+      })
       .state("Login", {
         url: "/login",
         templateUrl: "view/app/login/login.html",
