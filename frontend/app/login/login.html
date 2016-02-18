@@ -1,14 +1,12 @@
 <h1>Log in</h1>
-<form class="col s12" novalidate>
-  <div input-field>
-    <input type="email" name="username" ng-model="vm.userName">
+<form ng-submit="vm.login()">
+  <div class="form-group">
     <label>Username</label>
+    <input class="form-control" type="email" name="username" ng-model="vm.userName">
   </div>
-  <div input-field>
-    <input type="password" name="password" ng-model="vm.password">
+  <div class="form-group">
     <label>password</label>
+    <input class="form-control" type="password" name="password" ng-model="vm.password">
   </div>
-  <button type="submit" class="btn waves-effect wave-light" ng-click="vm.login()">Save
-    <i class="material-icons right">send</i>
-  </button>
+  <button type="submit" class="btn btn-success">Sign in <i class="fa fa-sign-in"></i></button>
 </form>
