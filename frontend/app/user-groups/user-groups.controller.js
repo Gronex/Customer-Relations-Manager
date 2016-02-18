@@ -56,8 +56,9 @@
       dataservice.userGroups
         .remove(id)
         .then(function () {
-          vm.groups = [];
-          getGroups();
+          _.remove(vm.stages, function (s) {
+            return s.id == id;
+          });
         });
     }
 

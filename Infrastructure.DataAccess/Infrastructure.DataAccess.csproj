@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201602181404338_OverridingPercentageOnOpportunity.Designer.cs">
       <DependentUpon>201602181404338_OverridingPercentageOnOpportunity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602181436099_StageNameUniqueue.cs" />
+    <Compile Include="Migrations\201602181436099_StageNameUniqueue.Designer.cs">
+      <DependentUpon>201602181436099_StageNameUniqueue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateKeyException.cs" />
@@ -119,6 +123,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602181404338_OverridingPercentageOnOpportunity.resx">
       <DependentUpon>201602181404338_OverridingPercentageOnOpportunity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602181436099_StageNameUniqueue.resx">
+      <DependentUpon>201602181436099_StageNameUniqueue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

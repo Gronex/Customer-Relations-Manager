@@ -42,6 +42,12 @@
         controller: "UserGroups",
         controllerAs: 'vm'
       })
+      .state("Stages", {
+        url: "/stages",
+        templateUrl: "view/app/stages/stages.html",
+        controller: "Stages",
+        controllerAs: 'vm'
+      })
       .state("Companies", {
         url: "/companies",
         templateUrl: "view/app/companies/companies.html",
