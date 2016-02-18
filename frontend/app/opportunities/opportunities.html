@@ -22,10 +22,12 @@
       <td>{{opportunity.expectedClose}}</td>
       <td>{{opportunity.amount}}</td>
       <td>
-        <a ui-sref="Home" class="btn-floating red">
+        <a ui-sref="Opportunity({id: opportunity.id})" class="btn-floating red">
           <i class="material-icons">mode_edit</i>
         </a>
       </td>
     </tr>
   </tbody>
 </table>
+
+<a ui-sref="Opportunity({id: 'new'})" type="button" class="btn"><i class="material-icons right">add</i>New</a>

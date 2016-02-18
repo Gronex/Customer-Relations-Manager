@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-      .module('CRM')
-      .controller('Opportunities', Opportunities);
+    .module('CRM')
+    .controller('Opportunities', Opportunities);
 
   Opportunities.$inject = ['dataservice'];
 

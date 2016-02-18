@@ -1,4 +1,4 @@
-﻿(function () {
+(function() {
   'use strict';
 
   angular.module('CRM', [
@@ -58,6 +58,12 @@
         url: "/opportunities",
         templateUrl: "view/app/opportunities/opportunities.html",
         controller: "Opportunities",
+        controllerAs: 'vm'
+      })
+      .state("Opportunity", {
+        url: "/opportunities/{id}",
+        templateUrl: "view/app/opportunities/opportunity.html",
+        controller: "Opportunity",
         controllerAs: 'vm'
       })
       .state("Login", {
