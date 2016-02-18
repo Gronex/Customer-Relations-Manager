@@ -20,7 +20,7 @@
 
     function activate() {
       if($stateParams.id !== 'new'){
-        getCompany($stateParams.id)
+        getCompany($stateParams.id);
       }
     }
 

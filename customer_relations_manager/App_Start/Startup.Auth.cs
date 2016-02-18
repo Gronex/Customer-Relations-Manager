@@ -33,7 +33,7 @@ namespace customer_relations_manager
                 AllowInsecureHttp = true
             };
 #if !DEBUG
-            OAuthOptions.AllowInsecureHttp = false;
+            oAuthOptions.AllowInsecureHttp = false;
 #endif
             app.UseOAuthBearerTokens(oAuthOptions);
         }

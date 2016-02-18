@@ -1,36 +1,36 @@
 <h1 ng-if="vm.editing">Editing {{vm.company.name}}</h1>
 <h1 ng-if="!vm.editing">Create new Company</h1>
 
-<form class="col s12" ng-submit="vm.save()">
-  <div input-field>
-    <input type="text" ng-model="vm.company.name" required>
+<form ng-submit="vm.save()">
+  <div class="form-group">
     <label>Name</label>
+    <input class="form-control" type="text" ng-model="vm.company.name" required>
   </div>
-  <div input-field>
-    <input type="text" ng-model="vm.company.address">
+  <div class="form-group">
     <label>Address</label>
+    <input class="form-control" type="text" ng-model="vm.company.address">
   </div>
   <div class="row">
-    <div class="col s6" input-field>
-      <input type="text" ng-model="vm.company.city">
+    <div class="form-group col-sm-6">
       <label>City</label>
+      <input class="form-control" type="text" ng-model="vm.company.city">
     </div>
-    <div class="col s6" input-field>
-      <input type="number" min="0" ng-model="vm.company.postalCode">
+    <div class="form-group col-sm-6">
       <label>Postal code</label>
+      <input class="form-control" type="number" min="0" ng-model="vm.company.postalCode">
     </div>
   </div>
-  <div input-field>
-    <input type="text" ng-model="vm.company.country">
+  <div class="form-group">
     <label>Country</label>
+    <input class="form-control" type="text" ng-model="vm.company.country">
   </div>
-  <div input-field>
-    <input type="text" ng-model="vm.company.webSite">
+  <div class="form-group">
     <label>Website</label>
+    <input class="form-control" type="text" ng-model="vm.company.webSite">
   </div>
-  <button class="btn waves-effect wave-light" type="submit"><i class="material-icons right">save</i>Save</button>
-  <a ui-sref="Companies" class="btn waves-effect wave-light"><i class="material-icons right">arrow_back</i>Back</a>
-  <button ng-if="vm.editing" class="btn waves-effect wave-light red right" type="button" ng-click="vm.remove()">
-    <i class="material-icons right">remove_circle_outline</i>Remove
+  <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
+  <a ui-sref="Companies" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
+  <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
+    Remove <i class="fa fa-trash"></i>
   </button>
 </form>

@@ -1,0 +1,77 @@
+<h1 ng-if="vm.editing">Opportinity {{vm.opportunity.name}}</h1>
+<h1 ng-if="!vm.editing">New Opportunity</h1>
+
+<form ng-submit="vm.save()">
+  <div class="form-group">
+    <label>Name</label>
+    <input class="form-control" type="text" required ng-model="vm.opportunity.name">
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <textarea class="form-control" ng-model="vm.opportunity.description"></textarea>
+  </div>
+  <div class="form-group">
+    <label>Hourly price</label>
+    <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.hourlyPrice">
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label>Role</label>
+      <select
+        class="form-control"
+        ng-model="vm.opportunity.stage"
+        ng-options="stage.name for stage in vm.stages track by stage.id"
+        ng-change="vm.stageSelected()"
+        required>
+      </select>
+    </div>
+    <div class="form-group col-sm-6">
+      <label>Likelihood of close</label>
+      <input class="form-control" type="number" min="0" max="100" ng-model="vm.opportunity.percentage">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Amount</label>
+    <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.amount">
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label>Start date</label>
+      <div class="input-group">
+        <input type="date" class="form-control" is-open="startDate.open" uib-datepicker-popup datepicker-options="{startingDay: 1}" ng-model="vm.opportunity.startDate" required />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="startDate.open = !startDate.open"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </div>
+    </div>
+    <div class="form-group col-sm-6">
+      <label>End date</label>
+      <div class="input-group">
+        <input type="date" class="form-control" is-open="endDate.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.endDate" required />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="endDate.open = !endDate.open"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>company</label>
+    <input class="form-control" disabled type="text" required ng-model="vm.opportunity.company.name"><br>
+    <input type="text" ng-model="vm.company" placeholder="Select company" uib-typeahead="company as company.name for company in vm.companies | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.companySelected($item)">
+  </div>
+  <div class="form-group">
+    <label>Expected close date</label>
+    <div class="input-group">
+      <input type="date" class="form-control" is-open="expectedClose.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.expectedClose" required />
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="expectedClose.open = !expectedClose.open"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
+  <a ui-sref="Opportunities" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
+  <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
+    Remove <i class="fa fa-trash"></i>
+  </button>
+</form>

@@ -11,6 +11,10 @@ namespace Core.DomainModels.Opportunity
 {
     public class Opportunity
     {
+        public Opportunity()
+        {
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -20,11 +24,19 @@ namespace Core.DomainModels.Opportunity
         [Required]
         public string Description { get; set; }
 
+        [Required]
         public double Amount { get; set; }
+        [Required]
         public double HourlyPrice { get; set; }
 
+        [Required]
+        public int Percentage { get; set; }
+
+        [Required]
         public DateTime StartDate { get; set; }
+        [Required]
         public DateTime EndDate { get; set; }
+        [Required]
         public DateTime ExpectedClose { get; set; }
 
         [Required, ForeignKey(nameof(Owner))]
@@ -47,8 +59,8 @@ namespace Core.DomainModels.Opportunity
         public int StageId { get; set; }
         public virtual Stage Stage { get; set; }
 
-        public virtual ICollection<UserGroupOpportunity> UserGroups { get; set; }
-        public virtual ICollection<OpportunityComment> Comments { get; set; }
+        public virtual ICollection<UserGroupOpportunity> UserGroups { get; set; } = new HashSet<UserGroupOpportunity>();
+        public virtual ICollection<OpportunityComment> Comments { get; set; } = new HashSet<OpportunityComment>();
 
     }
 }

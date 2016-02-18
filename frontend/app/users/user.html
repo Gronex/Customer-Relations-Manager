@@ -1,32 +1,32 @@
 <h1 ng-if="vm.editing">Editing  {{vm.user.name}}</h1>
 <h1 ng-if="!vm.editing">Creating new user</h1>
 
-<form class="col s12">
+<form ng-submit="vm.save()">
   <div class="row">
-    <div input-field class="col s6">
-      <input type="text" ng-model="vm.user.firstName">
+    <div class="form-group col-sm-6">
       <label>First Name</label>
+      <input class="form-control" type="text" ng-model="vm.user.firstName">
     </div>
-    <div input-field class="col s6">
-      <input type="text" ng-model="vm.user.lastName">
+    <div class="form-group col-sm-6">
       <label>Last Name</label>
+      <input class="form-control" type="text" ng-model="vm.user.lastName">
     </div>
   </div>
-  <div input-field>
-    <input ng-disabled="vm.editing" type="text" ng-model="vm.user.email">
+  <div class="form-group">
     <label>Email</label>
+    <input class="form-control" ng-disabled="vm.editing" type="text" ng-model="vm.user.email">
   </div>
-  <select ng-model="vm.user.role" material-select>
-    <option ng-repeat="role in vm.roles">{{role}}</option>
-  </select>
-  <button type="button" class="btn waves-effect wave-light" ng-click="vm.save()">Save
-    <i class="material-icons right">save</i>
-  </button>
-  <button type="button" class="btn waves-effect wave-light" ng-click="vm.cancel()">Back
-    <i class="material-icons right">cancel</i>
-  </button>
-  <button ng-if="vm.editing" type="button" class="btn waves-effect wave-light red lighten-2 right" ng-click="vm.remove()">Remove
-    <i class="material-icons right">remove_circle_outline</i>
+  <div class="form-group">
+    <label>Role</label>
+    <select class="form-control" ng-model="vm.user.role" material-select>
+      <option ng-repeat="role in vm.roles">{{role}}</option>
+    </select>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
+  <a ui-sref="Users" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
+  <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
+    Remove <i class="fa fa-trash"></i>
   </button>
 </form>
 
@@ -37,7 +37,6 @@
   typeahead-on-select="vm.onGroupSelect($item)"
   type="text"
   ng-model="vm.group"
-  typeahead-popup-template-url="view/app/components/type-ahead-template.html"
   uib-typeahead="group.name for group in vm.groups | filter:$viewValue | limitTo:8"
   class="form-control">
   <label>Add groups</label>

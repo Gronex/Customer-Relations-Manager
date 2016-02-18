@@ -1,4 +1,4 @@
-﻿(function () {
+(function() {
   'use strict';
 
   angular.module('CRM', [
@@ -7,10 +7,10 @@
     // Custom modules
 
     // 3rd Party Modules
-    'ui.router',
-    'ui.materialize',
     'ui.bootstrap',
-    'LocalStorageModule'
+    'ui.router',
+    'LocalStorageModule',
+    'ngTagsInput'
   ]).config(RouteConfig);
 
   function RouteConfig($stateProvider, $urlRouterProvider) {
@@ -21,7 +21,8 @@
     // Now set up the states
     $stateProvider
       .state('Home', {
-        url: "/"
+        url: "/",
+        template: "<h1>Hello world</h1>"
       })
       .state('Users', {
         url: "/users",
@@ -51,6 +52,18 @@
         url: "/companies/{id}",
         templateUrl: "view/app/companies/company.html",
         controller: "Company",
+        controllerAs: 'vm'
+      })
+      .state("Opportunities", {
+        url: "/opportunities",
+        templateUrl: "view/app/opportunities/opportunities.html",
+        controller: "Opportunities",
+        controllerAs: 'vm'
+      })
+      .state("Opportunity", {
+        url: "/opportunities/{id}",
+        templateUrl: "view/app/opportunities/opportunity.html",
+        controller: "Opportunity",
         controllerAs: 'vm'
       })
       .state("Login", {
