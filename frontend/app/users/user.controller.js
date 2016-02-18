@@ -18,7 +18,6 @@
     vm.goals = [];
 
     vm.save = save;
-    vm.cancel = cancel;
     vm.remove = remove;
     vm.onGroupSelect = onGroupSelect;
     vm.removeGroup = removeGroup;
@@ -83,10 +82,6 @@
             $state.go("Users");
           });
       }
-    }
-
-    function cancel() {
-      $state.go("Users");
     }
 
     function remove() {

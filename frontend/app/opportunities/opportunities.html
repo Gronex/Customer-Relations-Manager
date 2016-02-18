@@ -1,33 +1,30 @@
 <h1>Opportunities</h1>
 
-<table class="striped">
-  <thead>
-    <tr>
-      <td>Name</td>
-      <td>Company</td>
-      <td>Owner</td>
-      <td>Start</td>
-      <td>End</td>
-      <td>Close</td>
-      <td>Amount</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="opportunity in vm.opportunities">
-      <td>{{opportunity.name}}</td>
-      <td>{{opportunity.companyName}}</td>
-      <td>{{opportunity.ownerName}}</td>
-      <td>{{opportunity.startDate}}</td>
-      <td>{{opportunity.endDate}}</td>
-      <td>{{opportunity.expectedClose}}</td>
-      <td>{{opportunity.amount}}</td>
-      <td>
-        <a ui-sref="Opportunity({id: opportunity.id})" class="btn-floating red">
-          <i class="material-icons">mode_edit</i>
-        </a>
-      </td>
-    </tr>
-  </tbody>
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Company</th>
+    <th>Owner</th>
+    <th>Start</th>
+    <th>End</th>
+    <th>Close</th>
+    <th>Amount</th>
+    <th></th>
+  </tr>
+  <tr ng-repeat="opportunity in vm.opportunities">
+    <td>{{opportunity.name}}</td>
+    <td>{{opportunity.companyName}}</td>
+    <td>{{opportunity.ownerName}}</td>
+    <td>{{opportunity.startDate}}</td>
+    <td>{{opportunity.endDate}}</td>
+    <td>{{opportunity.expectedClose}}</td>
+    <td>{{opportunity.amount}}</td>
+    <td>
+      <a ui-sref="Opportunity({id: opportunity.id})" class="btn btn-primary">
+        <i class="fa fa-pencil-square-o"></i>
+      </a>
+    </td>
+  </tr>
 </table>
 
-<a ui-sref="Opportunity({id: 'new'})" type="button" class="btn"><i class="material-icons right">add</i>New</a>
+<a ui-sref="Opportunity({id: 'new'})" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Create new</a>

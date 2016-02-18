@@ -1,18 +1,17 @@
 <h1>User groups</h1>
 
-<form name="create">
+<form ng-submit="vm.create()">
   <p class="red-text text-darken-2" ng-if="vm.group.errMsg">
     {{vm.group.errMsg}}
   </p>
-  <div input-field>
-    <input data-error="{{vm.group.errMsg}}" required type="text" ng-model="vm.group.name">
+  <div class="form-group">
     <label>Name</label>
+    <input class="form-control" data-error="{{vm.group.errMsg}}" required type="text" ng-model="vm.group.name">
   </div>
-  <button ng-disabled="!create.$valid" type="button" class="btn waves-effect wave-light" ng-click="vm.create()">Create
-    <i class="material-icons right">add</i>
-  </button>
+  <button class="btn btn-primary" type="submit">Create <i class="fa fa-plus"></i></button>
 </form>
 
+<!-- todo: Redo -->
 <ul class="collapsible popout" data-collapsible="accordion" watch>
     <li ng-repeat="group in vm.groups">
         <div class="collapsible-header">

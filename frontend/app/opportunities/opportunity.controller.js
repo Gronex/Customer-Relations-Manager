@@ -15,6 +15,7 @@
     vm.companies = [];
 
     vm.save = save;
+    vm.remove = remove;
 
     activate();
 
@@ -68,6 +69,14 @@
           $state.go("Opportunities");
         });
       }
+    }
+
+    function remove() {
+      dataservice.opportunities
+        .remove($stateParams.id)
+        .then(function () {
+          $state.go("Opportunities");
+        });
     }
   }
 })();
