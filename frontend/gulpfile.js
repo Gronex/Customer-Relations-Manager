@@ -13,39 +13,39 @@ var dest = "../customer_relations_manager";
 var fullDest = dest + "/view";
 
 gulp.task("clean", function () {
-  del([fullDest], {force: true});
+  return del([fullDest], {force: true});
 });
 
-gulp.task("move:js", function () {
+gulp.task("move:js", ["clean"], function () {
   return gulp.src(paths.js, {base: "./"})
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("move:html", function () {
+gulp.task("move:html", ["clean"], function () {
   return gulp
     .src(paths.html, {base: "./"})
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("move:index", function () {
+gulp.task("move:index", ["clean"], function () {
   return gulp
     .src(paths.index, {base: "./"})
     .pipe(gulp.dest(dest));
 });
 
-gulp.task("move:css", function () {
+gulp.task("move:css", ["clean"], function () {
   return gulp
     .src(paths.css, {base: "./"})
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("move:libs", function () {
+gulp.task("move:libs", ["clean"], function () {
   return gulp
     .src(paths.libs, {base: "./"})
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("watch", ["clean", "move"], function () {
+gulp.task("watch", ["build"], function () {
   var everything = paths.js.concat(
     paths.html,
     paths.css,
@@ -53,9 +53,9 @@ gulp.task("watch", ["clean", "move"], function () {
     paths.index
   );
 
-  gulp.watch(everything, ["move"]);
+  gulp.watch(everything, ["build"]);
 });
 
-gulp.task("move", ["move:js", "move:html", "move:css", "move:libs", "move:index"]);
+gulp.task("build", ["move:js", "move:html", "move:css", "move:libs", "move:index"]);
 
-gulp.task("default", ["watch"]);
+gulp.task("default", ['clean', 'watch']);
