@@ -48,6 +48,10 @@ namespace customer_relations_manager.Controllers
             var data = _mapper.Map<Opportunity>(model);
 
             var dbModel = _repo.Create(data, User.Identity.Name);
+
+            if (dbModel == null)
+                return NotFound();
+
             _uow.Save();
             return Created(dbModel.Id.ToString(), _mapper.Map<OpportunityViewModel>(dbModel));
         }

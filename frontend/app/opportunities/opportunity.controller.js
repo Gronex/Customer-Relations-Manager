@@ -13,10 +13,12 @@
 
     vm.opportunity = {};
     vm.companies = [];
+    vm.stages = [];
 
     vm.save = save;
     vm.remove = remove;
     vm.companySelected = companySelected;
+    vm.stageSelected = stageSelected;
 
     activate();
 
@@ -27,7 +29,8 @@
           vm.editing = true;
         });
       }
-      getCompanies();
+      getCompanies(); //TODO: call with query param on search
+      getStages();
     }
 
     function getOpportunity() {
@@ -55,16 +58,14 @@
     function save() {
 
       if(vm.editing){
-        dataservice.opportunities
+        return dataservice.opportunities
         .update($stateParams.id, vm.opportunity)
         .then(function () {
           $state.go("Opportunities");
         });
       } else {
         vm.opportunity.company = vm.companies[0];
-
-
-        dataservice.opportunities
+        return dataservice.opportunities
         .create(vm.opportunity)
         .then(function () {
           $state.go("Opportunities");
@@ -73,7 +74,7 @@
     }
 
     function remove() {
-      dataservice.opportunities
+      return dataservice.opportunities
         .remove($stateParams.id)
         .then(function () {
           $state.go("Opportunities");
@@ -83,6 +84,18 @@
     function companySelected(item) {
       vm.company = undefined;
       vm.opportunity.company = item;
+    }
+
+    function stageSelected() {
+      vm.opportunity.percentage = vm.opportunity.stage.value;
+    }
+
+    function getStages() {
+      return dataservice.stages
+        .getAll()
+        .then(function (data) {
+          vm.stages = data;
+        });
     }
   }
 })();

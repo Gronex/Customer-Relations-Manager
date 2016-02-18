@@ -39,6 +39,7 @@ namespace customer_relations_manager.App_Start
                     .ForMember(vm => vm.EndDate, c => c.MapFrom(o => o.EndDate.Value.Date))
                     .ForMember(vm => vm.ExpectedClose, c => c.MapFrom(o => o.ExpectedClose.Value.Date));
                 cfg.CreateMap<Opportunity, OpportunityOverviewViewMode>().ReverseMap();
+                cfg.CreateMap<Stage, StageViewModel>().ReverseMap();
             });
 
             return config;

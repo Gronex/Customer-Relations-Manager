@@ -24,11 +24,19 @@ namespace Core.DomainModels.Opportunity
         [Required]
         public string Description { get; set; }
 
+        [Required]
         public double Amount { get; set; }
+        [Required]
         public double HourlyPrice { get; set; }
 
+        [Required]
+        public int Percentage { get; set; }
+
+        [Required]
         public DateTime StartDate { get; set; }
+        [Required]
         public DateTime EndDate { get; set; }
+        [Required]
         public DateTime ExpectedClose { get; set; }
 
         [Required, ForeignKey(nameof(Owner))]

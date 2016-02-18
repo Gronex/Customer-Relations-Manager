@@ -62,6 +62,10 @@
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.Designer.cs">
       <DependentUpon>201602161303314_UniqueYearMonthUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602181404338_OverridingPercentageOnOpportunity.cs" />
+    <Compile Include="Migrations\201602181404338_OverridingPercentageOnOpportunity.Designer.cs">
+      <DependentUpon>201602181404338_OverridingPercentageOnOpportunity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateKeyException.cs" />
@@ -112,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602161303314_UniqueYearMonthUser.resx">
       <DependentUpon>201602161303314_UniqueYearMonthUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602181404338_OverridingPercentageOnOpportunity.resx">
+      <DependentUpon>201602181404338_OverridingPercentageOnOpportunity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

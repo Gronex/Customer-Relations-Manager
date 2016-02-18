@@ -14,6 +14,22 @@
     <label>Hourly price</label>
     <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.hourlyPrice">
   </div>
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label>Role</label>
+      <select
+        class="form-control"
+        ng-model="vm.opportunity.stage"
+        ng-options="stage.name for stage in vm.stages track by stage.id"
+        ng-change="vm.stageSelected()"
+        required>
+      </select>
+    </div>
+    <div class="form-group col-sm-6">
+      <label>Likelihood of close</label>
+      <input class="form-control" type="number" min="0" max="100" ng-model="vm.opportunity.percentage">
+    </div>
+  </div>
   <div class="form-group">
     <label>Amount</label>
     <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.amount">
