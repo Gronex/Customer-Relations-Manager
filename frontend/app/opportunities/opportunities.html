@@ -3,6 +3,8 @@
 <table class="table">
   <tr>
     <th>Name</th>
+    <th>Stage</th>
+    <th>Likelihood</th>
     <th>Company</th>
     <th>Owner</th>
     <th>Start</th>
@@ -13,6 +15,8 @@
   </tr>
   <tr ng-repeat="opportunity in vm.opportunities">
     <td>{{opportunity.name}}</td>
+    <td>{{opportunity.stage.name}}</td>
+    <td>{{opportunity.percentage}} %</td>
     <td>{{opportunity.companyName}}</td>
     <td>{{opportunity.ownerName}}</td>
     <td>{{opportunity.startDate}}</td>
