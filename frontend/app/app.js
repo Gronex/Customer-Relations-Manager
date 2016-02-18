@@ -7,6 +7,7 @@
     // Custom modules
 
     // 3rd Party Modules
+    'ui.bootstrap',
     'ui.router',
     'LocalStorageModule'
   ]).config(RouteConfig);
