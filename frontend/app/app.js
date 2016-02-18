@@ -4,6 +4,8 @@
   angular.module('CRM', [
     // Angular modules
     'ngAnimate',
+    'ngAria',
+    'ngMaterial',
     // Custom modules
 
     // 3rd Party Modules
