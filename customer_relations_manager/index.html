@@ -6,21 +6,22 @@
     <title>Customer Relations Manager</title>
 
     <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="view/bower_components/angular-material/angular-material.min.css">
+
+    <link rel="stylesheet" href="view/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="view/bower_components/angular-bootstrap/ui-bootstrap-csp.css"/>
     <link rel="stylesheet" href="view/content/css/style.css"/>
 
 
     <script src="view/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="view/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="view/bower_components/lodash/dist/lodash.min.js"></script>
 
     <!-- Angular things -->
     <script src="view/bower_components/angular/angular.min.js"></script>
-    <script src="view/bower_components/angular-aria/angular-aria.min.js"></script>
     <script src="view/bower_components/angular-animate/angular-animate.min.js"></script>
-    <script src="view/bower_components/angular-material/angular-material.js"></script>
     <script src="view/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="view/bower_components/angular-bootstrap/release/ui-bootstrap-tpls.min.js"></script>
     <script src="view/bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
 
 
@@ -31,6 +32,7 @@
     <script src="view/app/services/authorization.service.js"></script>
 
     <!-- Directives -->
+    <script src="view/app/components/navbar.directive.js"></script>
 
     <!-- Controllers -->
     <script src="view/app/app.controller.js"></script>
@@ -45,22 +47,24 @@
 
   </head>
 
-  <body ng-app="CRM" ng-controller="App as vm">
+  <body ng-app="CRM">
+    <div layout="column" gn-controller="App as vm">
 
-    <ul id="slide-out" class="side-nav fixed">
-      <li class="logo"><a ui-sref="Home" id="logo-container" class="brand-logo"><h4>CRM</h4></a></li>
-      <li><a ui-sref="Opportunities">Opportunities</a></li>
-      <li><a ui-sref="Companies">Companies</a></li>
-      <li><a ui-sref="Users">Users</a></li>
-      <li><a ui-sref="UserGroups">Groups</a></li>
-      <li ng-if="!vm.user"><a ui-sref="Login">Log in</a></li>
-      <hr ng-if="!!vm.user">
-      <li ng-if="!!vm.user">{{vm.user.name}}</li>
-      <ul ng-if="!!vm.user">
-        <li><a href ng-click="vm.logout()">LogOut</a></li>
+      <h1 class="md-toolbar-tools">
+        <a ui-sref="Home">CRM</a>
+      </h1>
+      <ul>
+        <li><h2 class="menu-heading"><a ui-sref="Opportunities">Opportunities</a></h2></li>
+        <li><h2><a ui-sref="Companies">Companies</a></h2></li>
+        <li><h2><a ui-sref="Users">Users</a></h2></li>
+        <li><h2><a ui-sref="UserGroups">Groups</a></h2></li>
+        <li ng-if="!vm.user"><h2><a ui-sref="Login">Log in</a></h2></li>
+        <hr ng-if="!!vm.user">
+        <li ng-if="!!vm.user">{{vm.user.name}}</li>
+        <ul ng-if="!!vm.user">
+          <li><h2><a href ng-click="vm.logout()">LogOut</a></h2></li>
+        </ul>
       </ul>
-    </ul>
-    <div class="container">
       <div ui-view></div>
     </div>
   </body>
