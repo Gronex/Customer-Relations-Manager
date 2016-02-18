@@ -21,21 +21,37 @@
   <div class="row">
     <div class="form-group col-sm-6">
       <label>Start date</label>
-      <input class="form-control" type="date" required ng-model="vm.opportunity.startDate">
+      <div class="input-group">
+        <input type="date" class="form-control" is-open="startDate.open" uib-datepicker-popup datepicker-options="{startingDay: 1}" ng-model="vm.opportunity.startDate" required />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="startDate.open = !startDate.open"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </div>
     </div>
     <div class="form-group col-sm-6">
       <label>End date</label>
-      <input class="form-control" type="date" required ng-model="vm.opportunity.endDate">
+      <div class="input-group">
+        <input type="date" class="form-control" is-open="endDate.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.endDate" required />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="endDate.open = !endDate.open"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </div>
     </div>
   </div>
-  <div>
-    <label>Expected close date</label>
-    <input class="form-control" type="date" required ng-model="vm.opportunity.expectedClose">
+  <div class="form-group">
+    <label>company</label>
+    <input class="form-control" disabled type="text" required ng-model="vm.opportunity.company.name"><br>
+    <input type="text" ng-model="vm.company" placeholder="Select company" uib-typeahead="company as company.name for company in vm.companies | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.companySelected($item)">
   </div>
-  <!-- todo: as readonly chips -->
-  <ul>
-    <li ng-repeat="group in vm.opportunity.groups">{{group.name}}</li>
-  </ul>
+  <div class="form-group">
+    <label>Expected close date</label>
+    <div class="input-group">
+      <input type="date" class="form-control" is-open="expectedClose.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.expectedClose" required />
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="expectedClose.open = !expectedClose.open"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+    </div>
+  </div>
 
   <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
   <a ui-sref="Opportunities" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>

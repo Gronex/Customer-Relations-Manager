@@ -25,6 +25,7 @@
     "lodash": "^4.3.0",
     "angular-bootstrap": "^1.1.2",
     "bootstrap": "^3.3.6",
-    "font-awesome": "^4.5.0"
+    "font-awesome": "^4.5.0",
+    "ng-tags-input": "^3.0.0"
   }
 }

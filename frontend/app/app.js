@@ -9,7 +9,8 @@
     // 3rd Party Modules
     'ui.bootstrap',
     'ui.router',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'ngTagsInput'
   ]).config(RouteConfig);
 
   function RouteConfig($stateProvider, $urlRouterProvider) {

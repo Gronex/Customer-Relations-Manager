@@ -16,6 +16,7 @@
 
     vm.save = save;
     vm.remove = remove;
+    vm.companySelected = companySelected;
 
     activate();
 
@@ -77,6 +78,11 @@
         .then(function () {
           $state.go("Opportunities");
         });
+    }
+
+    function companySelected(item) {
+      vm.company = undefined;
+      vm.opportunity.company = item;
     }
   }
 })();
