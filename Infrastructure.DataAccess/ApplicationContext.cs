@@ -76,5 +76,11 @@ namespace Infrastructure.DataAccess
             
             base.OnModelCreating(modelBuilder);
         }
+
+        public void SetModified<T>(T entity)
+            where T : class
+        {
+            Entry(entity).State = EntityState.Modified;
+        }
     }
 }

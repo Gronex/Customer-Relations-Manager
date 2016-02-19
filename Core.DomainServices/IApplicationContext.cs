@@ -32,7 +32,9 @@ namespace Core.DomainServices
         IDbSet<IdentityRole> Roles { get; set; }
 
         DbSet<T> Set<T>() where T : class;
-        DbEntityEntry<T> Entry<T>(T entity) where T : class;
+
+        void SetModified<T>(T entity)
+            where T : class;
 
     }
 }

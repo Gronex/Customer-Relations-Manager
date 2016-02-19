@@ -40,13 +40,13 @@ namespace UnitTests.Stubs
         public IDbSet<IdentityRole> Roles { get; set; } = new TestDbSet<IdentityRole>();
         public DbSet<T> Set<T>() where T : class
         {
-            var prop = typeof (IApplicationContext).GetProperties().SingleOrDefault(p => p.PropertyType == typeof (T));
+            var prop = typeof (IApplicationContext).GetProperties().SingleOrDefault(p => p.PropertyType == typeof (DbSet<T>));
             return prop?.GetValue(this) as DbSet<T>;
         }
 
-        public DbEntityEntry<T> Entry<T>(T entity) where T : class
+        public void SetModified<T>(T entity) where T : class
         {
-            throw new NotImplementedException();
+            // Do nothing
         }
     }
 }

@@ -23,11 +23,15 @@ namespace UnitTests.Stubs
         public override T Find(params object[] keyValues)
         {
             // if only one key and it is int, we select based on index
-            if(keyValues.Length == 1 && keyValues[0] is int)
+            if (keyValues.Length != 1 || !(keyValues[0] is int)) return base.Find(keyValues);
+            try
             {
                 return _data.ToList()[(int) keyValues[0]];
             }
-            return base.Find(keyValues);
+            catch
+            {
+                return null;
+            }
         }
 
         public override T Add(T item)
@@ -51,7 +55,7 @@ namespace UnitTests.Stubs
 
         public override T Attach(T item)
         {
-            _data.Add(item);
+            //_data.Add(item);
             return item;
         }
 
@@ -64,6 +68,7 @@ namespace UnitTests.Stubs
         {
             return Activator.CreateInstance<TDerivedEntity>();
         }
+        
 
         public override ObservableCollection<T> Local => new ObservableCollection<T>(_data);
 
