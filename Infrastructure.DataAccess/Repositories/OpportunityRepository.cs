@@ -10,11 +10,11 @@ namespace Infrastructure.DataAccess.Repositories
 {
     public class OpportunityRepository : IOpportunityRepository
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly IGenericRepository<Opportunity> _repo;
         private readonly UserManager<User> _userManager;
 
-        public OpportunityRepository(ApplicationContext context, IGenericRepository<Opportunity> repo, UserManager<User> userManager)
+        public OpportunityRepository(IApplicationContext context, IGenericRepository<Opportunity> repo, UserManager<User> userManager)
         {
             _context = context;
             _repo = repo;

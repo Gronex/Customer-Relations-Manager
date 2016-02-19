@@ -7,10 +7,10 @@ namespace Infrastructure.DataAccess.Repositories
 {
     public class UserGroupRepository : IUserGroupRepository
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly IGenericRepository<UserGroup> _repo;
 
-        public UserGroupRepository(ApplicationContext context, IGenericRepository<UserGroup> repo)
+        public UserGroupRepository(IApplicationContext context, IGenericRepository<UserGroup> repo)
         {
             _context = context;
             _repo = repo;
