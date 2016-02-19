@@ -25,6 +25,19 @@ namespace UnitTests.Repositories
             _context = new AppContextStub();
             _generic = Substitute.For<IGenericRepository<UserGroup>>();
 
+            _generic.GetByKey(Arg.Any<object[]>()).Returns(a =>
+            {
+                var gId = (int)a.Arg<object[]>()[0];
+                try
+                {
+                    return _context.UserGroups.ToList()[gId];
+                }
+                catch
+                {
+                    return null;
+                }
+            });
+
             //Add some data
             _context.UserGroups.AddRange(new List<UserGroup>
             {
@@ -93,26 +106,27 @@ namespace UnitTests.Repositories
         {
             var data = new UserGroup { Name = "Updated data" };
 
-            // To verify the test actualy tests anything
-            // by making sure that the data in the exisitng object does not
-            // have the updated value
-            Assert.False(_context.UserGroups.ToList()[0].Name == data.Name);
+
+            _generic.Update(Arg.Any<Action<UserGroup>>(), 1).Returns(ci =>
+            {
+                var action = ci.Arg<Action<UserGroup>>();
+                var oldData = new UserGroup { Name = "Pre update"};
+                action(oldData);
+                return oldData;
+            });
 
             var result = _repo.Update(1, data);
 
-            Assert.Equal(result.Name, _context.UserGroups.ToList()[0].Name);
+            Assert.Equal(data.Name, result.Name);
         }
 
         [Theory]
         [InlineData(0)]
         [InlineData(99)]
-        public void UpdateSucceedsNoMatterWhat(int id)
+        public void DeleteSucceedsNoMatterWhat(int id)
         {
-            var data = _context.UserGroups.ToList()[0];
-          
             _repo.Delete(id);
-            
-            Assert.DoesNotContain(data, _context.UserGroups);
+            _generic.Received().DeleteByKey(id);
         }
     }
 }
