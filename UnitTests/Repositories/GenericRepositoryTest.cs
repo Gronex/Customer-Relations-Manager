@@ -7,6 +7,7 @@ using Core.DomainModels.UserGroups;
 using Core.DomainServices;
 using Infrastructure.DataAccess;
 using Infrastructure.DataAccess.Repositories;
+using UnitTests.Stubs;
 using Xunit;
 
 namespace UnitTests.Repositories
@@ -14,7 +15,7 @@ namespace UnitTests.Repositories
     public class GenericRepositoryTest
     {
         
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly IGenericRepository<UserGroup> _repo;
 
         private readonly IEnumerable<UserGroup> _seedData = new List<UserGroup>
@@ -28,12 +29,10 @@ namespace UnitTests.Repositories
 
         public GenericRepositoryTest()
         {
-            var dbConnection = Effort.DbConnectionFactory.CreateTransient();
-            _context = new ApplicationContext(dbConnection);
+            _context = new AppContextStub();
 
             //Add some data to something
             _context.UserGroups.AddRange(_seedData);
-            _context.SaveChanges();
 
             _repo = new GenericRepository<UserGroup>(_context);
         }
@@ -44,14 +43,14 @@ namespace UnitTests.Repositories
             var data = new UserGroup {Name = "Test data"};
             var dbData = _context.UserGroups.Add(data);
 
-            var repoDbData = _repo.GetByKey(dbData.Id);
+            var repoDbData = _repo.GetByKey(5); // 5th inserted element
             Assert.Equal(dbData, repoDbData);
         }
 
         [Fact]
         public void GetFail()
         {
-            var result = _repo.GetByKey(0);
+            var result = _repo.GetByKey(-1);
             Assert.Null(result);
         }
 
@@ -85,12 +84,10 @@ namespace UnitTests.Repositories
         {
             var data = new UserGroup { Name = "Test data" };
             var dbData = _context.UserGroups.Add(data);
-            _context.SaveChanges();
             
-            _repo.Update(ug => ug.Name = "New test data", dbData.Id);
-            _context.SaveChanges();
+            _repo.Update(ug => ug.Name = "New test data", 5);
 
-            var newData = _context.UserGroups.Find(dbData.Id);
+            var newData = _context.UserGroups.Find(5);
 
             Assert.Equal("New test data", newData.Name);
         }
@@ -99,8 +96,7 @@ namespace UnitTests.Repositories
         public void UpdateFail()
         {
             
-            var result = _repo.Update(ug => ug.Name = "New test data", 0);
-            _context.SaveChanges();
+            var result = _repo.Update(ug => ug.Name = "New test data", -1);
             Assert.Null(result);
         }
 
@@ -109,27 +105,26 @@ namespace UnitTests.Repositories
         {
             var data = new UserGroup { Name = "Test data" };
             var dbData = _context.UserGroups.Add(data);
-            _context.SaveChanges();
 
             // Verify the data was added
-            Assert.NotNull(_context.UserGroups.Find(dbData.Id));
+            Assert.NotNull(_context.UserGroups.Find(5));
 
             _repo.DeleteByKey(dbData.Id);
-            _context.SaveChanges();
             // Check if it was deleted
-            Assert.Null(_context.UserGroups.Find(dbData.Id));
+            Assert.Null(_context.UserGroups.Find(5));
         }
 
         [Fact]
         public void DeleteSurviveFail()
         {
+            // count because of the mocked datastores way of handeling id's
+            var id = _context.UserGroups.Count();
             // Verify db state
-            Assert.Null(_context.UserGroups.Find(0));
+            Assert.Null(_context.UserGroups.Find(id));
 
             _repo.DeleteByKey(0);
-            _context.SaveChanges();
             // Check if it was deleted
-            Assert.Null(_context.UserGroups.Find(0));
+            Assert.Null(_context.UserGroups.Find(id));
         }
 
         [Fact]
@@ -140,7 +135,6 @@ namespace UnitTests.Repositories
                 Name = "Test data!!!"
             };
             var dbData = _repo.Insert(data);
-            _context.SaveChanges();
             // Check if it was deleted
             Assert.NotNull(_context.UserGroups.Find(dbData.Id));
         }

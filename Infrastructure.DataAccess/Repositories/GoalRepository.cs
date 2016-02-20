@@ -11,10 +11,10 @@ namespace Infrastructure.DataAccess.Repositories
 {
     public class GoalRepository : IGoalRepository
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly IGenericRepository<ProductionGoal> _repo;
 
-        public GoalRepository(ApplicationContext context, IGenericRepository<ProductionGoal> repo)
+        public GoalRepository(IApplicationContext context, IGenericRepository<ProductionGoal> repo)
         {
             _context = context;
             _repo = repo;

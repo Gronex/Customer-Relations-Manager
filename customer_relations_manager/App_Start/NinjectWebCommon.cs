@@ -74,7 +74,7 @@ namespace customer_relations_manager.App_Start
             var mapperConfig = AutomapperConfig.ConfigMappings();
 
 
-            kernel.Bind<ApplicationContext>().ToSelf().InRequestScope();
+            kernel.Bind<IApplicationContext>().To<ApplicationContext>().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind<IMapper>().ToConstant(mapperConfig.CreateMapper());
 

@@ -9,10 +9,10 @@ namespace Infrastructure.DataAccess.Repositories
     public class GenericRepository<T> : IGenericRepository<T>
         where T : class
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(ApplicationContext context)
+        public GenericRepository(IApplicationContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
@@ -72,7 +72,8 @@ namespace Infrastructure.DataAccess.Repositories
         {
             if (entity == null) return null;
             updateFunction(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+
+            _context.SetModified(entity);
 
             return entity;
         }
@@ -102,9 +103,6 @@ namespace Infrastructure.DataAccess.Repositories
         private void Remove(T entity)
         {
             if (entity == null) return;
-
-            if (_context.Entry(entity).State == EntityState.Detached)
-                _dbSet.Attach(entity);
 
             _dbSet.Remove(entity);
         }

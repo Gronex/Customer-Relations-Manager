@@ -1,16 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using customer_relations_manager;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess;
 using Infrastructure.DataAccess.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using NSubstitute;
+using UnitTests.Stubs;
 using Xunit;
 
 namespace UnitTests.Repositories
@@ -18,37 +22,51 @@ namespace UnitTests.Repositories
     public class GoalRepositoryTest
     {
         private readonly IGoalRepository _repo;
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly ProductionGoal _data;
+        private readonly IGenericRepository<ProductionGoal> _generic;
+        
         public GoalRepositoryTest()
         {
+            _context = new AppContextStub();
+            _generic = Substitute.For<IGenericRepository<ProductionGoal>>();
+
+            _generic.GetByKey(Arg.Any<object[]>()).Returns(a =>
+            {
+                var gId = (int)a.Arg<object[]>()[0];
+                var uId = (string)a.Arg<object[]>()[1];
+                try
+                {
+                    return _context.Goals.SingleOrDefault(g => g.Id == gId && g.UserId == uId);
+                }
+                catch
+                {
+                    return null;
+                }
+            });
+
             _data = new ProductionGoal {Goal = 10000000, Month = 5, Year = 3000, UserId = "0"};
-            var dbConnection = Effort.DbConnectionFactory.CreateTransient();
-            _context = new ApplicationContext(dbConnection);
 
             //Add some data
-            var um = new ApplicationUserManager(new UserStore<User>(_context));
-            var t1 = um.Create(new User {Id = "0", FirstName = "Test", LastName = "User", UserName = "Test1"});
-            um.Create(new User {Id = "1", FirstName = "Test", LastName = "User", UserName = "Test2" });
-            um.Create(new User {Id = "2", FirstName = "Test", LastName = "User", UserName = "Test3" });
-            _context.SaveChanges();
-            
             _context.Goals.AddRange(new List<ProductionGoal>
             {
-                new ProductionGoal {Id = 1, Month = 1, Year = 2016, Goal = 100, UserId = "0"},
-                new ProductionGoal {Id = 2, Month = 1, Year = 2016, Goal = 200, UserId = "0"},
-                new ProductionGoal {Id = 3, Month = 1, Year = 2016, Goal = 300, UserId = "1"},
-                new ProductionGoal {Id = 4, Month = 1, Year = 2016, Goal = 100000, UserId = "2"},
+                new ProductionGoal {Id = 0, Month = 1, Year = 2016, Goal = 100, UserId = "0"},
+                new ProductionGoal {Id = 1, Month = 1, Year = 2016, Goal = 200, UserId = "0"},
+                new ProductionGoal {Id = 2, Month = 1, Year = 2016, Goal = 300, UserId = "1"},
+                new ProductionGoal {Id = 3, Month = 1, Year = 2016, Goal = 100000, UserId = "2"},
             });
-            _context.SaveChanges();
-            _repo = new GoalRepository(_context, new GenericRepository<ProductionGoal>(_context));
+
+            _context.Users.Add(new User {Id = "0"});
+            _context.Users.Add(new User {Id = "1"});
+            _context.Users.Add(new User {Id = "2"});
+
+            _repo = new GoalRepository(_context, _generic);
         }
 
         [Fact]
         public void CreateAdds()
         {
             var result = _repo.Create("0", _data);
-            _context.SaveChanges();
 
             Assert.Contains(result, _context.Goals);
         }
@@ -56,16 +74,19 @@ namespace UnitTests.Repositories
         [Fact]
         public void GetAllReturnsFullList()
         {
+            _generic.Get(filter: Arg.Any<Expression<Func<ProductionGoal, bool>>>())
+                .Returns(a => _context.Goals.Where(g => g.UserId == "0"));
+
             var result = _repo.GetAll("0");
 
             Assert.Equal(_context.Goals.Where(g => g.UserId == "0"), result);
         }
 
         [Theory]
-        [InlineData("0", 1, 100)]
-        [InlineData("0", 2, 200)]
-        [InlineData("1", 3, 300)]
-        [InlineData("2", 4, 100000)]
+        [InlineData("0", 0, 100)]
+        [InlineData("0", 1, 200)]
+        [InlineData("1", 2, 300)]
+        [InlineData("2", 3, 100000)]
         public void GetByIdGetsData(string userId, int id, int goal)
         {
             var result = _repo.GetById(userId, id);
@@ -100,15 +121,20 @@ namespace UnitTests.Repositories
         [Fact]
         public void UpdateReturnsUpdatesData()
         {
-            // To verify the test actualy tests anything
-            // by making sure that the data in the exisitng object does not
-            // have the updated value
-            Assert.False(_context.Goals.Any(g => g.UserId == "0" && g.Id == 1 && g.Year == _data.Year));
+            // Actual test is of the action updates what is expected
+            _generic
+                .UpdateBy(Arg.Any<Action<ProductionGoal>>(), Arg.Any<Expression<Func<ProductionGoal, bool>>>())
+                .Returns(ci =>
+                {
+                    var action = ci.Arg<Action<ProductionGoal>>();
+                    var oldData = new ProductionGoal {Goal = -1, Month = -1, Year = -1};
+                    action(oldData);
+                    return oldData;
+                });
 
             var result = _repo.Update("0", 1, _data);
-            _context.SaveChanges();
-
-            Assert.Equal(result.Year, _context.Goals.Single(g => g.UserId == "0" && g.Id == 1).Year);
+            
+            Assert.Equal(new { _data.Goal, _data.Month, _data.Year }, new { result.Goal, result.Month, result.Year });
         }
 
         [Theory]
@@ -118,12 +144,8 @@ namespace UnitTests.Repositories
         [InlineData("-1", 99)]
         public void DeleteSucceedsNoMatterWhat(string userId, int id)
         {
-            var data = _context.Goals.SingleOrDefault(g => g.Id == id && userId == g.UserId);
-
             _repo.Delete(userId, id);
-            _context.SaveChanges();
-
-            Assert.DoesNotContain(data, _context.Goals);
+            _generic.Received().DeleteBy(Arg.Any<Expression<Func<ProductionGoal, bool>>>());
         }
     }
 }

@@ -11,11 +11,12 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainServices;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Infrastructure.DataAccess
 {
-    public class ApplicationContext : IdentityDbContext<User>
+    public class ApplicationContext : IdentityDbContext<User>, IApplicationContext
     {
         public ApplicationContext(DbConnection connection) : base(connection, true)
         {
@@ -74,6 +75,12 @@ namespace Infrastructure.DataAccess
             modelBuilder.Entity<Opportunity>().HasRequired(o => o.Owner).WithMany(u => u.Opportunities).WillCascadeOnDelete(false);
             
             base.OnModelCreating(modelBuilder);
+        }
+
+        public void SetModified<T>(T entity)
+            where T : class
+        {
+            Entry(entity).State = EntityState.Modified;
         }
     }
 }

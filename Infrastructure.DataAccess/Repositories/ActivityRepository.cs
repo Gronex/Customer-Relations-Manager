@@ -2,15 +2,16 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
+using Core.DomainServices;
 using Core.DomainServices.Repositories;
 
 namespace Infrastructure.DataAccess.Repositories
 {
     public class ActivityRepository : IActivityRepository
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
 
-        public ActivityRepository(ApplicationContext context)
+        public ActivityRepository(IApplicationContext context)
         {
             _context = context;
         }

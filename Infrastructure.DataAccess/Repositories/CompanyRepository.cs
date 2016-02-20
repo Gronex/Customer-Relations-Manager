@@ -11,10 +11,10 @@ namespace Infrastructure.DataAccess.Repositories
 {
     public class CompanyRepository : ICompanyRepository
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly IGenericRepository<Company> _repo;
 
-        public CompanyRepository(ApplicationContext context, IGenericRepository<Company> repo)
+        public CompanyRepository(IApplicationContext context, IGenericRepository<Company> repo)
         {
             _context = context;
             _repo = repo;
