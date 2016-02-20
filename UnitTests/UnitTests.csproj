@@ -114,7 +114,6 @@
     <Compile Include="Repositories\GenericRepositoryTest.cs" />
     <Compile Include="Repositories\GoalRepositoryTest.cs" />
     <Compile Include="Repositories\UserGroupRepositoryTest.cs" />
-    <Compile Include="Sanity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\ActivityRepoStub.cs" />
     <Compile Include="Stubs\AppContextStub.cs" />
