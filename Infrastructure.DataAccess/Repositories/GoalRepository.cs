@@ -20,7 +20,7 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public IQueryable<ProductionGoal> GetAll(string userId)
+        public IEnumerable<ProductionGoal> GetAll(string userId)
         {
             return _context.Users.Any(u => u.Id == userId) ? _repo.Get(g => g.UserId == userId) : null;
         }

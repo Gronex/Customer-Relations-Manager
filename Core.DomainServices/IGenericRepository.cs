@@ -22,7 +22,7 @@ namespace Core.DomainServices
         /// <param name="page">User with Page size, requires orderby to be set</param>
         /// <param name="pageSize">used with page, requires orderby to be set</param>
         /// <returns></returns>
-        IQueryable<T> Get(
+        IEnumerable<T> Get(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             int? page = null, 

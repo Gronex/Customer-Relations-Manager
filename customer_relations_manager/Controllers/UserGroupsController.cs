@@ -18,12 +18,12 @@ namespace customer_relations_manager.Controllers
     [Authorize(Roles = nameof(UserRole.Super))]
     public class UserGroupsController : CrmApiController
     {
-        private readonly IUserGroupRepository _repo;
+        private readonly IGenericRepository<UserGroup> _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
         public UserGroupsController(
-            IUserGroupRepository repo,
+            IGenericRepository<UserGroup> repo,
             IUnitOfWork uow,
             IMapper mapper)
         {
@@ -35,7 +35,7 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         public IEnumerable<UserGroupViewModel> Get()
         {
-            var inDb = _repo.GetAll().ToList();
+            var inDb = _repo.Get();
 
             return inDb.Select(ug => _mapper.Map<UserGroupViewModel>(ug));
         }
@@ -44,7 +44,7 @@ namespace customer_relations_manager.Controllers
         [ResponseType(typeof(UserGroupViewModel))]
         public IHttpActionResult Get(int id)
         {
-            var group = _repo.GetById(id);
+            var group = _repo.GetByKey(id);
             if(group == null) return NotFound();
             return Ok(_mapper.Map<UserGroupViewModel>(group));
         }
@@ -54,7 +54,7 @@ namespace customer_relations_manager.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var result = _repo.Create(_mapper.Map<UserGroup>(model));
+            var result = _repo.Insert(_mapper.Map<UserGroup>(model));
             try
             {
                 _uow.Save();
@@ -70,7 +70,7 @@ namespace customer_relations_manager.Controllers
         public IHttpActionResult Put(int id, UserGroupViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var updated = _repo.Update(id, _mapper.Map<UserGroup>(model));
+            var updated = _repo.Update(group => group.Name = model.Name, id);
             if(updated == null) return NotFound();
 
             try
@@ -87,7 +87,7 @@ namespace customer_relations_manager.Controllers
         [HttpDelete]
         public void Delete(int id)
         {
-            _repo.Delete(id);
+            _repo.DeleteByKey(id);
             _uow.Save();
         }
     }

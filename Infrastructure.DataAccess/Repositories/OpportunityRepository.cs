@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
@@ -21,7 +22,7 @@ namespace Infrastructure.DataAccess.Repositories
             _userManager = userManager;
         }
 
-        public IQueryable<Opportunity> GetAll()
+        public IEnumerable<Opportunity> GetAll()
         {
             return _repo.Get();
         }

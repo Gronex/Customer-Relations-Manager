@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,7 +19,7 @@ namespace Infrastructure.DataAccess.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public IQueryable<T> Get(
+        public IEnumerable<T> Get(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             int? page = null,
