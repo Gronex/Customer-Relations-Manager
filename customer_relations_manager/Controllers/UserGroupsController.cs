@@ -33,24 +33,24 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<UserGroupViewModel> Get()
+        public IEnumerable<GroupViewModel> Get()
         {
             var inDb = _repo.Get();
 
-            return inDb.Select(ug => _mapper.Map<UserGroupViewModel>(ug));
+            return inDb.Select(ug => _mapper.Map<GroupViewModel>(ug));
         }
 
         [HttpGet]
-        [ResponseType(typeof(UserGroupViewModel))]
+        [ResponseType(typeof(GroupViewModel))]
         public IHttpActionResult Get(int id)
         {
             var group = _repo.GetByKey(id);
             if(group == null) return NotFound();
-            return Ok(_mapper.Map<UserGroupViewModel>(group));
+            return Ok(_mapper.Map<GroupViewModel>(group));
         }
 
         [HttpPost]
-        public IHttpActionResult Post(UserGroupViewModel model)
+        public IHttpActionResult Post(GroupViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -59,15 +59,15 @@ namespace customer_relations_manager.Controllers
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
-            return Created(result.Id.ToString(), _mapper.Map<UserGroupViewModel>(result));
+            return Created(result.Id.ToString(), _mapper.Map<GroupViewModel>(result));
         }
 
         [HttpPut]
-        public IHttpActionResult Put(int id, UserGroupViewModel model)
+        public IHttpActionResult Put(int id, GroupViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var updated = _repo.Update(group => group.Name = model.Name, id);
@@ -77,11 +77,11 @@ namespace customer_relations_manager.Controllers
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
-            return Ok(_mapper.Map<UserGroupViewModel>(updated));
+            return Ok(_mapper.Map<GroupViewModel>(updated));
         }
 
         [HttpDelete]

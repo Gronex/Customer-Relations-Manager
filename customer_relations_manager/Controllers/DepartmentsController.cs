@@ -13,41 +13,52 @@ using Infrastructure.DataAccess.Exceptions;
 namespace customer_relations_manager.Controllers
 {
     [Authorize(Roles = nameof(UserRole.Super))]
-    public class OpportunityCategoriesController : CrmApiController
+    public class DepartmentsController : CrmApiController
     {
-        private readonly IGenericRepository<OpportunityCategory> _repo;
+        private readonly IGenericRepository<Department> _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public OpportunityCategoriesController(IGenericRepository<OpportunityCategory> repo, IUnitOfWork uow, IMapper mapper)
+        public DepartmentsController(IGenericRepository<Department> repo, IUnitOfWork uow, IMapper mapper)
         {
             _repo = repo;
             _uow = uow;
             _mapper = mapper;
         }
 
-        [HttpGet]
         [Authorize]
-        public IEnumerable<CategoryViewModel> Get()
+        public IEnumerable<GroupViewModel> Get()
         {
-            return _repo.Get().Select(_mapper.Map<CategoryViewModel>);
+            return _repo.Get().Select(_mapper.Map<GroupViewModel>);
         }
 
-        [HttpGet]
         public IHttpActionResult Get(int id)
         {
             var model = _repo.GetByKey(id);
-
             if(model == null) return NotFound();
-
-            return Ok(_mapper.Map<CategoryViewModel>(model));
+            return Ok(_mapper.Map<GroupViewModel>(model));
         }
 
-
-        [HttpPost]
-        public IHttpActionResult Post(CategoryViewModel model)
+        public IHttpActionResult Post(GroupViewModel model)
         {
-            var dbModel = _repo.Insert(_mapper.Map<OpportunityCategory>(model));
+            var dbModel = _repo.Insert(_mapper.Map<Department>(model));
+            try
+            {
+                _uow.Save();
+            }
+            catch (Exception)
+            {
+                return Conflict();
+            }
+            return Created(dbModel.Id.ToString(), _mapper.Map<GroupViewModel>(dbModel));
+        }
+
+        public IHttpActionResult Put(int id, GroupViewModel model)
+        {
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
+            var dbModel = _repo.Update(d => d.Name = model.Name, id);
+            if(dbModel == null) return NotFound();
             try
             {
                 _uow.Save();
@@ -56,34 +67,9 @@ namespace customer_relations_manager.Controllers
             {
                 return Conflict();
             }
-
-            return Created(dbModel.Id.ToString(), _mapper.Map<CategoryViewModel>(dbModel));
+            return Ok(_mapper.Map<GoalViewModel>(dbModel));
         }
 
-        [HttpPut]
-        public IHttpActionResult Put(int id, CategoryViewModel model)
-        {
-            var dbModel = _repo.Update(oc =>
-            {
-                oc.Name = model.Name;
-                oc.Value = model.Value;
-            }, id);
-
-            if (dbModel == null) return NotFound();
-
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Conflict();
-            }
-
-            return Ok(_mapper.Map<CategoryViewModel>(dbModel));
-        }
-
-        [HttpDelete]
         public void Delete(int id)
         {
             _repo.DeleteByKey(id);

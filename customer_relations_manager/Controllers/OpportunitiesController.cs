@@ -6,11 +6,13 @@ using System.Web.Http;
 using AutoMapper;
 using customer_relations_manager.ViewModels.Opportunity;
 using Core.DomainModels.Opportunity;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class OpportunitiesController : CrmApiController
     {
         private readonly IOpportunityRepository _repo;
@@ -63,6 +65,9 @@ namespace customer_relations_manager.Controllers
 
             var data = _mapper.Map<Opportunity>(model);
             var dbModel = _repo.Update(id, data);
+            if (dbModel == null)
+                return NotFound();
+
             _uow.Save();
             return Ok(_mapper.Map<OpportunityViewModel>(dbModel));
         }

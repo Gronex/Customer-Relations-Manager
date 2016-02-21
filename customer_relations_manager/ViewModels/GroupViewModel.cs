@@ -7,7 +7,7 @@ using Core.DomainModels.UserGroups;
 
 namespace customer_relations_manager.ViewModels
 {
-    public class UserGroupViewModel
+    public class GroupViewModel
     {
         public int Id { get; set; }
 

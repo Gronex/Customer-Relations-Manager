@@ -46,7 +46,7 @@ namespace Infrastructure.DataAccess
             {
                 //Should not be able to be null since the when should be able to catch it
                 if (ex.InnerException != null)
-                    throw new DuplicateKeyException(ex.InnerException.InnerException.Message);
+                    throw new DuplicateException(ex.InnerException.InnerException.Message);
                 throw;
             }
         }
