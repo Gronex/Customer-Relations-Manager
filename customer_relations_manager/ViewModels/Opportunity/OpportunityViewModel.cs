@@ -29,8 +29,11 @@ namespace customer_relations_manager.ViewModels.Opportunity
         public double HourlyPrice { get; set; }
         [Required, Range(0,100)]
         public int Percentage { get; set; }
-
         [Required]
         public StageViewModel Stage { get; set; }
+
+        public string CategoryName { get; set; }
+        [Required]
+        public int? CategoryId { get; set; }
     }
 }
