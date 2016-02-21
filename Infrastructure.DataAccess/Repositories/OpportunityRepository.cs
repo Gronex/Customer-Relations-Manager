@@ -47,6 +47,7 @@ namespace Infrastructure.DataAccess.Repositories
             if (model.Company.Id > 0)
             {
                 model.Company = _context.Companies.SingleOrDefault(c => c.Id == model.Company.Id);
+                if (model.Company == null) return null;
             }
             
             model.Department = department;

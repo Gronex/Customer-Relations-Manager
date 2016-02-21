@@ -17,9 +17,9 @@ namespace Infrastructure.DataAccess
     {
         public static int SqlDuplicateKeyException { get; } = 2601;
 
-        private readonly DbContext _context;
+        private readonly IApplicationContext _context;
 
-        public UnitOfWork(ApplicationContext context)
+        public UnitOfWork(IApplicationContext context)
         {
             _context = context;
         }

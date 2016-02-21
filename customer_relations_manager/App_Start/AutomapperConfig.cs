@@ -42,7 +42,7 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Opportunity, OpportunityOverviewViewMode>().ReverseMap();
                 cfg.CreateMap<Stage, StageViewModel>().ReverseMap();
                 cfg.CreateMap<OpportunityCategory, CategoryViewModel>().ReverseMap();
-                cfg.CreateMap<Department, GoalViewModel>().ReverseMap();
+                cfg.CreateMap<Department, GroupViewModel>().ReverseMap();
             });
 
             return config;

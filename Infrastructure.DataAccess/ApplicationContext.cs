@@ -46,7 +46,7 @@ namespace Infrastructure.DataAccess
         public DbSet<Stage> Stages { get; set; }
         public DbSet<OpportunityComment> OpportunityComments { get; set; }
         public DbSet<ActivityComment> ActivityComments { get; set; }
-        
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // The DateTime type in .NET has the same range and precision as datetime2 in SQL Server.
@@ -76,11 +76,10 @@ namespace Infrastructure.DataAccess
             
             base.OnModelCreating(modelBuilder);
         }
-
-        public void SetModified<T>(T entity)
-            where T : class
+        
+        public void SetState<T>(T entity, EntityState state) where T : class
         {
-            Entry(entity).State = EntityState.Modified;
+            Entry(entity).State = state;
         }
     }
 }

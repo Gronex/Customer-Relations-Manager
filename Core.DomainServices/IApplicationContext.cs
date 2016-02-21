@@ -1,6 +1,7 @@
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Threading.Tasks;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Comments;
 using Core.DomainModels.Customers;
@@ -33,8 +34,10 @@ namespace Core.DomainServices
 
         DbSet<T> Set<T>() where T : class;
 
-        void SetModified<T>(T entity)
+        void SetState<T>(T entity, EntityState state)
             where T : class;
 
+        int SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }
