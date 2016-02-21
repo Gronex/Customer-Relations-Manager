@@ -31,6 +31,24 @@
     </div>
   </div>
   <div class="form-group">
+    <label>Department</label>
+    <select
+      class="form-control"
+      ng-model="vm.opportunity.department"
+      ng-options="department.name for department in vm.departments track by department.id"
+      required>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Category</label>
+    <select
+      class="form-control"
+      ng-model="vm.opportunity.category"
+      ng-options="category.name for category in vm.categories track by category.id"
+      required>
+    </select>
+  </div>
+  <div class="form-group">
     <label>Amount</label>
     <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.amount">
   </div>
