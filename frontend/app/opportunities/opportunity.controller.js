@@ -14,6 +14,8 @@
     vm.opportunity = {};
     vm.companies = [];
     vm.stages = [];
+    vm.departments = [];
+    vm.categories = [];
 
     vm.save = save;
     vm.remove = remove;
@@ -31,6 +33,8 @@
       }
       getCompanies(); //TODO: call with query param on search
       getStages();
+      getDepartments();
+      getCategories();
     }
 
     function getOpportunity() {
@@ -64,7 +68,6 @@
           $state.go("Opportunities");
         });
       } else {
-        vm.opportunity.company = vm.companies[0];
         return dataservice.opportunities
         .create(vm.opportunity)
         .then(function () {
@@ -95,6 +98,22 @@
         .getAll()
         .then(function (data) {
           vm.stages = data;
+        });
+    }
+
+    function getDepartments() {
+      return dataservice.departments
+        .getAll()
+        .then(function (data) {
+          vm.departments = data;
+        });
+    }
+
+    function getCategories() {
+      return dataservice.opportunityCategories
+        .getAll()
+        .then(function (data) {
+          vm.categories = data;
         });
     }
   }

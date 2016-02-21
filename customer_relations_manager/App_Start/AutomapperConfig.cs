@@ -28,7 +28,7 @@ namespace customer_relations_manager.App_Start
                     .ForMember(u => u.UserName, o => o.MapFrom(vm => vm.Email));
 
                 
-                cfg.CreateMap<UserGroup, UserGroupViewModel>().ReverseMap();
+                cfg.CreateMap<UserGroup, GroupViewModel>().ReverseMap();
                 cfg.CreateMap<ProductionGoal, GoalViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyOverviewViewModel>().ReverseMap();
@@ -38,8 +38,11 @@ namespace customer_relations_manager.App_Start
                     .ForMember(vm => vm.StartDate, c => c.MapFrom(o => o.StartDate.Value.Date))
                     .ForMember(vm => vm.EndDate, c => c.MapFrom(o => o.EndDate.Value.Date))
                     .ForMember(vm => vm.ExpectedClose, c => c.MapFrom(o => o.ExpectedClose.Value.Date));
+
                 cfg.CreateMap<Opportunity, OpportunityOverviewViewMode>().ReverseMap();
                 cfg.CreateMap<Stage, StageViewModel>().ReverseMap();
+                cfg.CreateMap<OpportunityCategory, CategoryViewModel>().ReverseMap();
+                cfg.CreateMap<Department, GroupViewModel>().ReverseMap();
             });
 
             return config;

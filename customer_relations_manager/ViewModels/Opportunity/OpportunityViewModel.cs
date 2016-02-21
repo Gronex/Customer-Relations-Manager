@@ -24,13 +24,16 @@ namespace customer_relations_manager.ViewModels.Opportunity
         public DateTime? EndDate { get; set; }
         [Required]
         public DateTime? ExpectedClose { get; set; }
-        public IEnumerable<UserGroupViewModel> Groups { get; set; }
+        public IEnumerable<GroupViewModel> Groups { get; set; }
         [Required]
         public double HourlyPrice { get; set; }
         [Required, Range(0,100)]
         public int Percentage { get; set; }
-
         [Required]
         public StageViewModel Stage { get; set; }
+        [Required]
+        public CategoryViewModel Category { get; set; }
+        [Required]
+        public GroupViewModel Department { get; set; }
     }
 }

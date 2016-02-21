@@ -6,11 +6,13 @@ using System.Web.Http;
 using AutoMapper;
 using customer_relations_manager.ViewModels.Opportunity;
 using Core.DomainModels.Opportunity;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize(Roles = nameof(UserRole.Super))]
     public class StagesController : CrmApiController
     {
         private readonly IUnitOfWork _uow;
@@ -25,6 +27,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IEnumerable<StageViewModel> Get()
         {
             var stages = _repo.Get();
@@ -49,7 +52,7 @@ namespace customer_relations_manager.Controllers
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
@@ -71,7 +74,7 @@ namespace customer_relations_manager.Controllers
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }

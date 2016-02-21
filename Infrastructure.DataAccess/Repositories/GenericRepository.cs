@@ -41,7 +41,9 @@ namespace Infrastructure.DataAccess.Repositories
 
         public T Insert(T entity)
         {
-            return _dbSet.Add(entity);
+            var inDb = _dbSet.Add(entity);
+            _context.SetState(inDb, EntityState.Added);
+            return inDb;
         }
 
         public void DeleteByKey(params object[] key)
@@ -74,7 +76,7 @@ namespace Infrastructure.DataAccess.Repositories
             if (entity == null) return null;
             updateFunction(entity);
 
-            _context.SetModified(entity);
+            _context.SetState(entity, EntityState.Modified);
 
             return entity;
         }

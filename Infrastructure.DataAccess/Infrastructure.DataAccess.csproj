@@ -70,9 +70,13 @@
     <Compile Include="Migrations\201602181436099_StageNameUniqueue.Designer.cs">
       <DependentUpon>201602181436099_StageNameUniqueue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602211215398_UniqueueCategoryName.cs" />
+    <Compile Include="Migrations\201602211215398_UniqueueCategoryName.Designer.cs">
+      <DependentUpon>201602211215398_UniqueueCategoryName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
-    <Compile Include="Exceptions\DuplicateKeyException.cs" />
+    <Compile Include="Exceptions\DuplicateException.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Migrations\201602091102004_Initial.cs" />
     <Compile Include="Migrations\201602091102004_Initial.Designer.cs">
@@ -124,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602181436099_StageNameUniqueue.resx">
       <DependentUpon>201602181436099_StageNameUniqueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602211215398_UniqueueCategoryName.resx">
+      <DependentUpon>201602211215398_UniqueueCategoryName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

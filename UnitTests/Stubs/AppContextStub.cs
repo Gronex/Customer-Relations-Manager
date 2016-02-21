@@ -44,9 +44,21 @@ namespace UnitTests.Stubs
             return prop?.GetValue(this) as DbSet<T>;
         }
 
-        public void SetModified<T>(T entity) where T : class
+        public void SetState<T>(T entity, EntityState state) where T : class
         {
             // Do nothing
+        }
+
+        public int SaveChanges()
+        {
+            // Do nothing
+            return 0;
+        }
+
+        public Task<int> SaveChangesAsync()
+        {
+            // Do Nothing
+            return Task.FromResult(0);
         }
     }
 }

@@ -54,8 +54,8 @@ namespace UnitTests.Controllers
             var data = new UserGroup() { Id = 1, Name = "Grp1" };
             _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
 
-            var result = _controller.Get(1) as OkNegotiatedContentResult<UserGroupViewModel>;
-            var dataViewModel = _mapper.Map<UserGroupViewModel>(data);
+            var result = _controller.Get(1) as OkNegotiatedContentResult<GroupViewModel>;
+            var dataViewModel = _mapper.Map<GroupViewModel>(data);
             // Only testing one, since there is no reason the 
             // system should have chosen the same string and object comparison
             // compares on reference
@@ -75,7 +75,7 @@ namespace UnitTests.Controllers
         public void CreateCallsInsert()
         {
             var data = new UserGroup{Id = 1, Name = "Grp1"};
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
             _repo.Insert(Arg.Any<UserGroup>()).Returns(data);
 
@@ -87,7 +87,7 @@ namespace UnitTests.Controllers
         public void CreateSaves()
         {
             var data = new UserGroup { Id = 1, Name = "Grp1" };
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
             _repo.Insert(Arg.Any<UserGroup>()).Returns(data);
 
@@ -99,7 +99,7 @@ namespace UnitTests.Controllers
         public void UpdateCallsUpdateInRepo()
         {
             var data = new UserGroup { Id = 1, Name = "Grp1" };
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
             _repo.Update(Arg.Any<Action<UserGroup>>(), 1).Returns(data);
 
@@ -111,7 +111,7 @@ namespace UnitTests.Controllers
         public void UpdateSaves()
         {
             var data = new UserGroup { Id = 1, Name = "Grp1" };
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
             _repo.Update(Arg.Any<Action<UserGroup>>(), 1).Returns(data);
 

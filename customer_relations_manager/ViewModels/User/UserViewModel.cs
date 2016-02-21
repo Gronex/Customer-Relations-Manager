@@ -23,6 +23,6 @@ namespace customer_relations_manager.ViewModels.User
         [Required]
         public UserRole Role { get; set; }
 
-        public IEnumerable<UserGroupViewModel> Groups { get; set; }
+        public IEnumerable<GroupViewModel> Groups { get; set; }
     }
 }
