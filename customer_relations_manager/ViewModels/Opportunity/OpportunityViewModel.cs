@@ -31,10 +31,9 @@ namespace customer_relations_manager.ViewModels.Opportunity
         public int Percentage { get; set; }
         [Required]
         public StageViewModel Stage { get; set; }
-        public string CategoryName { get; set; }
-
-        public string DepartmentName { get; set; }
         [Required]
-        public int? DepartmentId { get; set; }
+        public CategoryViewModel Category { get; set; }
+        [Required]
+        public GroupViewModel Department { get; set; }
     }
 }
