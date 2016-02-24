@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('User', User);
 
-  User.$inject = ['dataservice', "$log", "$stateParams", '$state'];
-  function User(dataservice, $log, $stateParams, $state){
+  User.$inject = ['dataservice', "$log", "$stateParams", '$state', '$uibModal'];
+  function User(dataservice, $log, $stateParams, $state, $uibModal){
     var vm = this;
 
 
@@ -21,17 +21,11 @@
     vm.remove = remove;
     vm.onGroupSelect = onGroupSelect;
     vm.removeGroup = removeGroup;
-    vm.addGoal = addGoal;
-    vm.removeGoal = removeGoal;
+    vm.showGoals = showGoals;
 
     activate();
 
     function activate() {
-      resetGoal();
-      if($stateParams.id !== "new"){
-        getUserGoals($stateParams.id);
-      }
-
       getGroups().then(function () {
         if($stateParams.id !== "new")
           getUser($stateParams.id).then(function () {
@@ -103,42 +97,17 @@
       vm.group = "";
     }
 
-    function getUserGoals(id) {
-      dataservice.goals.getAll({userId: id})
-        .then(function (data) {
-          vm.goals = _.orderBy(data, ['year', 'month']);
-          return vm.goals;
-        });
-    }
-
-    function addGoal() {
-      vm.goal.errMsg = undefined;
-      dataservice.goals.create(vm.goal, {userId: $stateParams.id}).
-        then(function (data) {
-          vm.goals.push(data);
-          vm.goals = _.orderBy(vm.goals, ['year', 'month']);
-        }, function (err) {
-          if(err.status === 409)
-            vm.goal.errMsg = "For a single user there can only be one goal per month";
-        });
-      resetGoal();
-    }
-
-    function removeGoal(goal) {
-      dataservice.goals
-        .remove(goal.id, {userId: $stateParams.id})
-        .then(function () {
-          vm.goals = vm.goals.filter(function (g) { return g.id != goal.id;});
-        });
-    }
-
-    function resetGoal() {
-      var today = new Date();
-      vm.goal = {
-        month: today.getMonth()+1,
-        year: today.getFullYear(),
-        goal: 0
-      };
+    function showGoals() {
+      $uibModal.open({
+        controller: "Goals",
+        controllerAs: "vm",
+        size: "lg",
+        templateUrl: "view/app/users/goals.html",
+        resolve: {
+          userId: function () { return $stateParams.id; },
+          user: function () { return vm.user; }
+        }
+      });
     }
   }
 })();

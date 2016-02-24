@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h3 class="modal-title">Goals for {{vm.user.name}}</h3>
+</div>
+<div class="modal-body">
+  <p class="red-text text-darken-2" ng-if="vm.goal.errMsg">
+    {{vm.goal.errMsg}}
+  </p>
+  <form class="form-inline" ng-submit="vm.addGoal()">
+    <div class="form-group">
+      <label>Year</label>
+      <input class="form-control" type="number" ng-minlength="4" min="2000" ng-model="vm.goal.year">
+    </div>
+    <div class="form-group">
+      <label>Month</label>
+      <input class="form-control" type="number" max="12" ng-minlength="1" min="1" ng-model="vm.goal.month">
+    </div>
+    <div class="form-group">
+      <label>Goal</label>
+      <input class="form-control" min="0" type="number" ng-model="vm.goal.goal">
+    </div>
+    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+  </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Goal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="goal in vm.goals">
+        <td>
+          {{goal.year}}
+        </td>
+        <td>
+          {{goal.month}}
+        </td>
+        <td>
+          {{goal.goal}}
+        </td>
+        <td>
+          <button
+            class="btn btn-danger"
+            ng-click="vm.removeGoal(goal)">
+            <i class="fa fa-trash-o"></i> Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <button ng-click="vm.close()" class="btn btn-primary">Close</button>
+</div>
