@@ -18,8 +18,8 @@ namespace Core.ApplicationServices.Graph
             foreach (var user in users)
             {
                 var goals = user.Goals.OrderBy(g => g.StartDate);
-
-                var buffedGoals = BuffOutGoals(goals);
+                
+                var buffedGoals = BuffOutGoals(goals, !user.Active ? user.EndDate : null);
 
 
                 dict.Add(user.Id, new DataSet
@@ -43,43 +43,57 @@ namespace Core.ApplicationServices.Graph
             return Math.Abs((d1.Month - d2.Month) + 12*(d1.Year - d2.Year));
         }
 
-        public static IEnumerable<ProductionGoal> BuffOutGoals(IEnumerable<ProductionGoal> goalList)
+        public static IEnumerable<ProductionGoal> BuffOutGoals(IEnumerable<ProductionGoal> goalList, DateTime? finalDate = null)
         {
+
+
             var goals = goalList.ToList();
             if(!goals.Any()) return goals;
-
+            
             var firstGoal = goals.FirstOrDefault();
             var lastGoal = goals.LastOrDefault();
 
-            var difference = MonthDifference(firstGoal.StartDate, lastGoal.StartDate);
+            if(finalDate == null) finalDate = lastGoal.StartDate;
 
-            // adds one to account for a difference by 1 month means that the two months are
-            // right next to one another
-            if (goals.Count >= difference + 1) return goals;
+
+            var difference = MonthDifference(firstGoal.StartDate, finalDate.Value);
+            
+            if (goals.Count > difference) return goals;
 
             var toAdd = new List<ProductionGoal>();
-            var last = firstGoal.StartDate;
+            var last = firstGoal;
 
             foreach (var goal in goals)
             {
-                if (last.AddMonths(1) == goal.StartDate)
+                if (last.StartDate.AddMonths(1) == goal.StartDate)
                 {
-                    last = goal.StartDate;
+                    last = goal;
                     continue;
                 }
-                while (last.AddMonths(1) < goal.StartDate)
+                while (last.StartDate.AddMonths(1) < goal.StartDate)
                 {
-                    last = last.AddMonths(1);
-                    toAdd.Add(new ProductionGoal
+                    last = new ProductionGoal
                     {
-                        StartDate = last,
-                        Goal = goal.Goal
-                    });
+                        StartDate = last.StartDate.AddMonths(1),
+                        Goal = last.Goal
+                    };
+                    toAdd.Add(last);
                 }
             }
+
+            var remainder = MonthDifference(lastGoal.StartDate, finalDate.Value);
+
+            for (var i = 1; i <= remainder; i++)
+            {
+                toAdd.Add(new ProductionGoal
+                {
+                    StartDate = last.StartDate.AddMonths(i),
+                    Goal = last.Goal
+                });
+            }
             goals.AddRange(toAdd);
+
             return goals.OrderBy(g => g.StartDate);
         }
-
     }
 }

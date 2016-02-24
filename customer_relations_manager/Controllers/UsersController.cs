@@ -147,6 +147,8 @@ namespace customer_relations_manager.Controllers
             if (user == null) return;
 
             user.Active = false;
+            user.EndDate = DateTime.UtcNow.Date;
+
             var roles = _userManager.GetRoles(id).ToArray();
             _userManager.RemoveFromRoles(id, roles);
 

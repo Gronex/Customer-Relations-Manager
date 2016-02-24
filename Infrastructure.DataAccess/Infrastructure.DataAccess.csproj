@@ -78,6 +78,10 @@
     <Compile Include="Migrations\201602241402423_ProductionGoalHaveRealDates.Designer.cs">
       <DependentUpon>201602241402423_ProductionGoalHaveRealDates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602241607111_EndDateForInactiveUsers.cs" />
+    <Compile Include="Migrations\201602241607111_EndDateForInactiveUsers.Designer.cs">
+      <DependentUpon>201602241607111_EndDateForInactiveUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />
@@ -138,6 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602241402423_ProductionGoalHaveRealDates.resx">
       <DependentUpon>201602241402423_ProductionGoalHaveRealDates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602241607111_EndDateForInactiveUsers.resx">
+      <DependentUpon>201602241607111_EndDateForInactiveUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

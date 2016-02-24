@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,6 +28,7 @@ namespace Core.DomainModels.Users
         public string LastName { get; set; }
         
         public bool Active { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";

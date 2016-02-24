@@ -104,5 +104,22 @@ namespace UnitTests.Services
                 point => Assert.Equal(point.StartDate, today.AddMonths(1)),
                 point => Assert.Equal(point.StartDate, today.AddMonths(2)));
         }
+
+        [Fact]
+        public void CorrectValueOnBuffData()
+        {
+            var data = new List<ProductionGoal>
+            {
+                new ProductionGoal{Goal = 1, StartDate = DateTime.UtcNow.Date},
+                new ProductionGoal{Goal = 2, StartDate = DateTime.UtcNow.AddMonths(2).Date}
+            };
+
+            var buffedData = GraphService.BuffOutGoals(data).ToList();
+
+            Assert.Collection(buffedData,
+                point => Assert.Equal(point.Goal, 1),
+                point => Assert.Equal(point.Goal, 1),
+                point => Assert.Equal(point.Goal, 2));
+        }
     }
 }
