@@ -13,7 +13,7 @@ namespace UnitTests.Services
 {
     public class GraphServiceTest
     {
-        private readonly IGraphService _service;
+        private readonly GraphService _service;
         private readonly IEnumerable<User> _users;
         public GraphServiceTest()
         {
@@ -47,35 +47,69 @@ namespace UnitTests.Services
         public void ProductionGraphSplitsPerMonth()
         {
             var data = _service.GenerateProductionDataSets(_users);
+            
+            Assert.Collection(data, 
+                pair => Assert.Equal(2, pair.Value.DataPoints.Count()),
+                pair => Assert.Equal(3, pair.Value.DataPoints.Count()));
+        }
 
-            var expected = new Dictionary<string, DataSet>
+        [Fact]
+        public void ProductionGraphUsesUserIdAsKey()
+        {
+            var data = _service.GenerateProductionDataSets(_users);
+
+            Assert.Collection(data,
+                pair => Assert.Equal("1", pair.Key),
+                pair => Assert.Equal("2", pair.Key));
+        }
+
+        [Fact]
+        public void ProductionGraphUsesUserNameAsLabel()
+        {
+            var data = _service.GenerateProductionDataSets(_users);
+
+            Assert.Collection(data,
+                pair => Assert.Equal("user1 lastname1", pair.Value.Label),
+                pair => Assert.Equal("user2 lastname2", pair.Value.Label));
+        }
+
+        [Fact]
+        public void MissingMonthsAdded()
+        {
+            var data = new List<DateDataPoint>
             {
-                {
-                    "1", new DataSet
-                    {
-                        Label = "user1 lastname1",
-                        DataPoints = new List<DataPoint>
-                        {
-                            new DataPoint {Label = DateTime.Parse("0001-01-01"), Value = 1},
-                            new DataPoint {Label = DateTime.Parse("0001-02-01"), Value = 2}
-                        }
-                    }
-                },
-                {
-                    "2", new DataSet
-                    {
-                        Label = "user2 lastname2",
-                        DataPoints = new List<DataPoint>
-                        {
-                            new DataPoint {Label = DateTime.Parse("0001-01-01"), Value = 1},
-                            new DataPoint {Label = DateTime.Parse("0001-02-01"), Value = 1},
-                            new DataPoint {Label = DateTime.Parse("0002-03-01"), Value = 2}
-                        }
-                    }
-                }
+                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.Date},
+                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.AddMonths(2).Date}
             };
 
-            Assert.Equal(expected, data);
+            var expectedData = new List<DateDataPoint>
+            {
+                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.Date},
+                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.AddMonths(1).Date},
+                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.AddMonths(2).Date}
+            };
+
+            var buffedData = GraphService.BuffOut(data).ToList();
+
+            Assert.Equal(expectedData.Count, buffedData.Count);
+        }
+
+        [Fact]
+        public void CorrectOrderOnBuffData()
+        {
+            var today = DateTime.UtcNow.Date;
+            var data = new List<DateDataPoint>
+            {
+                new DateDataPoint{Value = 1, Date = today},
+                new DateDataPoint{Value = 1, Date = today.AddMonths(2).Date}
+            };
+
+            var buffedData = GraphService.BuffOut(data).ToList();
+
+            Assert.Collection(buffedData, 
+                point => Assert.Equal(point.Date, today), 
+                point => Assert.Equal(point.Date, today.AddMonths(1)),
+                point => Assert.Equal(point.Date, today.AddMonths(2)));
         }
     }
 }
