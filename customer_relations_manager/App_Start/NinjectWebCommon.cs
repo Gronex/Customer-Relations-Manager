@@ -1,6 +1,8 @@
 using AutoMapper;
+using Core.ApplicationServices.Graph;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Core.DomainServices.Services;
 using Infrastructure.DataAccess;
 using Infrastructure.DataAccess.Repositories;
 using Microsoft.AspNet.Identity;
@@ -88,6 +90,8 @@ namespace customer_relations_manager.App_Start
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
             kernel.Bind<IGoalRepository>().To<GoalRepository>();
             kernel.Bind<IOpportunityRepository>().To<OpportunityRepository>();
+
+            kernel.Bind<IGraphService>().To<GraphService>();
         }        
     }
 }
