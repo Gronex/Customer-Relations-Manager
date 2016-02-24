@@ -19,7 +19,7 @@ namespace Core.ApplicationServices.Graph
             {
                 var goals = user.Goals.OrderBy(g => g.StartDate);
                 
-                var buffedGoals = BuffOutGoals(goals, !user.Active ? user.EndDate : null);
+                var buffedGoals = BuffOutGoals(goals, !user.Active ? user.EndDate : DateTime.UtcNow.Date);
 
 
                 dict.Add(user.Id, new DataSet
@@ -80,7 +80,7 @@ namespace Core.ApplicationServices.Graph
                     toAdd.Add(last);
                 }
             }
-
+            last = lastGoal;
             var remainder = MonthDifference(lastGoal.StartDate, finalDate.Value);
 
             for (var i = 1; i <= remainder; i++)
