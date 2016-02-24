@@ -67,6 +67,7 @@
     <Compile Include="Repositories\IOpportunityRepository.cs" />
     <Compile Include="Repositories\IUserGroupRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IGraphService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainModels\Core.DomainModels.csproj">
