@@ -52,7 +52,8 @@ namespace Infrastructure.DataAccess.Repositories
             var person = _repo.GetByKey(id);
             if (person == null) return null;
             if (!_context.Companies.Any(c => c.Id == companyId)) return null;
-
+            if (person.Contracts.Any(c => c.CompanyId == companyId && !c.EndDate.HasValue)) return null;
+            
             person.Contracts.Add(new Contract {CompanyId = companyId, StartDate = DateTime.UtcNow.Date});
 
             _context.SetState(person, EntityState.Modified);
@@ -66,8 +67,8 @@ namespace Infrastructure.DataAccess.Repositories
 
             if (companyId.HasValue)
             {
-                var contract = person.Contracts.SingleOrDefault(c => c.CompanyId == companyId.Value);
-                if (contract == null || contract.EndDate.HasValue) return;
+                var contract = person.Contracts.FirstOrDefault(c => c.CompanyId == companyId.Value && !c.EndDate.HasValue);
+                if (contract == null) return;
                 contract.EndDate = DateTime.UtcNow.Date;
             }
             else
