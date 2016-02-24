@@ -19,7 +19,7 @@ namespace Core.ApplicationServices.Graph
             {
                 var goals = user.Goals.Select(g => new DateDataPoint
                 {
-                    Date = DateTime.Parse($"{g.Year.ToString("D4")}-{g.Month.ToString("D2")}-01"),
+                    Date = new DateTime(g.Year, g.Month, 1),
                     Value = g.Goal
                 }).OrderBy(g => g.Date);
 
