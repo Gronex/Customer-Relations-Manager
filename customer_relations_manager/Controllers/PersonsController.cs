@@ -12,6 +12,7 @@ using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
+    [RoutePrefix("api/persons")]
     public class PersonsController : ApiController
     {
         private readonly IPersonRepository _repo;
@@ -63,7 +64,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<PersonViewModel>(dbModel));
         }
 
-        [HttpPut, Route("add")]
+        [HttpPut, Route("{id}/add/{companyId}")]
         public IHttpActionResult AddToCompany(int id, int companyId)
         {
             var person = _repo.AddToCompany(id, companyId);
