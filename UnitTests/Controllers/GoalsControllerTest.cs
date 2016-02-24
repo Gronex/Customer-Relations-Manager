@@ -27,7 +27,7 @@ namespace UnitTests.Controllers
 
         public GoalsControllerTest()
         {
-            _data = new ProductionGoal { Id = 1, Month = 1, Year = 2010, Goal = 100 };
+            _data = new ProductionGoal { Id = 1, StartDate = new DateTime(2010, 1, 1), Goal = 100 };
             var mapper = AutomapperConfig.ConfigMappings().CreateMapper();
 
             _repo = Substitute.For<IGoalRepository>();
@@ -41,10 +41,10 @@ namespace UnitTests.Controllers
         {
             var data = new List<ProductionGoal>
             {
-                new ProductionGoal {Id = 1, Month = 1, Year = 2016, Goal = 100},
-                new ProductionGoal {Id = 2, Month = 1, Year = 2016, Goal = 200},
-                new ProductionGoal {Id = 3, Month = 1, Year = 2016, Goal = 300},
-                new ProductionGoal {Id = 4, Month = 1, Year = 2016, Goal = 100000},
+                new ProductionGoal {Id = 1, StartDate = new DateTime(2016, 1, 1), Goal = 100},
+                new ProductionGoal {Id = 2, StartDate = new DateTime(2016, 1, 1), Goal = 200},
+                new ProductionGoal {Id = 3, StartDate = new DateTime(2016, 1, 1), Goal = 300},
+                new ProductionGoal {Id = 4, StartDate = new DateTime(2016, 1, 1), Goal = 100000},
             };
 
             _repo.GetAll(Arg.Any<string>()).Returns(x => data.AsQueryable());
@@ -71,7 +71,7 @@ namespace UnitTests.Controllers
             // Only testing one, since there is no reason the 
             // system should have chosen a year in the past, and the objects are not the same refference,
             // just the same data, if all is well
-            Assert.Equal(_data.Year, result?.Content.Year);
+            Assert.Equal(_data.StartDate.Year, result?.Content.Year);
         }
 
         [Fact]

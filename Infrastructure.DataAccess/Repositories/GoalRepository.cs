@@ -44,8 +44,7 @@ namespace Infrastructure.DataAccess.Repositories
             return _repo.UpdateBy(g =>
             {
                 g.Goal = model.Goal;
-                g.Year = model.Year;
-                g.Month = model.Month;
+                g.StartDate = model.StartDate;
             }, g => g.Id == id && g.UserId == userId);
         }
 

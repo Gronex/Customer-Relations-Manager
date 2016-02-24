@@ -21,13 +21,13 @@ namespace UnitTests.Services
             {
                 new User {Id = "1", FirstName = "user1", LastName = "lastname1", Goals = new List<ProductionGoal>
                 {
-                    new ProductionGoal { Goal = 1, Month = 1, Year = 1},
-                    new ProductionGoal { Goal = 2, Month = 2, Year = 1},
+                    new ProductionGoal { Goal = 1, StartDate = new DateTime(1, 2, 1)},
+                    new ProductionGoal { Goal = 2, StartDate = new DateTime(1, 2, 1)}
                 }},
                 new User {Id = "2", FirstName = "user2", LastName = "lastname2", Goals = new List<ProductionGoal>
                 {
-                    new ProductionGoal { Goal = 1, Month = 1, Year = 1},
-                    new ProductionGoal { Goal = 2, Month = 3, Year = 1},
+                    new ProductionGoal { Goal = 1, StartDate = new DateTime(1, 1, 1)},
+                    new ProductionGoal { Goal = 2, StartDate = new DateTime(1, 3, 1)}
                 }},
             };
 
@@ -76,40 +76,33 @@ namespace UnitTests.Services
         [Fact]
         public void MissingMonthsAdded()
         {
-            var data = new List<DateDataPoint>
+            var data = new List<ProductionGoal>
             {
-                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.Date},
-                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.AddMonths(2).Date}
+                new ProductionGoal{Goal = 1, StartDate = DateTime.UtcNow.Date},
+                new ProductionGoal{Goal = 1, StartDate = DateTime.UtcNow.AddMonths(2).Date}
             };
 
-            var expectedData = new List<DateDataPoint>
-            {
-                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.Date},
-                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.AddMonths(1).Date},
-                new DateDataPoint{Value = 1, Date = DateTime.UtcNow.AddMonths(2).Date}
-            };
+            var buffedData = GraphService.BuffOutGoals(data).ToList();
 
-            var buffedData = GraphService.BuffOut(data).ToList();
-
-            Assert.Equal(expectedData.Count, buffedData.Count);
+            Assert.Equal(3, buffedData.Count);
         }
 
         [Fact]
         public void CorrectOrderOnBuffData()
         {
             var today = DateTime.UtcNow.Date;
-            var data = new List<DateDataPoint>
+            var data = new List<ProductionGoal>
             {
-                new DateDataPoint{Value = 1, Date = today},
-                new DateDataPoint{Value = 1, Date = today.AddMonths(2).Date}
+                new ProductionGoal{Goal = 1, StartDate = DateTime.UtcNow.Date},
+                new ProductionGoal{Goal = 1, StartDate = DateTime.UtcNow.AddMonths(2).Date}
             };
 
-            var buffedData = GraphService.BuffOut(data).ToList();
+            var buffedData = GraphService.BuffOutGoals(data).ToList();
 
             Assert.Collection(buffedData, 
-                point => Assert.Equal(point.Date, today), 
-                point => Assert.Equal(point.Date, today.AddMonths(1)),
-                point => Assert.Equal(point.Date, today.AddMonths(2)));
+                point => Assert.Equal(point.StartDate, today), 
+                point => Assert.Equal(point.StartDate, today.AddMonths(1)),
+                point => Assert.Equal(point.StartDate, today.AddMonths(2)));
         }
     }
 }

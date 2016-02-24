@@ -29,7 +29,11 @@ namespace customer_relations_manager.App_Start
 
                 
                 cfg.CreateMap<UserGroup, GroupViewModel>().ReverseMap();
-                cfg.CreateMap<ProductionGoal, GoalViewModel>().ReverseMap();
+                cfg.CreateMap<ProductionGoal, GoalViewModel>()
+                    .ForMember(vm => vm.Year, o => o.MapFrom(pg => pg.StartDate.Year))
+                    .ForMember(vm => vm.Month, o => o.MapFrom(pg => pg.StartDate.Month))
+                    .ReverseMap()
+                    .ForMember(pg => pg.StartDate, o => o.MapFrom(vm => new DateTime(vm.Year, vm.Month, 1)));
                 cfg.CreateMap<Company, CompanyViewModel>().ReverseMap();
                 cfg.CreateMap<Company, CompanyOverviewViewModel>().ReverseMap();
                 cfg.CreateMap<Opportunity, OpportunityViewModel>()

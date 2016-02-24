@@ -17,13 +17,9 @@ namespace Core.ApplicationServices.Graph
 
             foreach (var user in users)
             {
-                var goals = user.Goals.Select(g => new DateDataPoint
-                {
-                    Date = new DateTime(g.Year, g.Month, 1),
-                    Value = g.Goal
-                }).OrderBy(g => g.Date);
+                var goals = user.Goals.OrderBy(g => g.StartDate);
 
-                var buffedGoals = BuffOut(goals);
+                var buffedGoals = BuffOutGoals(goals);
 
 
                 dict.Add(user.Id, new DataSet
@@ -31,8 +27,8 @@ namespace Core.ApplicationServices.Graph
                     Label = user.Name,
                     DataPoints = buffedGoals.Select(g => new DataPoint
                     {
-                        Label = g.Date,
-                        Value = g.Value
+                        Label = g.StartDate,
+                        Value = g.Goal
                     })
                 });
             }
@@ -47,40 +43,42 @@ namespace Core.ApplicationServices.Graph
             return Math.Abs((d1.Month - d2.Month) + 12*(d1.Year - d2.Year));
         }
 
-        public static IEnumerable<DateDataPoint> BuffOut(IEnumerable<DateDataPoint> list)
+        public static IEnumerable<ProductionGoal> BuffOutGoals(IEnumerable<ProductionGoal> goalList)
         {
-            var goals = list.ToList();
+            var goals = goalList.ToList();
+            if(!goals.Any()) return goals;
+
             var firstGoal = goals.FirstOrDefault();
             var lastGoal = goals.LastOrDefault();
 
-            var difference = MonthDifference(firstGoal.Date, lastGoal.Date);
+            var difference = MonthDifference(firstGoal.StartDate, lastGoal.StartDate);
 
             // adds one to account for a difference by 1 month means that the two months are
             // right next to one another
-            if (goals.Count() >= difference + 1) return goals;
+            if (goals.Count >= difference + 1) return goals;
 
-            var toAdd = new List<DateDataPoint>();
-            var last = firstGoal.Date;
+            var toAdd = new List<ProductionGoal>();
+            var last = firstGoal.StartDate;
 
             foreach (var goal in goals)
             {
-                if (last.AddMonths(1) == goal.Date)
+                if (last.AddMonths(1) == goal.StartDate)
                 {
-                    last = goal.Date;
+                    last = goal.StartDate;
                     continue;
                 }
-                while (last.AddMonths(1) < goal.Date)
+                while (last.AddMonths(1) < goal.StartDate)
                 {
                     last = last.AddMonths(1);
-                    toAdd.Add(new DateDataPoint
+                    toAdd.Add(new ProductionGoal
                     {
-                        Date = last,
-                        Value = goal.Value
+                        StartDate = last,
+                        Goal = goal.Goal
                     });
                 }
             }
             goals.AddRange(toAdd);
-            return goals.OrderBy(g => g.Date);
+            return goals.OrderBy(g => g.StartDate);
         }
 
     }

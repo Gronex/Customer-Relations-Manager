@@ -45,15 +45,15 @@ namespace UnitTests.Repositories
                 }
             });
 
-            _data = new ProductionGoal {Goal = 10000000, Month = 5, Year = 3000, UserId = "0"};
+            _data = new ProductionGoal {Goal = 10000000, StartDate = new DateTime(3000, 5, 1), UserId = "0"};
 
             //Add some data
             _context.Goals.AddRange(new List<ProductionGoal>
             {
-                new ProductionGoal {Id = 0, Month = 1, Year = 2016, Goal = 100, UserId = "0"},
-                new ProductionGoal {Id = 1, Month = 1, Year = 2016, Goal = 200, UserId = "0"},
-                new ProductionGoal {Id = 2, Month = 1, Year = 2016, Goal = 300, UserId = "1"},
-                new ProductionGoal {Id = 3, Month = 1, Year = 2016, Goal = 100000, UserId = "2"},
+                new ProductionGoal {Id = 0, StartDate = new DateTime(2016, 1, 1), Goal = 100, UserId = "0"},
+                new ProductionGoal {Id = 1, StartDate = new DateTime(2016, 1, 1), Goal = 200, UserId = "0"},
+                new ProductionGoal {Id = 2, StartDate = new DateTime(2016, 1, 1), Goal = 300, UserId = "1"},
+                new ProductionGoal {Id = 3, StartDate = new DateTime(2016, 1, 1), Goal = 100000, UserId = "2"},
             });
 
             _context.Users.Add(new User {Id = "0"});
@@ -127,14 +127,14 @@ namespace UnitTests.Repositories
                 .Returns(ci =>
                 {
                     var action = ci.Arg<Action<ProductionGoal>>();
-                    var oldData = new ProductionGoal {Goal = -1, Month = -1, Year = -1};
+                    var oldData = new ProductionGoal {Goal = -1, StartDate = new DateTime(1, 1, 1) };
                     action(oldData);
                     return oldData;
                 });
 
             var result = _repo.Update("0", 1, _data);
             
-            Assert.Equal(new { _data.Goal, _data.Month, _data.Year }, new { result.Goal, result.Month, result.Year });
+            Assert.Equal(new { _data.Goal, _data.StartDate }, new { result.Goal, result.StartDate });
         }
 
         [Theory]

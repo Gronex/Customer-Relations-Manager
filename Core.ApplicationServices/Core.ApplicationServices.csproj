@@ -57,7 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graph\DateDataPoint.cs" />
     <Compile Include="Graph\GraphService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
