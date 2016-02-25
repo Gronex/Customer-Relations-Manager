@@ -15,6 +15,8 @@ namespace customer_relations_manager
             // Web API routes
             //config.MapHttpAttributeRoutes();
 
+
+
             routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -26,11 +28,6 @@ namespace customer_relations_manager
                 routeTemplate: "api/users/{userId}/{controller}/{id}",
                 defaults: new {id = RouteParameter.Optional }
             );
-        }
-
-        public static void Register(HttpConfiguration config)
-        {
-            //config.MapHttpAttributeRoutes();
         }
     }
 }

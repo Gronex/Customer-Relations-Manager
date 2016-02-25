@@ -11,20 +11,46 @@ using Core.DomainServices.Services;
 
 namespace customer_relations_manager.Controllers
 {
-    [RoutePrefix("api/graph")]
     public class GraphController : ApiController
     {
         private readonly IGenericRepository<User> _userRepo;
         private readonly IGraphService _graphService;
-
+        
         public GraphController(IGenericRepository<User> userRepo, IGraphService graphService)
         {
             _userRepo = userRepo;
             _graphService = graphService;
+
+
         }
 
-        [HttpGet, Route("production")]
-        public IDictionary<string, DataSet> GetProductionGraph()
+        [HttpGet]
+        public IHttpActionResult Get(string id)
+        {
+            // Since i cant figure out how to make it do this automaticaly
+            switch (id)
+            {
+                case "goal":
+                    //return Ok(GetGoalData());
+
+                    var users = _userRepo.Get();
+
+                    return Ok(_graphService.GenerateGoalDataTable(users));
+                case "production":
+                    return Ok(GetProductionData());
+                default:
+                    return NotFound();
+            }
+        }
+
+        public IDictionary<string, DataSet> GetGoalData()
+        {
+            var users = _userRepo.Get();
+
+            return _graphService.GenerateGoalDataSets(users);
+        }
+
+        public IDictionary<string, DataSet> GetProductionData()
         {
             var users = _userRepo.Get();
 

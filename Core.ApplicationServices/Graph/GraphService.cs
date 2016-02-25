@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Graph;
+using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
 using Core.DomainServices.Services;
 
@@ -11,7 +13,7 @@ namespace Core.ApplicationServices.Graph
 {
     public class GraphService : IGraphService
     {
-        public IDictionary<string, DataSet> GenerateProductionDataSets(IEnumerable<User> users)
+        public IDictionary<string, DataSet> GenerateGoalDataSets(IEnumerable<User> users)
         {
             var dict = new Dictionary<string, DataSet>();
 
@@ -36,8 +38,107 @@ namespace Core.ApplicationServices.Graph
             return dict;
         }
 
+        public IDictionary<object, List<object>> GenerateGoalDataTable(IEnumerable<User> users)
+        {
+            var usersWithGoals = users.Where(u => u.Goals.Any()).ToList();
+            var data = new List<IEnumerable<object>>();
+
+            var testData = new Dictionary<object, List<object>> {{"header", new List<object> {"Date"}}};
 
 
+            var header = new List<string> {"Date"};
+
+            var minDate = usersWithGoals.Select(u => u.Goals.Min(g => g.StartDate)).Min();
+            var maxDate = usersWithGoals.Select(u => u.Goals.Max(g => g.StartDate)).Max();
+
+            foreach (var user in usersWithGoals)
+            {
+                var currentDate = minDate;
+                //header.Add(user.Name);
+                testData["header"].Add(user.Name);
+
+                var goals = user.Goals.OrderBy(g => g.StartDate);
+                ProductionGoal lastGoal = null;
+
+                foreach (var goal in goals)
+                {
+                    while (goal.StartDate > currentDate)
+                    {
+                        if (lastGoal == null)
+                        {
+                            AddOrCreate(testData, currentDate, null);
+                            currentDate = currentDate.AddMonths(1);
+                            continue;
+                        }
+                        AddOrCreate(testData, currentDate, lastGoal.Goal);
+                        currentDate = currentDate.AddMonths(1);
+                    }
+                    lastGoal = goal;
+                }
+
+                while (maxDate >= currentDate)
+                {
+                    if (lastGoal == null)
+                    {
+                        AddOrCreate(testData, currentDate, null);
+                        continue;
+                    }
+                    AddOrCreate(testData, currentDate, lastGoal.Goal);
+                    currentDate = currentDate.AddMonths(1);
+                }
+            }
+
+            return testData;
+        }
+
+        private void AddOrCreate(IDictionary<object, List<object>> dict, object key, object value)
+        {
+            if (dict.ContainsKey(key))
+                dict[key].Add(value);
+            else
+                dict.Add(key, new List<object> { value });
+        }
+
+        public IDictionary<string, DataSet> GenerateProductionDataSets(IEnumerable<User> users)
+        {
+            var dict = new Dictionary<string, DataSet>();
+
+            foreach (var user in users)
+            {
+                var production = user.Opportunities
+                    .SelectMany(SpreadOutEarnings)
+                    .GroupBy(t => t.Item1);
+
+                dict.Add(user.Id, new DataSet
+                {
+                    Label = user.Name,
+                    DataPoints = production.Select(p => new DataPoint
+                    {
+                        Label = p.Key,
+                        Value = p.Sum(t => t.Item2)
+                    })
+                });
+            }
+
+            return dict;
+        }
+
+
+        public IEnumerable<Tuple<DateTime, double>> SpreadOutEarnings(Opportunity opportunity)
+        {
+
+            var difference = MonthDifference(opportunity.StartDate, opportunity.EndDate) + 1;
+
+            var earningTimeList = new List<Tuple<DateTime, double>>();
+
+            for (var i = 0; i < difference; i++)
+            {
+                earningTimeList.Add(new Tuple<DateTime, double>(opportunity.StartDate.AddMonths(i), difference));
+            }
+
+            return earningTimeList;
+        } 
+        
         private static int MonthDifference(DateTime d1, DateTime d2)
         {
             return Math.Abs((d1.Month - d2.Month) + 12*(d1.Year - d2.Year));

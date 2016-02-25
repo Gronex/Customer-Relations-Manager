@@ -13,7 +13,7 @@ var dest = "../customer_relations_manager";
 var fullDest = dest + "/view";
 
 gulp.task("clean", function () {
-  return del([fullDest], {force: true});
+  return del([fullDest + "/app", fullDest + "/content"], {force: true});
 });
 
 gulp.task("move:js", ["clean"], function () {

@@ -20,7 +20,6 @@ namespace customer_relations_manager
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             WebApiConfig.Register(RouteTable.Routes);
             SerializationSettings(GlobalConfiguration.Configuration);
-            GlobalConfiguration.Configure(WebApiConfig.Register);
         }
 
         private static void SerializationSettings(HttpConfiguration config)
