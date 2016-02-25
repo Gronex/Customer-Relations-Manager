@@ -36,8 +36,8 @@
       vm.stage.errMsg = undefined;
       dataservice.stages
         .create(vm.stage)
-        .then(function (stage) {
-          vm.stages.push(stage);
+        .then(function (data) {
+          vm.stages.push(data.data);
           resetStage();
         }, function (err) { handleError(err, vm.stage); });
     }

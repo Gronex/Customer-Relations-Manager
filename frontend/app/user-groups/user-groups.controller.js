@@ -36,8 +36,8 @@
       vm.group.errMsg = undefined;
       dataservice.userGroups
         .create(vm.group)
-        .then(function (group) {
-          vm.groups.push(group);
+        .then(function (data) {
+          vm.groups.push(data.data);
           vm.group.name = "";
         }, function (err) { handleError(err, vm.group); });
     }

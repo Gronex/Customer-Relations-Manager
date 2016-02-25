@@ -18,7 +18,8 @@
       opportunities: createResource("api/opportunities"),
       stages: createResource("api/stages"),
       departments: createResource("api/departments"),
-      opportunityCategories: createResource("api/opportunitycategories")
+      opportunityCategories: createResource("api/opportunitycategories"),
+      people:  createResource("api/persons")
     };
 
     function login(userName, password) {
@@ -83,10 +84,13 @@
 
     function handleError(err) {
       $log.error("XHR Failed with code: '" + err.status + "' on '" + err.config.method + " " + err.config.url + "'");
+      if(err.status === 401) authorization.logout();
       return $q.reject(err);
     }
 
     function returnData(response) {
+      if(response.status === 201)
+        return {location: response.location, data: response.data};
       return response.data;
     }
   }
