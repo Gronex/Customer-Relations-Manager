@@ -16,15 +16,7 @@
     activate();
 
     function activate() {
-      vm.people = [
-        {
-          id: 1,
-          firstName: "Test1",
-          lastName: "Test",
-          email: "test@test.com",
-          phoneNumber: "123123"
-        }
-      ];
+      getPeople();
     }
 
     function getPeople() {
