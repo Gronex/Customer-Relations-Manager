@@ -5,7 +5,7 @@ var paths = {
   js: ["scripts/**/*.js", "app/**/*.js"],
   html: ["app/**/*.html"],
   css: ["content/**/*.css"],
-  libs: ["bower_components/**"],
+  libs: ["bower_components/**", "node_modules/**"],
   index: "index.html"
 };
 

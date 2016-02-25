@@ -10,7 +10,8 @@
     'ui.bootstrap',
     'ui.router',
     'LocalStorageModule',
-    'ngTagsInput'
+    'ngTagsInput',
+    'n3-line-chart'
   ]).config(RouteConfig);
 
   function RouteConfig($stateProvider, $urlRouterProvider) {
