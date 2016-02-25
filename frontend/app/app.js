@@ -54,6 +54,18 @@
         controller: "Companies",
         controllerAs: 'vm'
       })
+      .state("People", {
+        url: "/people",
+        templateUrl: "view/app/people/people.html",
+        controller: "People",
+        controllerAs: 'vm'
+      })
+      .state("Person", {
+        url: "/people/{id}",
+        templateUrl: "view/app/people/person.html",
+        controller: "Person",
+        controllerAs: 'vm'
+      })
       .state("Company", {
         url: "/companies/{id}",
         templateUrl: "view/app/companies/company.html",

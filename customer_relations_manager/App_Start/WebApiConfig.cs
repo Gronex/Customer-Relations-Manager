@@ -27,5 +27,10 @@ namespace customer_relations_manager
                 defaults: new {id = RouteParameter.Optional }
             );
         }
+
+        public static void Register(HttpConfiguration config)
+        {
+            config.MapHttpAttributeRoutes();
+        }
     }
 }
