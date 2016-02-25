@@ -30,7 +30,7 @@ namespace customer_relations_manager
 
         public static void Register(HttpConfiguration config)
         {
-            config.MapHttpAttributeRoutes();
+            //config.MapHttpAttributeRoutes();
         }
     }
 }

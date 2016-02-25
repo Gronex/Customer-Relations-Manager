@@ -11,6 +11,7 @@ using Core.DomainServices.Services;
 
 namespace customer_relations_manager.Controllers
 {
+    [RoutePrefix("api/graph")]
     public class GraphController : ApiController
     {
         private readonly IGenericRepository<User> _userRepo;
@@ -22,7 +23,7 @@ namespace customer_relations_manager.Controllers
             _graphService = graphService;
         }
 
-        [HttpGet, Route("Production")]
+        [HttpGet, Route("production")]
         public IDictionary<string, DataSet> GetProductionGraph()
         {
             var users = _userRepo.Get();

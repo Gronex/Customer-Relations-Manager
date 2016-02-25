@@ -19,7 +19,7 @@
     activate();
 
     function activate() {
-      if($stateParams === "new") vm.editing = true;
+      if($stateParams !== "new") vm.editing = true;
       if(vm.editing){
         getPerson();
       }
@@ -48,7 +48,6 @@
           $state.go("Person", {id: data.location});
         });
       }
-
     }
 
     function removeFromAll() {
