@@ -1,0 +1,26 @@
+<h1>Editing {{vm.person.firstName}} {{vm.person.lastName}}</h1>
+
+<form ng-submit="vm.save()">
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label>First name</label>
+      <input class="form-control" type="text" required ng-model="vm.person.firstName">
+    </div>
+    <div class="form-group col-sm-6">
+      <label>Last name</label>
+      <input class="form-control" type="text" required ng-model="vm.person.lastName">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input class="form-control" type="email" ng-model="vm.person.email">
+  </div>
+  <div class="form-group">
+    <label>Phone number</label>
+    <input class="form-control" type="phone" ng-model="vm.person.phoneNumber">
+  </div>
+
+  <button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i></button>
+  <a role="button" class="btn btn-primary" ui-sref="People">Back <i class="fa fa-arrow-left"></i></a>
+  <button type="button" class="btn btn-danger pull-right" ng-click="vm.removeFromAll()">Remove from all companies <i class="fa fa-level-down"></i></button>
+</form>

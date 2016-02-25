@@ -60,6 +60,7 @@ namespace customer_relations_manager
             //});
 
             //manager.EmailService = new EmailService(new SmtpClient());
+            
 
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)

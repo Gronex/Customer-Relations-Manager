@@ -29,11 +29,12 @@ namespace customer_relations_manager
                 TokenEndpointPath = new PathString("/api/token"),
                 Provider = new ApplicationOAuthProvider("self"),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(365),
                 AllowInsecureHttp = true
             };
 #if !DEBUG
             oAuthOptions.AllowInsecureHttp = false;
+            oAuthOptions.AccessTokenExpireTimeSpan = TimeSpan.FromDays(1);
 #endif
             app.UseOAuthBearerTokens(oAuthOptions);
         }

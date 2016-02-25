@@ -568,6 +568,7 @@
     <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="Controllers\OpportunitiesController.cs" />
     <Compile Include="Controllers\OpportunityCategoriesController.cs" />
+    <Compile Include="Controllers\PersonsController.cs" />
     <Compile Include="Controllers\StagesController.cs" />
     <Compile Include="Controllers\Users\GoalsController.cs" />
     <Compile Include="Controllers\UserGroupsController.cs" />
@@ -580,6 +581,7 @@
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\Company\CompanyOverviewViewModel.cs" />
     <Compile Include="ViewModels\Company\CompanyViewModel.cs" />
+    <Compile Include="ViewModels\Company\PersonViewModel.cs" />
     <Compile Include="ViewModels\GoalViewModel.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityOverviewViewMode.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityViewModel.cs" />

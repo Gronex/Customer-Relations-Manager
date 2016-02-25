@@ -47,6 +47,8 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Stage, StageViewModel>().ReverseMap();
                 cfg.CreateMap<OpportunityCategory, CategoryViewModel>().ReverseMap();
                 cfg.CreateMap<Department, GroupViewModel>().ReverseMap();
+
+                cfg.CreateMap<Person, PersonViewModel>().ReverseMap();
             });
 
             return config;

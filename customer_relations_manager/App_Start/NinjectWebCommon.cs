@@ -90,8 +90,8 @@ namespace customer_relations_manager.App_Start
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
             kernel.Bind<IGoalRepository>().To<GoalRepository>();
             kernel.Bind<IOpportunityRepository>().To<OpportunityRepository>();
-
             kernel.Bind<IGraphService>().To<GraphService>();
+            kernel.Bind<IPersonRepository>().To<PersonRepository>();
         }        
     }
 }
