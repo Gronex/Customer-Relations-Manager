@@ -10,11 +10,12 @@
   /* @ngInject */
   function graph ($http, $q) {
 
-    google.charts.load('current', {'packages':['corechart']});
+    google.charts.load('current', {'packages':['corechart', 'table']});
 
     return {
       productionGraph: productionGraph,
-      drawChart: drawChart
+      drawChart: drawChart,
+      drawTable: drawTable
     };
 
     function drawChart(data, options, divId) {
@@ -23,7 +24,17 @@
         if(!divId) divId = 'chart_div';
         var table = google.visualization.arrayToDataTable(data);
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.AreaChart(document.getElementById(divId));
+        var chart = new google.visualization.ComboChart(document.getElementById(divId));
+        chart.draw(table, options);
+      });
+    }
+
+    function drawTable(data, options, divId) {
+      google.charts.setOnLoadCallback(function () {
+        if(!divId) divId = 'table_div';
+        var table = google.visualization.arrayToDataTable(data);
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.Table(document.getElementById(divId));
         chart.draw(table, options);
       });
     }
@@ -44,7 +55,7 @@
           var data = [];
           for (var date in result[0]) {
             if(date === "header")
-              data.push(_.flatten([date, result[0][date], "Goal"]));
+              data.push(_.flatten(["Month", result[0][date], "Goal"]));
             else
               data.push(_.flatten([date, result[0][date], _.sum(result[1][date])]));
           }
@@ -54,14 +65,19 @@
 
           return {
             data: data,
-            options: {
+            graphOptions: {
+              title: 'Production',
               isStacked: true,
               legend: {position: 'top', maxLines: 3},
-              title: 'Goals',
               hAxis: {title: "Time"},
-              vAxis: {minValue: 0, title: "DKK"},
+              vAxis: {title: "DKK"},
               seriesType: "area",
-              series: goalSeries
+              series: goalSeries,
+              crosshair: { trigger: 'both' }
+            },
+            tableOptions: {
+              width: '100%',
+              height: '100%'
             }
           };
         });

@@ -20,7 +20,8 @@
     function getProductionGraph(){
       graph.productionGraph()
         .then(function (result) {
-          graph.drawChart(result.data, result.options);
+          graph.drawChart(result.data, result.graphOptions);
+          graph.drawTable(result.data, result.tableOptions);
         });
     }
   }
