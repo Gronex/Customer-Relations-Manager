@@ -49,29 +49,33 @@
       };
 
       function getAll(args) {
-        return $http.get(getUrl(url, args), {params: args.query})
+        return $http.get(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
       }
 
       function getById(args) {
 
-        return $http.get(getUrl(url, args), {params: args.query})
+        return $http.get(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
       }
 
       function create(data, args) {
-        return $http.post(getUrl(url, args), data, {params: args.query})
+        return $http.post(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
       }
 
       function update(id, data, args) {
-        return $http.put(getUrl(url, args), data, {params: args.query})
+        return $http.put(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
       }
 
       function remove(id, args) {
-        return $http.delete(getUrl(url, args), {params: args.query})
+        return $http.delete(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
+      }
+
+      function getQuery(args) {
+        if(args) return {params: args.query};
       }
 
       function getUrl(urlToUpdate, args) {
@@ -79,7 +83,7 @@
         if(typeof(args) === "string" || typeof(args) === "number")
           return urlToUpdate + "/" + args;
 
-        if(args["id"] !== undefined)
+        if(args !== undefined && args["id"] !== undefined)
           urlToUpdate = urlToUpdate  + "/" + args.id;
 
         if(!pathRegex.test(urlToUpdate)) return urlToUpdate;
