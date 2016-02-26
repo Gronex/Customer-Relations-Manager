@@ -5,7 +5,7 @@ var paths = {
   js: ["scripts/**/*.js", "app/**/*.js"],
   html: ["app/**/*.html"],
   css: ["content/**/*.css"],
-  libs: ["bower_components/**", "node_modules/**"],
+  libs: ["bower_components/**"],
   index: "index.html"
 };
 
@@ -13,7 +13,7 @@ var dest = "../customer_relations_manager";
 var fullDest = dest + "/view";
 
 gulp.task("clean", function () {
-  return del([fullDest + "/app", fullDest + "/content"], {force: true});
+  return del([fullDest], {force: true});
 });
 
 gulp.task("move:js", ["clean"], function () {

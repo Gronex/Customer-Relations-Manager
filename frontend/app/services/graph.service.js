@@ -43,21 +43,16 @@
         .then(function (result) {
           var data = [];
           for (var date in result[0]) {
-            if(date === "header"){
+            if(date === "header")
               data.push(_.flatten([date, result[0][date], "Goal"]));
-            }
             else
               data.push(_.flatten([date, result[0][date], _.sum(result[1][date])]));
-
           }
 
-
           var goalSeries = {};
+          goalSeries[data[0].length - 2] = {type: 'line'};
 
-          goalSeries[data[0].length - 2] = {type: 'line'}
-          console.log(goalSeries);
-
-          var res = {
+          return {
             data: data,
             options: {
               isStacked: true,
@@ -69,7 +64,6 @@
               series: goalSeries
             }
           };
-          return res;
         });
     }
 
