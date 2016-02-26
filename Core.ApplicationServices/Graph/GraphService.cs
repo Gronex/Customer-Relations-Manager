@@ -14,34 +14,39 @@ namespace Core.ApplicationServices.Graph
 {
     public class GraphService : IGraphService
     {
-        public IDictionary<object, List<object>> GenerateGoalDataTable(IEnumerable<User> users)
+        public IDictionary<object, List<object>> GenerateGoalDataTable(
+            IEnumerable<User> users,
+            DateTime? startDate = null,
+            DateTime? endDate = null)
         {
-            var usersWithGoals = users.Where(u => u.Goals.Any()).ToList();
+            var usersWithGoals = users
+                .Where(u => u.Goals.Any(g => !endDate.HasValue || g.StartDate <= endDate)).ToList();
 
-            var testData = new Dictionary<object, List<object>> {{"header", new List<object> {"Date"}}};
+            var data = new Dictionary<object, List<object>> {{"header", new List<object>()}};
 
-            var minDate = usersWithGoals.Select(u => u.Goals.Min(g => g.StartDate)).Min();
-            var maxDate = usersWithGoals.Select(u => u.Goals.Max(g => g.StartDate)).Max();
+            var minDate = startDate ?? usersWithGoals.Select(u => u.Goals.Min(g => g.StartDate)).Min();
+            var maxDate = endDate ?? usersWithGoals.Select(u => u.Goals.Max(g => g.StartDate)).Max();
 
             foreach (var user in usersWithGoals)
             {
                 var currentDate = minDate;
-                testData["header"].Add(user.Name);
+                data["header"].Add(user.Name);
 
-                var goals = user.Goals.OrderBy(g => g.StartDate);
-                ProductionGoal lastGoal = null;
+                var goals = user.Goals
+                    .OrderBy(g => g.StartDate);
+                var lastGoal = goals.LastOrDefault(g => g.StartDate <= minDate);
 
-                foreach (var goal in goals)
+                foreach (var goal in goals.Where(g => g.StartDate >= minDate && g.StartDate <= maxDate))
                 {
                     while (goal.StartDate > currentDate)
                     {
-                        if (lastGoal == null)
+                        if (lastGoal == null || lastGoal.StartDate < minDate)
                         {
-                            AddOrCreate(testData, currentDate, null);
+                            AddOrCreate(data, currentDate, null);
                             currentDate = currentDate.AddMonths(1);
                             continue;
                         }
-                        AddOrCreate(testData, currentDate, lastGoal.Goal);
+                        AddOrCreate(data, currentDate, lastGoal.Goal);
                         currentDate = currentDate.AddMonths(1);
                     }
                     lastGoal = goal;
@@ -51,25 +56,28 @@ namespace Core.ApplicationServices.Graph
                 {
                     if (lastGoal == null)
                     {
-                        AddOrCreate(testData, currentDate, null);
+                        AddOrCreate(data, currentDate, null);
                         continue;
                     }
-                    AddOrCreate(testData, currentDate, lastGoal.Goal);
+                    AddOrCreate(data, currentDate, lastGoal.Goal);
                     currentDate = currentDate.AddMonths(1);
                 }
             }
 
-            return testData;
+            return data;
         }
 
-        public IDictionary<object, List<object>> GenerateProductionDataTable(IEnumerable<User> users)
+        public IDictionary<object, List<object>> GenerateProductionDataTable(
+            IEnumerable<User> users,
+            DateTime? startDate = null,
+            DateTime? endDate = null)
         {
-            var usableUsers = users.Where(u => u.Opportunities.Any()).ToList();
+            var usableUsers = users.Where(u => u.Opportunities.Any(o => (!endDate.HasValue || o.StartDate <= endDate) && (!startDate.HasValue || o.EndDate >= startDate))).ToList();
 
             var data = new Dictionary<object, List<object>>();
 
-            var minDate = usableUsers.Select(u => u.Opportunities.Min(g => g.StartDate)).Min().RoundToMonth();
-            var maxDate = usableUsers.Select(u => u.Opportunities.Max(g => g.EndDate)).Max().RoundToMonth();
+            var minDate = startDate ?? usableUsers.Select(u => u.Opportunities.Min(g => g.StartDate)).Min().RoundToMonth();
+            var maxDate = endDate ?? usableUsers.Select(u => u.Opportunities.Max(g => g.EndDate)).Max().RoundToMonth();
 
             foreach (var user in usableUsers)
             {
@@ -79,6 +87,7 @@ namespace Core.ApplicationServices.Graph
                 var earnings = user.Opportunities
                     .SelectMany(SpreadOutEarnings)
                     .GroupBy(e => e.Item1)
+                    .Where(o => o.Key >= minDate && o.Key <= maxDate)
                     .OrderBy(e => e.Key);
 
                 foreach (var earning in earnings)

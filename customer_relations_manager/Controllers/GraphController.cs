@@ -25,16 +25,16 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult Get(string id)
+        public IHttpActionResult Get(string id, [FromUri]DateTime? startDate = null, [FromUri]DateTime? endDate = null)
         {
             // Since i cant figure out how to make it do this automaticaly
             var users = _userRepo.Get();
             switch (id)
             {
                 case "goal":
-                    return Ok(_graphService.GenerateGoalDataTable(users));
+                    return Ok(_graphService.GenerateGoalDataTable(users, startDate, endDate));
                 case "production":
-                    return Ok(_graphService.GenerateProductionDataTable(users));
+                    return Ok(_graphService.GenerateProductionDataTable(users, startDate, endDate));
                 default:
                     return NotFound();
             }
