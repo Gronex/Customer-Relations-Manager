@@ -143,7 +143,9 @@ namespace Core.ApplicationServices.Graph
         
         private static int MonthDifference(DateTime d1, DateTime d2)
         {
-            return Math.Abs((d1.Month - d2.Month) + 12*(d1.Year - d2.Year));
+            var extraMonth = Math.Abs(d1.Day - d2.Day) > DateTime.DaysInMonth(d1.Year, d1.Month)/2 ? 1 : 0;
+
+            return Math.Abs(d1.Month - d2.Month + 12*(d1.Year - d2.Year)) + extraMonth;
         }
 
         public static IEnumerable<ProductionGoal> BuffOutGoals(IEnumerable<ProductionGoal> goalList, DateTime? finalDate = null)

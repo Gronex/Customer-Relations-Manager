@@ -11,23 +11,20 @@
   function graph ($http, $q) {
 
     google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-
 
     return {
       productionGraph: productionGraph,
       drawChart: drawChart
     };
 
-    function drawChart(divId) {
-      if(!divId) divId = 'chart_div';
-      productionGraph()
-      .then(function (result) {
-        var table = google.visualization.arrayToDataTable(result.data);
+    function drawChart(data, options, divId) {
+
+      google.charts.setOnLoadCallback(function () {
+        if(!divId) divId = 'chart_div';
+        var table = google.visualization.arrayToDataTable(data);
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.AreaChart(document.getElementById(divId));
-        chart.draw(table, result.options);
+        chart.draw(table, options);
       });
     }
 
@@ -46,10 +43,19 @@
         .then(function (result) {
           var data = [];
           for (var date in result[0]) {
-            data.push(_.flatten([date, result[0][date]]));
+            if(date === "header"){
+              data.push(_.flatten([date, result[0][date], "Goal"]));
+            }
+            else
+              data.push(_.flatten([date, result[0][date], _.sum(result[1][date])]));
+
           }
 
-          console.log(result[1]);
+
+          var goalSeries = {};
+
+          goalSeries[data[0].length - 2] = {type: 'line'}
+          console.log(goalSeries);
 
           var res = {
             data: data,
@@ -57,8 +63,10 @@
               isStacked: true,
               legend: {position: 'top', maxLines: 3},
               title: 'Goals',
-            //  hAxis: {title: 'Month',  titleTextStyle: {color: '#333'}},
-              vAxis: {minValue: 0}
+              hAxis: {title: "Time"},
+              vAxis: {minValue: 0, title: "DKK"},
+              seriesType: "area",
+              series: goalSeries
             }
           };
           return res;

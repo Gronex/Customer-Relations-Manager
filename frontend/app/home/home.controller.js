@@ -19,8 +19,8 @@
 
     function getProductionGraph(){
       graph.productionGraph()
-        .then(function () {
-
+        .then(function (result) {
+          graph.drawChart(result.data, result.options);
         });
     }
   }
