@@ -9,7 +9,7 @@ using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Standard))]
+    [Authorize]
     public class ActivitiesController : ApiController
     {
         private readonly IUnitOfWork _uow;

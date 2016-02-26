@@ -28,33 +28,17 @@ namespace customer_relations_manager.Controllers
         public IHttpActionResult Get(string id)
         {
             // Since i cant figure out how to make it do this automaticaly
+            var users = _userRepo.Get();
             switch (id)
             {
                 case "goal":
-                    //return Ok(GetGoalData());
-
-                    var users = _userRepo.Get();
-
                     return Ok(_graphService.GenerateGoalDataTable(users));
                 case "production":
-                    return Ok(GetProductionData());
+                    return Ok(_graphService.GenerateProductionDataTable(users));
                 default:
                     return NotFound();
             }
         }
-
-        public IDictionary<string, DataSet> GetGoalData()
-        {
-            var users = _userRepo.Get();
-
-            return _graphService.GenerateGoalDataSets(users);
-        }
-
-        public IDictionary<string, DataSet> GetProductionData()
-        {
-            var users = _userRepo.Get();
-
-            return _graphService.GenerateProductionDataSets(users);
-        }
+        
     }
 }

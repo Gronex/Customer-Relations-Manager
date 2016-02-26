@@ -13,5 +13,7 @@ namespace Core.DomainServices.Services
 
         // Testing...
         IDictionary<object, List<object>> GenerateGoalDataTable(IEnumerable<User> users);
+
+        IDictionary<object, List<object>> GenerateProductionDataTable(IEnumerable<User> users);
     }
 }

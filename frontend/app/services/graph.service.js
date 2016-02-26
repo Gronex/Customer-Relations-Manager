@@ -16,14 +16,15 @@
 
     function drawChart() {
 
-      $http.get("api/graph/goal")
+      $http.get("api/graph/production")
         .then(function (result) {
           //var data = convertToDate(result.data);//["6e25cee6-c6ee-49a3-b05c-f3df1302ea35"];
 
-          var data = [result.data.header];
+          var data = [];
 
           for (var date in result.data) {
-            if(date === "header") continue;
+            console.log(data);
+            console.log(result.data[data]);
             data.push(_.flatten([date, result.data[date]]));
           }
 

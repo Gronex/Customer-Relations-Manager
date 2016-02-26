@@ -12,7 +12,7 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Super))]
+    [Authorize]
     public class OpportunityCategoriesController : CrmApiController
     {
         private readonly IGenericRepository<OpportunityCategory> _repo;
@@ -27,7 +27,6 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IEnumerable<CategoryViewModel> Get()
         {
             return _repo.Get().Select(_mapper.Map<CategoryViewModel>);
@@ -45,6 +44,7 @@ namespace customer_relations_manager.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(CategoryViewModel model)
         {
             var dbModel = _repo.Insert(_mapper.Map<OpportunityCategory>(model));
@@ -61,6 +61,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, CategoryViewModel model)
         {
             var dbModel = _repo.Update(oc =>
@@ -84,6 +85,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
             _repo.DeleteByKey(id);

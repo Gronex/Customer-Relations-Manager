@@ -12,7 +12,7 @@ using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Standard))]
+    [Authorize]
     public class OpportunitiesController : CrmApiController
     {
         private readonly IOpportunityRepository _repo;

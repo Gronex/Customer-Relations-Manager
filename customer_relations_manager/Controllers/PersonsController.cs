@@ -13,6 +13,7 @@ using Core.DomainServices.Repositories;
 namespace customer_relations_manager.Controllers
 {
     [RoutePrefix("api/persons")]
+    [Authorize]
     public class PersonsController : ApiController
     {
         private readonly IPersonRepository _repo;

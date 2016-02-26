@@ -12,7 +12,7 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Super))]
+    [Authorize]
     public class DepartmentsController : CrmApiController
     {
         private readonly IGenericRepository<Department> _repo;
@@ -25,8 +25,7 @@ namespace customer_relations_manager.Controllers
             _uow = uow;
             _mapper = mapper;
         }
-
-        [Authorize]
+        
         public IEnumerable<GroupViewModel> Get()
         {
             return _repo.Get().Select(_mapper.Map<GroupViewModel>);
@@ -39,6 +38,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<GroupViewModel>(model));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(GroupViewModel model)
         {
             var dbModel = _repo.Insert(_mapper.Map<Department>(model));
@@ -53,6 +53,7 @@ namespace customer_relations_manager.Controllers
             return Created(dbModel.Id.ToString(), _mapper.Map<GroupViewModel>(dbModel));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, GroupViewModel model)
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
@@ -70,6 +71,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<GoalViewModel>(dbModel));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
             _repo.DeleteByKey(id);

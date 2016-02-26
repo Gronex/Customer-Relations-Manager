@@ -15,7 +15,7 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Super))]
+    [Authorize]
     public class UserGroupsController : CrmApiController
     {
         private readonly IGenericRepository<UserGroup> _repo;
@@ -50,6 +50,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(GroupViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -67,6 +68,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, GroupViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -85,6 +87,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
             _repo.DeleteByKey(id);

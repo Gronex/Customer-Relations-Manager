@@ -1,19 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.ApplicationServices.Graph;
-using Core.DomainModels.Graph;
 using Core.DomainModels.Users;
-using Core.DomainServices.Services;
 using Xunit;
 
-namespace UnitTests.Services
+namespace UnitTests.Services.GraphService
 {
     public class GraphServiceTest
     {
-        private readonly GraphService _service;
+        private readonly Core.ApplicationServices.Graph.GraphService _service;
         private readonly IEnumerable<User> _users;
         public GraphServiceTest()
         {
@@ -32,7 +27,7 @@ namespace UnitTests.Services
             };
 
 
-            _service = new GraphService();
+            _service = new Core.ApplicationServices.Graph.GraphService();
         }
 
         [Fact]
@@ -82,7 +77,7 @@ namespace UnitTests.Services
                 new ProductionGoal{Goal = 1, StartDate = DateTime.UtcNow.AddMonths(2).Date}
             };
 
-            var buffedData = GraphService.BuffOutGoals(data).ToList();
+            var buffedData = Core.ApplicationServices.Graph.GraphService.BuffOutGoals(data).ToList();
 
             Assert.Equal(3, buffedData.Count);
         }
@@ -97,7 +92,7 @@ namespace UnitTests.Services
                 new ProductionGoal{Goal = 1, StartDate = DateTime.UtcNow.AddMonths(2).Date}
             };
 
-            var buffedData = GraphService.BuffOutGoals(data).ToList();
+            var buffedData = Core.ApplicationServices.Graph.GraphService.BuffOutGoals(data).ToList();
 
             Assert.Collection(buffedData, 
                 point => Assert.Equal(point.StartDate, today), 
@@ -114,7 +109,7 @@ namespace UnitTests.Services
                 new ProductionGoal{Goal = 2, StartDate = DateTime.UtcNow.AddMonths(2).Date}
             };
 
-            var buffedData = GraphService.BuffOutGoals(data).ToList();
+            var buffedData = Core.ApplicationServices.Graph.GraphService.BuffOutGoals(data).ToList();
 
             Assert.Collection(buffedData,
                 point => Assert.Equal(point.Goal, 1),

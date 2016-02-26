@@ -12,7 +12,7 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Super))]
+    [Authorize]
     public class StagesController : CrmApiController
     {
         private readonly IUnitOfWork _uow;
@@ -27,7 +27,6 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IEnumerable<StageViewModel> Get()
         {
             var stages = _repo.Get();
@@ -43,6 +42,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<StageViewModel>(stage));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(StageViewModel model)
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
@@ -60,6 +60,7 @@ namespace customer_relations_manager.Controllers
             return Created(dbModel.Id.ToString(), _mapper.Map<StageViewModel>(dbModel));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, StageViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -82,6 +83,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<StageViewModel>(dbModel));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
             _repo.DeleteByKey(id);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Core.ApplicationServices.ExtentionMethods;
 using Core.DomainModels.Graph;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
@@ -41,12 +42,8 @@ namespace Core.ApplicationServices.Graph
         public IDictionary<object, List<object>> GenerateGoalDataTable(IEnumerable<User> users)
         {
             var usersWithGoals = users.Where(u => u.Goals.Any()).ToList();
-            var data = new List<IEnumerable<object>>();
 
             var testData = new Dictionary<object, List<object>> {{"header", new List<object> {"Date"}}};
-
-
-            var header = new List<string> {"Date"};
 
             var minDate = usersWithGoals.Select(u => u.Goals.Min(g => g.StartDate)).Min();
             var maxDate = usersWithGoals.Select(u => u.Goals.Max(g => g.StartDate)).Max();
@@ -54,7 +51,6 @@ namespace Core.ApplicationServices.Graph
             foreach (var user in usersWithGoals)
             {
                 var currentDate = minDate;
-                //header.Add(user.Name);
                 testData["header"].Add(user.Name);
 
                 var goals = user.Goals.OrderBy(g => g.StartDate);
@@ -91,7 +87,48 @@ namespace Core.ApplicationServices.Graph
             return testData;
         }
 
-        private void AddOrCreate(IDictionary<object, List<object>> dict, object key, object value)
+        public IDictionary<object, List<object>> GenerateProductionDataTable(IEnumerable<User> users)
+        {
+            var usableUsers = users.Where(u => u.Opportunities.Any()).ToList();
+
+            var data = new Dictionary<object, List<object>>();
+
+            var minDate = usableUsers.Select(u => u.Opportunities.Min(g => g.StartDate)).Min().RoundToMonth();
+            var maxDate = usableUsers.Select(u => u.Opportunities.Max(g => g.EndDate)).Max().RoundToMonth();
+
+            foreach (var user in usableUsers)
+            {
+                var currentDate = minDate;
+                AddOrCreate(data, "header", user.Name);
+
+                var earnings = user.Opportunities
+                    .SelectMany(SpreadOutEarnings)
+                    .GroupBy(e => e.Item1)
+                    .OrderBy(e => e.Key);
+
+                foreach (var earning in earnings)
+                {
+                    while (earning.Key > currentDate)
+                    {
+                        AddOrCreate(data, currentDate, null);
+                        currentDate = currentDate.AddMonths(1);
+                    }
+
+                    AddOrCreate(data, earning.Key, earning.Sum(e => e.Item2));
+                    currentDate = currentDate.AddMonths(1);
+                }
+
+                while (currentDate <= maxDate)
+                {
+                    AddOrCreate(data, currentDate, null);
+                    currentDate = currentDate.AddMonths(1);
+                }
+            }
+
+            return data;
+        }
+
+        private static void AddOrCreate(IDictionary<object, List<object>> dict, object key, object value)
         {
             if (dict.ContainsKey(key))
                 dict[key].Add(value);
@@ -127,13 +164,18 @@ namespace Core.ApplicationServices.Graph
         public IEnumerable<Tuple<DateTime, double>> SpreadOutEarnings(Opportunity opportunity)
         {
 
-            var difference = MonthDifference(opportunity.StartDate, opportunity.EndDate) + 1;
+            var difference = MonthDifference(opportunity.StartDate, opportunity.EndDate);
 
             var earningTimeList = new List<Tuple<DateTime, double>>();
 
             for (var i = 0; i < difference; i++)
             {
-                earningTimeList.Add(new Tuple<DateTime, double>(opportunity.StartDate.AddMonths(i), difference));
+                earningTimeList.Add(new Tuple<DateTime, double>(opportunity.StartDate.RoundToMonth().AddMonths(i), opportunity.Amount/difference));
+            }
+
+            if (difference == 0)
+            {
+                earningTimeList.Add(new Tuple<DateTime, double>(opportunity.StartDate.RoundToMonth(), opportunity.Amount));
             }
 
             return earningTimeList;
