@@ -31,44 +31,6 @@ namespace UnitTests.Services.GraphService
         }
 
         [Fact]
-        public void ProductionGraphDoesNotAddExtras()
-        {
-            var data = _service.GenerateGoalDataSets(new List<User>());
-            
-            Assert.Equal(0, data.Count);
-        }
-
-        [Fact]
-        public void ProductionGraphSplitsPerMonth()
-        {
-            var data = _service.GenerateGoalDataSets(_users);
-            
-            Assert.Collection(data, 
-                pair => Assert.Equal(2, pair.Value.DataPoints.Count()),
-                pair => Assert.Equal(3, pair.Value.DataPoints.Count()));
-        }
-
-        [Fact]
-        public void ProductionGraphUsesUserIdAsKey()
-        {
-            var data = _service.GenerateGoalDataSets(_users);
-
-            Assert.Collection(data,
-                pair => Assert.Equal("1", pair.Key),
-                pair => Assert.Equal("2", pair.Key));
-        }
-
-        [Fact]
-        public void ProductionGraphUsesUserNameAsLabel()
-        {
-            var data = _service.GenerateGoalDataSets(_users);
-
-            Assert.Collection(data,
-                pair => Assert.Equal("user1 lastname1", pair.Value.Label),
-                pair => Assert.Equal("user2 lastname2", pair.Value.Label));
-        }
-
-        [Fact]
         public void MissingMonthsAdded()
         {
             var data = new List<ProductionGoal>

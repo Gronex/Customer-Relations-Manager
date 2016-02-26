@@ -6,10 +6,6 @@ namespace Core.DomainServices.Services
 {
     public interface IGraphService
     {
-        IDictionary<string, DataSet> GenerateGoalDataSets(IEnumerable<User> users);
-
-        IDictionary<string, DataSet> GenerateProductionDataSets(IEnumerable<User> users);
-
 
         // Testing...
         IDictionary<object, List<object>> GenerateGoalDataTable(IEnumerable<User> users);

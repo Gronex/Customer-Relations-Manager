@@ -14,31 +14,6 @@ namespace Core.ApplicationServices.Graph
 {
     public class GraphService : IGraphService
     {
-        public IDictionary<string, DataSet> GenerateGoalDataSets(IEnumerable<User> users)
-        {
-            var dict = new Dictionary<string, DataSet>();
-
-            foreach (var user in users)
-            {
-                var goals = user.Goals.OrderBy(g => g.StartDate);
-                
-                var buffedGoals = BuffOutGoals(goals, !user.Active ? user.EndDate : DateTime.UtcNow.Date);
-
-
-                dict.Add(user.Id, new DataSet
-                {
-                    Label = user.Name,
-                    DataPoints = buffedGoals.Select(g => new DataPoint
-                    {
-                        Label = g.StartDate,
-                        Value = g.Goal
-                    })
-                });
-            }
-
-            return dict;
-        }
-
         public IDictionary<object, List<object>> GenerateGoalDataTable(IEnumerable<User> users)
         {
             var usersWithGoals = users.Where(u => u.Goals.Any()).ToList();
@@ -134,30 +109,6 @@ namespace Core.ApplicationServices.Graph
                 dict[key].Add(value);
             else
                 dict.Add(key, new List<object> { value });
-        }
-
-        public IDictionary<string, DataSet> GenerateProductionDataSets(IEnumerable<User> users)
-        {
-            var dict = new Dictionary<string, DataSet>();
-
-            foreach (var user in users)
-            {
-                var production = user.Opportunities
-                    .SelectMany(SpreadOutEarnings)
-                    .GroupBy(t => t.Item1);
-
-                dict.Add(user.Id, new DataSet
-                {
-                    Label = user.Name,
-                    DataPoints = production.Select(p => new DataPoint
-                    {
-                        Label = p.Key,
-                        Value = p.Sum(t => t.Item2)
-                    })
-                });
-            }
-
-            return dict;
         }
 
 

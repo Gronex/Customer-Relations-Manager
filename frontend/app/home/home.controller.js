@@ -19,27 +19,8 @@
 
     function getProductionGraph(){
       graph.productionGraph()
-        .then(function (data) {
-          console.log(data);
-          vm.productionData = data.set;
+        .then(function () {
 
-          vm.options = {
-            series: [
-              {
-                axis: "y",
-                dataset: "test",
-                key: "value",
-                label: "An area series",
-                color: "#1f77b4",
-                type: ['line', 'dot', 'area'],
-                id: 'mySeries0'
-              }
-            ],
-            axes: {x: {
-              type: 'date', // or 'date', or 'log'
-              key: "label"
-            }}
-          };
         });
     }
   }
