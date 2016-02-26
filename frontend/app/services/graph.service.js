@@ -5,10 +5,10 @@
     .module('CRM')
     .service('graph', graph );
 
-  graph.$inject = ['$http', '$q'];
+  graph.$inject = ['dataservice', '$q'];
 
   /* @ngInject */
-  function graph ($http, $q) {
+  function graph (dataservice, $q) {
 
     google.charts.load('current', {'packages':['corechart', 'table']});
 
@@ -39,15 +39,17 @@
       });
     }
 
-    function productionGraph() {
-      var production = $http.get("api/graph/production")
+    function productionGraph(config) {
+      var production = dataservice.graph
+        .getById({id: "production", query: config})
         .then(function (result) {
-          return convertToDate(result.data);
+          return convertToDate(result);
         });
 
-      var goals = $http.get("api/graph/goal")
+      var goals = dataservice.graph
+        .getById("goal")
         .then(function (result) {
-          return convertToDate(result.data);
+          return convertToDate(result);
         });
 
       return $q.all([production, goals])

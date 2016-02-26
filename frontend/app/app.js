@@ -21,7 +21,7 @@
     // Now set up the states
     $stateProvider
       .state('Home', {
-        url: "/",
+        url: "/?{fromMonth:int}&{fromYear:int}&{toMonth:int}&{toYear:int}",
         templateUrl: "view/app/home/home.html",
         controller: "Home",
         controllerAs: "vm"

@@ -32,9 +32,9 @@ namespace customer_relations_manager.Controllers
             switch (id)
             {
                 case "goal":
-                    return Ok(_graphService.GenerateGoalDataTable(users, startDate, endDate));
+                    return Ok(_graphService.GenerateGoalDataTable(users, startDate?.Date, endDate?.Date));
                 case "production":
-                    return Ok(_graphService.GenerateProductionDataTable(users, startDate, endDate));
+                    return Ok(_graphService.GenerateProductionDataTable(users, startDate?.Date, endDate?.Date));
                 default:
                     return NotFound();
             }

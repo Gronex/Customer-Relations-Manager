@@ -3,5 +3,25 @@
 <br>
 <!-- <linechart data="vm.productionData" options="vm.options"></linechart> -->
 
+<form class="form-inline" ng-submit="vm.getProductionGraph()">
+  <div class="form-group">
+    <label>From Year</label>
+    <input class="form-control" type="number" min="2000" ng-model="vm.filter.fromYear">
+  </div>
+  <div class="form-group">
+    <label>From Month</label>
+    <input class="form-control" type="number" min="1" max="12" ng-model="vm.filter.fromMonth">
+  </div>
+  <div class="form-group">
+    <label>To Year</label>
+    <input class="form-control" type="number" min="2000" ng-model="vm.filter.toYear">
+  </div>
+  <div class="form-group">
+    <label>To Month</label>
+    <input class="form-control" type="number" min="1" max="12" ng-model="vm.filter.toMonth">
+  </div>
+  <button type="submit" class="btn btn-default">Filter</button>
+</form>
+
 <div id="chart_div"></div>
 <div id="table_div"></div>
