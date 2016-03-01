@@ -50,6 +50,18 @@
         controller: "Stages",
         controllerAs: 'vm'
       })
+      .state("Departments", {
+        url: "/departments",
+        templateUrl: "view/app/departments/departments.html",
+        controller: "Departments",
+        controllerAs: 'vm'
+      })
+      .state("OpportunityCategories", {
+        url: "/opportunity-categories",
+        templateUrl: "view/app/opportunity-categories/opportunity-categories.html",
+        controller: "OpportunityCategories",
+        controllerAs: 'vm'
+      })
       .state("Companies", {
         url: "/companies",
         templateUrl: "view/app/companies/companies.html",

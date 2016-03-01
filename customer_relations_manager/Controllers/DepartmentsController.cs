@@ -68,7 +68,7 @@ namespace customer_relations_manager.Controllers
             {
                 return Conflict();
             }
-            return Ok(_mapper.Map<GoalViewModel>(dbModel));
+            return Ok(_mapper.Map<GroupViewModel>(dbModel));
         }
 
         [Authorize(Roles = nameof(UserRole.Super))]

@@ -59,7 +59,7 @@
           .then(returnData, handleError);
       }
 
-      function create(args, data) {
+      function create(data, args) {
         return $http.post(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
       }

@@ -51,7 +51,8 @@
     <script src="view/app/users/goals.controller.js"></script>
     <script src="view/app/people/people.controller.js"></script>
     <script src="view/app/people/person.controller.js"></script>
-
+    <script src="view/app/departments/departments.controller.js"></script>
+    <script src="view/app/opportunity-categories/opportunity-categories.controller.js"></script>
   </head>
 
   <body ng-app="CRM">
@@ -75,14 +76,23 @@
             <ul class="nav navbar-nav">
               <li><a ui-sref="Opportunities">Opportunities</a></li>
               <li><a ui-sref="Companies">Companies</a></li>
-              <li><a ui-sref="Users">Users</a></li>
-              <li><a ui-sref="UserGroups">Groups</a></li>
-              <li><a ui-sref="Stages">Stages</a></li>
               <li><a ui-sref="People">People</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+              <li>
+                <a href class="dropdown-toggle" data-toggle="dropdown" role="button">
+                  Administrate System <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a ui-sref="OpportunityCategories">Opportunity catogories</a></li>
+                  <li><a ui-sref="Users">Users</a></li>
+                  <li><a ui-sref="UserGroups">Groups</a></li>
+                  <li><a ui-sref="Stages">Stages</a></li>
+                  <li><a ui-sref="Departments">Departments</a></li>
+                </ul>
+              </li>
               <li ng-if="!!vm.user" >
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <a href class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {{vm.user.name}}<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
