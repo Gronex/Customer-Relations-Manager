@@ -10,7 +10,5 @@ namespace Core.DomainModels.Opportunity
 
         [Required, Index(IsUnique = true)]
         public string Name { get; set; }
-
-        public int Value { get; set; }
     }
 }

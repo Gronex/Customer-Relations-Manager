@@ -82,6 +82,14 @@
     <Compile Include="Migrations\201602241607111_EndDateForInactiveUsers.Designer.cs">
       <DependentUpon>201602241607111_EndDateForInactiveUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603010738230_RemovedValueFromOpportunityCategory.cs" />
+    <Compile Include="Migrations\201603010738230_RemovedValueFromOpportunityCategory.Designer.cs">
+      <DependentUpon>201603010738230_RemovedValueFromOpportunityCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603010817509_OnlyOneCompanyActivePerPerson.cs" />
+    <Compile Include="Migrations\201603010817509_OnlyOneCompanyActivePerPerson.Designer.cs">
+      <DependentUpon>201603010817509_OnlyOneCompanyActivePerPerson.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />
@@ -146,6 +154,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602241607111_EndDateForInactiveUsers.resx">
       <DependentUpon>201602241607111_EndDateForInactiveUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603010738230_RemovedValueFromOpportunityCategory.resx">
+      <DependentUpon>201603010738230_RemovedValueFromOpportunityCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603010817509_OnlyOneCompanyActivePerPerson.resx">
+      <DependentUpon>201603010817509_OnlyOneCompanyActivePerPerson.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

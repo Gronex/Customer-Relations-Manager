@@ -41,10 +41,8 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<PersonViewModel>(data));
         }
 
-        // POST: api/Persons?companyId=1
-        public IHttpActionResult Post(
-            [FromBody]PersonViewModel model
-            )
+        // POST: api/Persons
+        public IHttpActionResult Post([FromBody]PersonViewModel model)
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
             var dbModel = _repo.Create(_mapper.Map<Person>(model));
@@ -75,9 +73,9 @@ namespace customer_relations_manager.Controllers
         }
 
         // DELETE: api/Persons/5
-        public void Delete(int id, [FromUri] int? companyId = null)
+        public void Delete(int id)
         {
-            _repo.Unassign(id, companyId);
+            _repo.Unassign(id);
             _uow.Save();
         }
     }

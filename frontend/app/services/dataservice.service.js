@@ -59,17 +59,17 @@
           .then(returnData, handleError);
       }
 
-      function create(data, args) {
+      function create(args, data) {
         return $http.post(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
       }
 
-      function update(id, data, args) {
+      function update(args,data) {
         return $http.put(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
       }
 
-      function remove(id, args) {
+      function remove(args) {
         return $http.delete(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
       }

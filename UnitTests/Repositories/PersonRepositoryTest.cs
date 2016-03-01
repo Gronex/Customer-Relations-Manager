@@ -86,7 +86,7 @@ namespace UnitTests.Repositories
             _repo.AddToCompany(1, 0);
 
             var person = _context.Persons.SingleOrDefault(c => c.Id == 1);
-            Assert.Contains(company.Id, person.Contracts.Select(c => c.CompanyId));
+            Assert.True(person.CompanyId.HasValue);
         }
 
         [Fact]
@@ -160,50 +160,44 @@ namespace UnitTests.Repositories
             Assert.Equal(new { _data.FirstName, _data.LastName, _data.Email, _data.PhoneNumber }, new { result.FirstName, result.LastName, result.Email, result.PhoneNumber});
         }
 
-        [Theory]
-        [InlineData(-1,1)]
-        [InlineData(0,-1)]
-        [InlineData(-1,-1)]
-        public void UnassignDoesNotCrashOnNorFound(int companyId, int id)
+        [Fact]
+        public void UnassignDoesNotCrashOnNotFound()
         {
             var company = new Company {Id = 0};
             _context.Companies.Add(company);
 
             _repo.AddToCompany(1, 0);
 
-            _repo.Unassign(id, companyId);
+            _repo.Unassign(-1);
             // If we get this far without crashing, we are not going to crash because of this call
             Assert.True(true);
         }
+        
 
         [Fact]
-        public void UnassignWithNullRemovesAll()
+        public void UnassignAddsToContracts()
         {
             _context.Companies.Add(new Company { Id = 0 });
-            _context.Companies.Add(new Company { Id = 1 });
-            
-            _repo.AddToCompany(1, 0);
-            _repo.AddToCompany(1, 1);
 
-            _repo.Unassign(1, null);
+            _repo.AddToCompany(1, 0);
+
+            _repo.Unassign(1);
 
             var person = _context.Persons.SingleOrDefault(p => p.Id == 1);
-            Assert.Equal(0, person.Contracts.Count(c => !c.EndDate.HasValue));
+            Assert.Equal(0, person.Contracts.SingleOrDefault(c => c.Person.Id == 1).CompanyId);
         }
 
         [Fact]
-        public void UnassignOnlyRemovesTarget()
+        public void UnassignRemovesTarget()
         {
             _context.Companies.Add(new Company { Id = 0 });
-            _context.Companies.Add(new Company { Id = 1 });
 
             _repo.AddToCompany(1, 0);
-            _repo.AddToCompany(1, 1);
 
-            _repo.Unassign(1, 1);
+            _repo.Unassign(1);
 
             var person = _context.Persons.SingleOrDefault(p => p.Id == 1);
-            Assert.Equal(0, person.Contracts.SingleOrDefault(c => !c.EndDate.HasValue).CompanyId);
+            Assert.False(person.CompanyId.HasValue);
         }
     }
 }

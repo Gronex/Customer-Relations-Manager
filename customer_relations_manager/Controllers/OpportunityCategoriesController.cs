@@ -67,7 +67,6 @@ namespace customer_relations_manager.Controllers
             var dbModel = _repo.Update(oc =>
             {
                 oc.Name = model.Name;
-                oc.Value = model.Value;
             }, id);
 
             if (dbModel == null) return NotFound();

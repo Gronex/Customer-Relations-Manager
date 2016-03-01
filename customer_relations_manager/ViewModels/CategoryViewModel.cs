@@ -12,8 +12,5 @@ namespace customer_relations_manager.ViewModels
 
         [Required]
         public string Name { get; set; }
-
-        [Required]
-        public int Value { get; set; }
     }
 }

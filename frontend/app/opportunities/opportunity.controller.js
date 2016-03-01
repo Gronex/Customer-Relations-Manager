@@ -12,16 +12,14 @@
     var vm = this;
 
     vm.opportunity = {};
-    vm.companies = [];
     vm.stages = [];
     vm.departments = [];
     vm.categories = [];
 
     vm.save = save;
     vm.remove = remove;
-    vm.companySelected = companySelected;
     vm.stageSelected = stageSelected;
-
+    vm.updateCompany = updateCompany;
     activate();
 
     function activate() {
@@ -31,7 +29,6 @@
           vm.editing = true;
         });
       }
-      getCompanies(); //TODO: call with query param on search
       getStages();
       getDepartments();
       getCategories();
@@ -49,16 +46,6 @@
           return vm.opportunity;
         });
     }
-
-    function getCompanies() {
-      return dataservice.companies
-        .getAll()
-        .then(function (data){
-          vm.companies = data;
-          return vm.companies;
-        });
-    }
-
     function save() {
 
       if(vm.editing){
@@ -82,11 +69,6 @@
         .then(function () {
           $state.go("Opportunities");
         });
-    }
-
-    function companySelected(item) {
-      vm.company = undefined;
-      vm.opportunity.company = item;
     }
 
     function stageSelected() {
@@ -115,6 +97,10 @@
         .then(function (data) {
           vm.categories = data;
         });
+    }
+
+    function updateCompany(company){
+      vm.opportunity.company = company;
     }
   }
 })();

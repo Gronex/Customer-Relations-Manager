@@ -40,7 +40,6 @@ namespace Core.DomainServices.Repositories
         /// Removes the person from a company
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="companyId">Company to be removed from, if null will remove from all of them</param>
-        void Unassign(int id, int? companyId);
+        void Unassign(int id);
     }
 }

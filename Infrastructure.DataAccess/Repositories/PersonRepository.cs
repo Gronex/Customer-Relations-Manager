@@ -44,6 +44,13 @@ namespace Infrastructure.DataAccess.Repositories
                 p.LastName = model.LastName;
                 p.Email = model.Email;
                 p.PhoneNumber = model.PhoneNumber;
+
+                if (p.StartDate.HasValue || p.CompanyId.HasValue || !model.CompanyId.HasValue)
+                {
+                    Unassign(p);
+                }
+                p.CompanyId = model.CompanyId;
+                p.StartDate = DateTime.UtcNow.Date;
             }, id);
         }
 
@@ -52,33 +59,46 @@ namespace Infrastructure.DataAccess.Repositories
             var person = _repo.GetByKey(id);
             if (person == null) return null;
             if (!_context.Companies.Any(c => c.Id == companyId)) return null;
-            if (person.Contracts.Any(c => c.CompanyId == companyId && !c.EndDate.HasValue)) return null;
+            if (person.StartDate.HasValue) return null;
             
-            person.Contracts.Add(new Contract {CompanyId = companyId, StartDate = DateTime.UtcNow.Date});
+            person.CompanyId = companyId;
+            person.StartDate = DateTime.UtcNow.Date;
 
             _context.SetState(person, EntityState.Modified);
             return person;
         }
 
-        public void Unassign(int id, int? companyId)
+        public void Unassign(int id)
         {
             var person = _repo.GetByKey(id);
             if (person == null) return;
 
-            if (companyId.HasValue)
-            {
-                var contract = person.Contracts.FirstOrDefault(c => c.CompanyId == companyId.Value && !c.EndDate.HasValue);
-                if (contract == null) return;
-                contract.EndDate = DateTime.UtcNow.Date;
-            }
-            else
-            {
-                foreach (var contract in person.Contracts.Where(c => !c.EndDate.HasValue))
-                {
-                    contract.EndDate = DateTime.UtcNow.Date;
-                }
-            }
+            Unassign(person);
+            
             _context.SetState(person, EntityState.Modified);
+        }
+
+        private static void Unassign(Person person)
+        {
+            // If they are not either both null or not null, then we have a problem and need to fix it
+            if (!person.StartDate.HasValue || !person.CompanyId.HasValue)
+            {
+                person.StartDate = null;
+                person.CompanyId = null;
+                return;
+            }
+
+            var contract = new Contract
+            {
+                Person = person,
+                CompanyId = person.CompanyId.Value,
+                StartDate = person.StartDate.Value,
+                EndDate = DateTime.UtcNow.Date
+            };
+
+            person.StartDate = null;
+            person.CompanyId = null;
+            person.Contracts.Add(contract);
         }
     }
 }

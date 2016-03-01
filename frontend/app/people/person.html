@@ -1,4 +1,5 @@
-<h1>Editing {{vm.person.firstName}} {{vm.person.lastName}}</h1>
+<h1 ng-if="!vm.editing">New Person</h1>
+<h1 ng-if="vm.editing">Editing {{vm.person.firstName}} {{vm.person.lastName}}</h1>
 
 <form ng-submit="vm.save()">
   <div class="row">
@@ -19,7 +20,7 @@
     <label>Phone number</label>
     <input class="form-control" type="phone" ng-model="vm.person.phoneNumber">
   </div>
-
+  <crm-company-typeahead company-name="vm.person.companyName" on-select="vm.updateCompany"></crm-company-typeahead>
   <button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i></button>
   <a role="button" class="btn btn-primary" ui-sref="People">Back <i class="fa fa-arrow-left"></i></a>
   <button type="button" class="btn btn-danger pull-right" ng-click="vm.removeFromAll()">Remove from all companies <i class="fa fa-level-down"></i></button>

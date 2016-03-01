@@ -13,13 +13,14 @@
 
     vm.person = {};
 
+    vm.updateCompany = updateCompany;
     vm.save = save;
     vm.removeFromAll = removeFromAll;
 
     activate();
 
     function activate() {
-      if($stateParams !== "new") vm.editing = true;
+      if($stateParams.id !== "new") vm.editing = true;
       if(vm.editing){
         getPerson();
       }
@@ -56,6 +57,11 @@
         .then(function () {
           $state.go("People");
         });
+    }
+
+    function updateCompany(company){
+      vm.person.companyName = company.name;
+      vm.person.companyId = company.id;
     }
   }
 })();
