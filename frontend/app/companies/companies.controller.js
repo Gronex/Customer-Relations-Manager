@@ -22,7 +22,7 @@
       dataservice.companies
         .getAll()
         .then(function (data) {
-          vm.companies = data;
+          vm.companies = data.data;
         });
     }
   }

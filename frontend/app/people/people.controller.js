@@ -23,7 +23,7 @@
       dataservice.people
         .getAll()
         .then(function (data) {
-          vm.people = data;
+          vm.people = data.data;
         });
     }
   }

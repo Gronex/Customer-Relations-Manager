@@ -22,7 +22,7 @@
       dataservice.opportunities
         .getAll()
         .then(function (data) {
-          vm.opportunities = _.map(data, function (o) {
+          vm.opportunities = _.map(data.data, function (o) {
             o.startDate = new Date(o.startDate).toLocaleDateString();
             o.endDate = new Date(o.endDate).toLocaleDateString();
             o.expectedClose = new Date(o.expectedClose).toLocaleDateString();

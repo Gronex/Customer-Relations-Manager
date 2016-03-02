@@ -20,7 +20,7 @@
       return dataservice.users
         .getAll()
         .then(function (data) {
-          vm.users = data;
+          vm.users = data.data;
           return vm.users;
         });
     }

@@ -28,7 +28,7 @@
       dataservice.stages
         .getAll()
         .then(function (data) {
-          vm.stages = data.data;
+          vm.stages = data;
         });
     }
 
