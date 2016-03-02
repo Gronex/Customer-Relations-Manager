@@ -21,5 +21,8 @@ namespace customer_relations_manager.ViewModels.Company
 
         public int CompanyId { get; set; }
         public string CompanyName { get; set; }
+
+        // ReSharper disable once ConvertPropertyToExpressionBody
+        public string Name { get { return $"{FirstName} {LastName}"; } }
     }
 }

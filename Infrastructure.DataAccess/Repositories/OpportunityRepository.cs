@@ -49,6 +49,9 @@ namespace Infrastructure.DataAccess.Repositories
                 model.Company = _context.Companies.SingleOrDefault(c => c.Id == model.Company.Id);
                 if (model.Company == null) return null;
             }
+
+            if (model.Contact != null)
+                model.Contact = _context.Persons.SingleOrDefault(p => model.Contact.Id == p.Id);
             
             model.Department = department;
             model.Category = category;
@@ -89,7 +92,15 @@ namespace Infrastructure.DataAccess.Repositories
                         ? _context.Companies.SingleOrDefault(c => c.Id == model.Company.Id) 
                         : _context.Companies.Add(model.Company);
                 }
-                
+
+                if (model.Contact == null)
+                    o.Contact = null;
+                else if (model.Contact.Id != o.ContactId)
+                {
+                    var person = _context.Persons.SingleOrDefault(p => p.Id == model.Contact.Id);
+                    if(person != null && person.CompanyId == model.Company.Id)
+                        o.Contact = person;
+                }
                 if (model.Owner.Id != o.OwnerId)
                     o.Owner = _context.Users.SingleOrDefault(u => u.Id == model.Owner.Id);
                 if (model.Stage.Id != o.StageId)

@@ -15,11 +15,13 @@
     vm.stages = [];
     vm.departments = [];
     vm.categories = [];
+    vm.employees = [];
 
     vm.save = save;
     vm.remove = remove;
-    vm.stageSelected = stageSelected;
     vm.updateCompany = updateCompany;
+    vm.updateContact = updateContact;
+    vm.stageSelected = stageSelected;
     activate();
 
     function activate() {
@@ -43,6 +45,8 @@
           data.endDate = new Date(data.endDate);
 
           vm.opportunity = data;
+          if(data.company.id)
+            getEmployees(data.company.id);
           return vm.opportunity;
         });
     }
@@ -99,8 +103,23 @@
         });
     }
 
+    function getEmployees(companyId){
+      return dataservice.companyEmployees({companyId: companyId})
+        .then(function(data){
+          vm.opportunity.contactName = null;
+          vm.opportunity.contactId = null;
+          vm.employees = data;
+        });
+    }
+
     function updateCompany(company){
       vm.opportunity.company = company;
+      getEmployees(company.id);
+    }
+
+    function updateContact(contact){
+      vm.opportunity.contact = contact;
+      vm.person = undefined;
     }
   }
 })();

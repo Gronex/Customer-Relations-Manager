@@ -16,6 +16,7 @@ namespace customer_relations_manager.ViewModels.Opportunity
         public UserOverviewViewModel Owner { get; set; }
         [Required]
         public CompanyOverviewViewModel Company { get; set; }
+        public PersonViewModel Contact { get; set; }
         [Required]
         public double Amount { get; set; }
         [Required]

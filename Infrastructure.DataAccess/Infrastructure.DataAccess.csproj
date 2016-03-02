@@ -90,6 +90,10 @@
     <Compile Include="Migrations\201603010817509_OnlyOneCompanyActivePerPerson.Designer.cs">
       <DependentUpon>201603010817509_OnlyOneCompanyActivePerPerson.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603020946067_ContactAddedToOpportunity.cs" />
+    <Compile Include="Migrations\201603020946067_ContactAddedToOpportunity.Designer.cs">
+      <DependentUpon>201603020946067_ContactAddedToOpportunity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />
@@ -160,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603010817509_OnlyOneCompanyActivePerPerson.resx">
       <DependentUpon>201603010817509_OnlyOneCompanyActivePerPerson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603020946067_ContactAddedToOpportunity.resx">
+      <DependentUpon>201603020946067_ContactAddedToOpportunity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

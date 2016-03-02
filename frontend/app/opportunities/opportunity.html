@@ -2,94 +2,88 @@
 <h1 ng-if="!vm.editing">New Opportunity</h1>
 
 <form ng-submit="vm.save()">
-  <div class="form-group">
-    <label>Name</label>
-    <input class="form-control" type="text" required ng-model="vm.opportunity.name">
-  </div>
-  <div class="form-group">
-    <label>Description</label>
-    <textarea class="form-control" ng-model="vm.opportunity.description" rows="5"></textarea>
-  </div>
-  <div class="row">
-    <div class="form-group col-sm-6">
-      <label>Hourly price</label>
-      <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.hourlyPrice">
+    <div class="form-group">
+        <label>Name</label>
+        <input class="form-control" type="text" required ng-model="vm.opportunity.name">
     </div>
-    <div class="form-group col-sm-6">
-      <label>Amount</label>
-      <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.amount">
+    <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" ng-model="vm.opportunity.description" rows="5"></textarea>
     </div>
-  </div>
-  <div class="row">
-    <div class="form-group col-sm-6">
-      <label>Stage</label>
-      <select
-        class="form-control"
-        ng-model="vm.opportunity.stage"
-        ng-options="stage.name for stage in vm.stages track by stage.id"
-        ng-change="vm.stageSelected()"
-        required>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Hourly price</label>
+            <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.hourlyPrice">
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Amount</label>
+            <input class="form-control" type="number" step="any" required min="0" ng-model="vm.opportunity.amount">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Stage</label>
+            <select class="form-control" ng-model="vm.opportunity.stage" ng-options="stage.name for stage in vm.stages track by stage.id" ng-change="vm.stageSelected()" required>
       </select>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Likelihood of close</label>
+            <input class="form-control" type="number" min="0" max="100" ng-model="vm.opportunity.percentage">
+        </div>
     </div>
-    <div class="form-group col-sm-6">
-      <label>Likelihood of close</label>
-      <input class="form-control" type="number" min="0" max="100" ng-model="vm.opportunity.percentage">
-    </div>
-  </div>
-  <div class="row">
-    <div class="form-group col-sm-6">
-      <label>Department</label>
-      <select
-         class="form-control"
-         ng-model="vm.opportunity.department"
-         ng-options="department.name for department in vm.departments track by department.id"
-         required>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Department</label>
+            <select class="form-control" ng-model="vm.opportunity.department" ng-options="department.name for department in vm.departments track by department.id" required>
       </select>
-    </div>
-    <div class="form-group col-sm-6">
-      <label>Category</label>
-      <select
-         class="form-control"
-         ng-model="vm.opportunity.category"
-         ng-options="category.name for category in vm.categories track by category.id"
-         required>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Category</label>
+            <select class="form-control" ng-model="vm.opportunity.category" ng-options="category.name for category in vm.categories track by category.id" required>
       </select>
+        </div>
     </div>
-  </div>
- <div class="row">
-    <div class="form-group col-sm-6">
-      <label>Start date</label>
-      <div class="input-group">
-        <input type="date" class="form-control" is-open="startDate.open" uib-datepicker-popup datepicker-options="{startingDay: 1}" ng-model="vm.opportunity.startDate" required />
-        <span class="input-group-btn">
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Start date</label>
+            <div class="input-group">
+                <input type="date" class="form-control" is-open="startDate.open" uib-datepicker-popup datepicker-options="{startingDay: 1}" ng-model="vm.opportunity.startDate" required />
+                <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="startDate.open = !startDate.open"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
-      </div>
-    </div>
-    <div class="form-group col-sm-6">
-      <label>End date</label>
-      <div class="input-group">
-        <input type="date" class="form-control" is-open="endDate.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.endDate" required />
-        <span class="input-group-btn">
+            </div>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>End date</label>
+            <div class="input-group">
+                <input type="date" class="form-control" is-open="endDate.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.endDate" required />
+                <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="endDate.open = !endDate.open"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <crm-company-typeahead on-select="vm.updateCompany" is-required="true" company-name="vm.opportunity.company.name"></crm-company-typeahead>
-<div class="form-group">
-    <label>Expected close date</label>
-    <div class="input-group">
-      <input type="date" class="form-control" is-open="expectedClose.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.expectedClose" required />
-      <span class="input-group-btn">
+    <div class="row">
+        <crm-company-typeahead class="col-sm-6" on-select="vm.updateCompany" is-required="true" company-name="vm.opportunity.company.name"></crm-company-typeahead>
+        <div class="col-sm-6 form-group">
+            <label>Contact</label>
+            <input disabled class="form-control" type="text" ng-model="vm.opportunity.contact.name"/><br>
+            <input type="text" ng-model="vm.person" placeholder="Select Employee" uib-typeahead="person as person.name for person in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateContact($item)">
+       </div>
+    </div>
+    <div class="form-group">
+        <label>Expected close date</label>
+        <div class="input-group">
+            <input type="date" class="form-control" is-open="expectedClose.open" datepicker-options="{startingDay: 1}" uib-datepicker-popup ng-model="vm.opportunity.expectedClose" required />
+            <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="expectedClose.open = !expectedClose.open"><i class="glyphicon glyphicon-calendar"></i></button>
       </span>
+        </div>
     </div>
-  </div>
 
-  <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
-  <a ui-sref="Opportunities" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
-  <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
+    <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
+    <a ui-sref="Opportunities" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
+    <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
     Remove <i class="fa fa-trash"></i>
   </button>
 </form>

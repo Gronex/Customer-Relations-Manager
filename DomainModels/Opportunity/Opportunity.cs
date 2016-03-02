@@ -59,6 +59,10 @@ namespace Core.DomainModels.Opportunity
         public int StageId { get; set; }
         public virtual Stage Stage { get; set; }
 
+        [ForeignKey(nameof(Contact))]
+        public int? ContactId { get; set; }
+        public virtual Person Contact { get; set; }
+
         public virtual ICollection<UserGroupOpportunity> UserGroups { get; set; } = new HashSet<UserGroupOpportunity>();
         public virtual ICollection<OpportunityComment> Comments { get; set; } = new HashSet<OpportunityComment>();
 
