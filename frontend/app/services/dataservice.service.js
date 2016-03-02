@@ -15,6 +15,7 @@
       userGroups: createResource("/api/usergroups"),
       goals: createResource("/api/users/{userId}/goals"),
       companies: createResource("/api/companies"),
+      companyEmployees: genericGet("/api/companies/{companyId}/persons"),
       opportunities: createResource("api/opportunities"),
       stages: createResource("api/stages"),
       departments: createResource("api/departments"),
@@ -37,6 +38,13 @@
         authorization.configToken(response.data["access_token"]);
         return authorization.configUser(response.data);
       });
+    }
+
+    function genericGet(url){
+      return function(args){
+        return $http.get(getUrl(url, args))
+          .then(returnData, handleError);
+      };
     }
 
     function createResource(url) {
@@ -73,26 +81,26 @@
         return $http.delete(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
       }
+    }
 
-      function getQuery(args) {
-        if(args) return {params: args.query};
-      }
+    function getQuery(args) {
+      if(args) return {params: args.query};
+    }
 
-      function getUrl(urlToUpdate, args) {
+    function getUrl(urlToUpdate, args) {
 
-        if(typeof(args) === "string" || typeof(args) === "number")
-          return urlToUpdate + "/" + args;
+      if(typeof(args) === "string" || typeof(args) === "number")
+        return urlToUpdate + "/" + args;
 
-        if(args !== undefined && args["id"] !== undefined)
-          urlToUpdate = urlToUpdate  + "/" + args.id;
+      if(args !== undefined && args["id"] !== undefined)
+        urlToUpdate = urlToUpdate  + "/" + args.id;
 
-        if(!pathRegex.test(urlToUpdate)) return urlToUpdate;
+      if(!pathRegex.test(urlToUpdate)) return urlToUpdate;
 
-        return urlToUpdate.replace(pathRegex, function (match, key) {
-          return args[key];
-        });
+      return urlToUpdate.replace(pathRegex, function (match, key) {
+        return args[key];
+      });
 
-      }
     }
 
     function handleError(err) {

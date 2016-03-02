@@ -28,6 +28,14 @@
     <label>Website</label>
     <input class="form-control" type="text" ng-model="vm.company.webSite">
   </div>
+  <h3>Employees</h3>
+  <div class="list-group">
+    <a ui-sref="Person({id: person.id})" ng-repeat="person in vm.employees" class="list-group-item">
+      <h4 class="list-group-item-heading">{{person.firstName}} {{person.lastName}}</h4>
+      <p class="list-group-item-text">Email: {{person.email}}</p>
+      <p class="list-group-item-text">Phone: {{person.phone}}</p>
+    </a>
+  </div>
   <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
   <a ui-sref="Companies" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
   <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">

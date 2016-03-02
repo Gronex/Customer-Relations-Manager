@@ -33,7 +33,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<CompanyViewModel>))]
+        [ResponseType(typeof(CompanyViewModel))]
         public IHttpActionResult Get(int id)
         {
             var data = _repo.GetByKey(id);
@@ -82,6 +82,16 @@ namespace customer_relations_manager.Controllers
         {
             _repo.DeleteByKey(id);
             _uow.Save();
+        }
+
+        [HttpGet]
+        public IHttpActionResult Persons(int mainId)
+        {
+            var company = _repo.GetByKey(mainId);
+            if(company == null) return NotFound();
+
+            var employees = company.Employees;
+            return Ok(employees.Select(_mapper.Map<PersonViewModel>));
         }
     }
 }
