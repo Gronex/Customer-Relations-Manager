@@ -19,13 +19,22 @@ namespace Infrastructure.DataAccess.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public IEnumerable<T> Get(
-            Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            int? page = null,
-            int? pageSize = null)
+        public IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
-            return FilterLogic(filter, orderBy, page, pageSize);
+            return FilterLogic(filter, orderBy, null, null);
+        }
+
+        public PaginationEnvelope<T> Get(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, int page, int pageSize, Expression<Func<T, bool>> filter = null)
+        {
+            var data = FilterLogic(filter, orderBy, page, pageSize);
+            
+            return new PaginationEnvelope<T>
+            {
+                PageSize = pageSize,
+                PageNumber = page,
+                PageCount = (int) Math.Ceiling((double)Count(filter) / pageSize),
+                Data = data
+            };
         }
 
         public T GetByKey(params object[] key)
@@ -108,6 +117,11 @@ namespace Infrastructure.DataAccess.Repositories
             if (entity == null) return;
 
             _dbSet.Remove(entity);
+        }
+        
+        public int Count(Expression<Func<T, bool>> filter = null)
+        {
+            return filter == null ? _dbSet.Count() : _dbSet.Count(filter);
         }
     }
 }

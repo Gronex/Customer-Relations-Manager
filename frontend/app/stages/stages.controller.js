@@ -11,7 +11,7 @@
   function Stages(dataservice) {
     var vm = this;
     vm.stages = [];
-    vm.stage;
+    vm.stage = {};
 
     vm.create = create;
     vm.save = save;
@@ -28,7 +28,7 @@
       dataservice.stages
         .getAll()
         .then(function (data) {
-          vm.stages = _.orderBy(data, ['value']);
+          vm.stages = data.data;
         });
     }
 
@@ -75,7 +75,7 @@
 
           break;
         case 409:
-          target.errMsg = "Group with name: '" + err.data.name + "' already exists";
+          target.errMsg = "Stage with name: '" + err.data.name + "' already exists";
           break;
         default:
       }

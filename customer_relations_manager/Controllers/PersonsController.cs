@@ -14,7 +14,7 @@ namespace customer_relations_manager.Controllers
 {
     [RoutePrefix("api/persons")]
     [Authorize]
-    public class PersonsController : ApiController
+    public class PersonsController : CrmApiController
     {
         private readonly IPersonRepository _repo;
         private readonly IUnitOfWork _uow;
@@ -28,9 +28,12 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Persons
-        public IEnumerable<PersonViewModel> Get()
+        public PaginationEnvelope<PersonViewModel> GetAll(int page = 1, int pageSize = 10)
         {
-            return _repo.GetAll().Select(_mapper.Map<PersonViewModel>);
+            CorrectPageInfo(ref page, ref pageSize);
+            return _repo
+                .GetAll(p => p.OrderBy(pe => pe.LastName), page, pageSize)
+                .MapData(_mapper.Map<PersonViewModel>);
         }
 
         // GET: api/Persons/5
