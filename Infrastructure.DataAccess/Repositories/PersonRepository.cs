@@ -78,7 +78,7 @@ namespace Infrastructure.DataAccess.Repositories
             _context.SetState(person, EntityState.Modified);
         }
 
-        private static void Unassign(Person person)
+        private void Unassign(Person person)
         {
             // If they are not either both null or not null, then we have a problem and need to fix it
             if (!person.StartDate.HasValue || !person.CompanyId.HasValue)
@@ -98,6 +98,15 @@ namespace Infrastructure.DataAccess.Repositories
 
             person.StartDate = null;
             person.CompanyId = null;
+
+            foreach (var opportunity in _context
+                .Opportunities
+                .Where(o => o.ContactId == person.Id))
+            {
+                opportunity.ContactId = null;
+                _context.SetState(opportunity, EntityState.Modified);
+            }
+
             person.Contracts.Add(contract);
         }
     }
