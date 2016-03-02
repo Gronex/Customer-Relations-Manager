@@ -32,7 +32,7 @@ namespace Infrastructure.DataAccess.Repositories
             {
                 PageSize = pageSize,
                 PageNumber = page,
-                PageCount = (int) Math.Ceiling((double)Count(filter) / pageSize),
+                ItemCount = Count(filter),
                 Data = data
             };
         }

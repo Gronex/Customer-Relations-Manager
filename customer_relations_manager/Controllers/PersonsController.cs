@@ -32,7 +32,9 @@ namespace customer_relations_manager.Controllers
         {
             CorrectPageInfo(ref page, ref pageSize);
             return _repo
-                .GetAll(p => p.OrderBy(pe => pe.LastName), page, pageSize)
+                .GetAll(p => p
+                    .OrderBy(pe => pe.LastName)
+                    .ThenBy(pe => pe.Id), page, pageSize)
                 .MapData(_mapper.Map<PersonViewModel>);
         }
 

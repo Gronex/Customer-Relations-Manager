@@ -12,6 +12,13 @@
     var vm = this;
 
     vm.people = [];
+    vm.pagination = {
+      pageSize: 5,
+      page: 1
+    };
+    vm.itemCount = 0;
+
+    vm.getPeople = getPeople;
 
     activate();
 
@@ -21,8 +28,9 @@
 
     function getPeople() {
       dataservice.people
-        .getAll()
+        .getAll({query: vm.pagination})
         .then(function (data) {
+          vm.itemCount = data.itemCount;
           vm.people = data.data;
         });
     }

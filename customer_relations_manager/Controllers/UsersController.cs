@@ -43,8 +43,8 @@ namespace customer_relations_manager.Controllers
             var users = _userManager.Users.ToList();
 
             var userModels = users
-                .Where(u => u.Active)
-                .OrderBy(u => u.LastName)
+                .Where(u => u.Active).OrderBy(pe => pe.Id)
+                .ThenBy(u => u.LastName)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(u =>
@@ -59,7 +59,7 @@ namespace customer_relations_manager.Controllers
             return Ok(new PaginationEnvelope<UserOverviewViewModel>
             {
                 Data = userModels,
-                PageCount = (int) Math.Ceiling(users.Count(u => u.Active)/(double)pageSize),
+                ItemCount = users.Count(u => u.Active),
                 PageSize = pageSize,
                 PageNumber = page
             });

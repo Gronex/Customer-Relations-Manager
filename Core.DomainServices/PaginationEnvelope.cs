@@ -11,14 +11,14 @@ namespace Core.DomainServices
     {
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
-        public int PageCount { get; set; }
+        public int ItemCount { get; set; }
         public IEnumerable<T> Data { get; set; }
         
         public PaginationEnvelope<T2> MapData<T2>(Func<T, T2> mapper)
         {
             return new PaginationEnvelope<T2>
             {
-                PageCount = PageCount,
+                ItemCount = ItemCount,
                 PageNumber = PageNumber,
                 PageSize = PageSize,
                 Data = Data.Select(mapper)

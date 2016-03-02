@@ -11,6 +11,13 @@
   function Companies(dataservice) {
     var vm = this;
     vm.companies = [];
+    vm.pagination = {
+      pageSize: 5,
+      page: 1
+    };
+    vm.itemCount = 0;
+
+    vm.getCompanies = getCompanies;
 
     activate();
 
@@ -20,10 +27,14 @@
 
     function getCompanies() {
       dataservice.companies
-        .getAll()
+        .getAll({query: vm.pagination})
         .then(function (data) {
+          vm.itemCount = data.itemCount;
           vm.companies = data.data;
         });
     }
   }
 })();
+
+
+

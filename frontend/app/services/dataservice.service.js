@@ -85,6 +85,7 @@
 
     function getQuery(args) {
       if(args) return {params: args.query};
+      return undefined;
     }
 
     function getUrl(urlToUpdate, args) {
@@ -111,7 +112,7 @@
 
     function returnData(response) {
       if(response.status === 201)
-        return {location: response.location, data: response.data};
+        return {location: response.headers("location"), data: response.data};
       return response.data;
     }
   }

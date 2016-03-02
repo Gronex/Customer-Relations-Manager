@@ -1,5 +1,7 @@
 <h1>Opportunities</h1>
-
+<a type="button" class="btn btn-default pull-right" ui-sref="Opportunity({id: 'new'})")>New Opportunity</a>
+<br/>
+<br/>
 <table class="table">
   <tr>
     <th>Name</th>
@@ -30,5 +32,4 @@
     </td>
   </tr>
 </table>
-
-<a ui-sref="Opportunity({id: 'new'})" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> Create new</a>
+<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getOpportunities()"></uib-pagination>

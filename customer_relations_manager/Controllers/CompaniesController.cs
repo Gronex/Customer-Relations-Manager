@@ -29,7 +29,9 @@ namespace customer_relations_manager.Controllers
         public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int page = 1, int pageSize = 10)
         {
             CorrectPageInfo(ref page, ref pageSize);
-            var data = _repo.Get(c => c.OrderBy(co => co.Name), page, pageSize);
+            var data = _repo.Get(c => c
+                .OrderBy(co => co.Name)
+                .ThenBy(co => co.Id), page, pageSize);
             return data.MapData(_mapper.Map<CompanyOverviewViewModel>);
         }
 

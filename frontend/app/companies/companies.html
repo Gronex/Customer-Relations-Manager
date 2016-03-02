@@ -1,5 +1,7 @@
 <h1>Companies</h1>
-
+<a type="button" class="btn btn-default pull-right" ui-sref="Company({id: 'new'})">New Company</a>
+<br/>
+<br/>
 <table class="table">
   <tr>
     <th>Name</th>
@@ -25,4 +27,5 @@
     </td>
   </tr>
 </table>
-<a ui-sref="Company({id: 'new'})" class="btn btn-primary"><i class="fa fa-plus"></i> Create new</a>
+
+<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getCompanies()"></uib-pagination>
