@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ActivitesControllerTest.cs" />
+    <Compile Include="Controllers\ActivityCategoryControllerTest.cs" />
     <Compile Include="Controllers\GoalsControllerTest.cs" />
     <Compile Include="Controllers\UsersControllerTest.cs" />
     <Compile Include="Controllers\UsersGroupControllerTest.cs" />
