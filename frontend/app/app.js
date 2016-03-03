@@ -56,6 +56,12 @@
         controller: "Departments",
         controllerAs: 'vm'
       })
+      .state("ActivityCategories", {
+        url: "/activity-categories",
+        templateUrl: "view/app/activity-categories/activity-categories.html",
+        controller: "ActivityCategories",
+        controllerAs: 'vm'
+      })
       .state("OpportunityCategories", {
         url: "/opportunity-categories",
         templateUrl: "view/app/opportunity-categories/opportunity-categories.html",

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using customer_relations_manager.ViewModels;
+using customer_relations_manager.ViewModels.Activity;
 using customer_relations_manager.ViewModels.Company;
 using customer_relations_manager.ViewModels.Opportunity;
 using customer_relations_manager.ViewModels.User;
+using Core.DomainModels.Activities;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
@@ -51,6 +53,8 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Person, PersonViewModel>()
                     .ForMember(vm => vm.CompanyName, c => c.MapFrom(p => p.Company.Name))    
                 .ReverseMap();
+
+                cfg.CreateMap<ActivityCategory, ActivityCategoryViewModel>().ReverseMap();
             });
 
             return config;
