@@ -26,10 +26,13 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CompanyOverviewViewModel> Get()
+        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int page = 1, int pageSize = 10)
         {
-            var data = _repo.Get();
-            return data.Select(_mapper.Map<CompanyOverviewViewModel>);
+            CorrectPageInfo(ref page, ref pageSize);
+            var data = _repo.Get(c => c
+                .OrderBy(co => co.Name)
+                .ThenBy(co => co.Id), page, pageSize);
+            return data.MapData(_mapper.Map<CompanyOverviewViewModel>);
         }
 
         [HttpGet]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.DomainModels.Opportunity;
@@ -20,6 +21,11 @@ namespace Infrastructure.DataAccess.Repositories
             _context = context;
             _repo = repo;
             _userManager = userManager;
+        }
+
+        public PaginationEnvelope<Opportunity> GetAll(Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>> orderBy, int page, int pageSize)
+        {
+            return _repo.Get(orderBy, page, pageSize);
         }
 
         public IEnumerable<Opportunity> GetAll()

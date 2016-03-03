@@ -27,10 +27,13 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<OpportunityOverviewViewMode> Get()
+        public PaginationEnvelope<OpportunityOverviewViewMode> GetAll(int page = 1, int pageSize = 10)
         {
-            var data = _repo.GetAll();
-            return data.Select(_mapper.Map<OpportunityOverviewViewMode>);
+            CorrectPageInfo(ref page, ref pageSize);
+            var data = _repo.GetAll(o => o
+                .OrderBy(op => op.Name)
+                .ThenBy(op => op.Id), page, pageSize);
+            return data.MapData(_mapper.Map<OpportunityOverviewViewMode>);
         }
 
         [HttpGet]

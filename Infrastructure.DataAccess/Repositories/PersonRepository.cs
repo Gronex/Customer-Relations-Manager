@@ -26,6 +26,11 @@ namespace Infrastructure.DataAccess.Repositories
             return _repo.Get();
         }
 
+        public PaginationEnvelope<Person> GetAll(Func<IQueryable<Person>, IOrderedQueryable<Person>> orderBy, int page, int pageSize)
+        {
+            return _repo.Get(orderBy, page, pageSize);
+        }
+
         public Person GetById(int id)
         {
             return _repo.GetByKey(id);

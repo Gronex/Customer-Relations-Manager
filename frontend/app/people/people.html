@@ -1,5 +1,5 @@
 <h1>People</h1>
-<a type="button" class="btn btn-default" ui-sref="Person({id: 'new'})")>New Person</a>
+<a type="button" class="btn btn-default pull-right" ui-sref="Person({id: 'new'})">New Person</a>
 <br/>
 <br/>
 <table class="table">
@@ -20,3 +20,4 @@
     </td>
   </tr>
 </table>
+<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getPeople()"></uib-pagination>

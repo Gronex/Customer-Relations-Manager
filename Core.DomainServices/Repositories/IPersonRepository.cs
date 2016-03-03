@@ -14,6 +14,7 @@ namespace Core.DomainServices.Repositories
         /// </summary>
         /// <returns></returns>
         IEnumerable<Person> GetAll();
+        PaginationEnvelope<Person> GetAll(Func<IQueryable<Person>, IOrderedQueryable<Person>> orderBy, int page, int pageSize);
         /// <summary>
         /// Gets a single person
         /// </summary>

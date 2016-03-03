@@ -25,11 +25,11 @@ namespace customer_relations_manager.Controllers
             _mapper = mapper;
             _repo = repo;
         }
-
+        
         [HttpGet]
-        public IEnumerable<StageViewModel> Get()
+        public IEnumerable<StageViewModel> GetAll()
         {
-            var stages = _repo.Get();
+            var stages = _repo.Get(orderBy: s => s.OrderBy(st => st.Value));
             return stages.Select(_mapper.Map<StageViewModel>);
         }
 

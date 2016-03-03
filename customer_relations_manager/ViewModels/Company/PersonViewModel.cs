@@ -19,7 +19,7 @@ namespace customer_relations_manager.ViewModels.Company
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
         public string CompanyName { get; set; }
 
         // ReSharper disable once ConvertPropertyToExpressionBody

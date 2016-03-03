@@ -37,12 +37,16 @@ namespace customer_relations_manager.Controllers
 
         // GET: api/users
         [HttpGet]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int page = 1, int pageSize = 10)
         {
+            CorrectPageInfo(ref page, ref pageSize);
             var users = _userManager.Users.ToList();
 
             var userModels = users
-                .Where(u => u.Active)
+                .Where(u => u.Active).OrderBy(pe => pe.Id)
+                .ThenBy(u => u.LastName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Select(u =>
                 {
                     var roles = _userManager.GetRoles(u.Id);
@@ -52,7 +56,13 @@ namespace customer_relations_manager.Controllers
                         opts => opts.AfterMap((_, res) => res.Role = role));
                 });
             
-            return Ok(userModels);
+            return Ok(new PaginationEnvelope<UserOverviewViewModel>
+            {
+                Data = userModels,
+                ItemCount = users.Count(u => u.Active),
+                PageSize = pageSize,
+                PageNumber = page
+            });
         }
 
         // GET: api/users/{id}

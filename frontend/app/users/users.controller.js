@@ -9,6 +9,13 @@
   function Users(dataservice){
     var vm = this;
     vm.users = [];
+    vm.pagination = {
+      pageSize: 5,
+      page: 1
+    };
+    vm.itemCount = 0;
+
+    vm.getUsers = getUsers;
 
     activate();
 
@@ -18,9 +25,10 @@
 
     function getUsers() {
       return dataservice.users
-        .getAll()
+        .getAll({query: vm.pagination})
         .then(function (data) {
-          vm.users = data;
+          vm.itemCount = data.itemCount;
+          vm.users = data.data;
           return vm.users;
         });
     }
