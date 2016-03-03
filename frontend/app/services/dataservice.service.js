@@ -22,7 +22,8 @@
       opportunityCategories: createResource("api/opportunityCategories"),
       people:  createResource("api/persons"),
       graph: createResource("api/graph"),
-      activityCategories: createResource("api/activityCategories")
+      activityCategories: createResource("api/activityCategories"),
+      activities: createResource("api/activities")
     };
 
     function login(userName, password) {

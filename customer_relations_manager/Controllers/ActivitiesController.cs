@@ -52,7 +52,7 @@ namespace customer_relations_manager.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutActivity(int id, ActivityViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(id, _mapper.Map<Activity>(model));
             if(dbModel == null) return NotFound();
@@ -65,7 +65,7 @@ namespace customer_relations_manager.Controllers
         [ResponseType(typeof(ActivityViewModel))]
         public IHttpActionResult PostActivity(ActivityViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Create(_mapper.Map<Activity>(model));
             _uow.Save();
