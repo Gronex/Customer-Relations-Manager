@@ -22,6 +22,8 @@ namespace customer_relations_manager.App_Start
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<DateTime, TimeSpan>().ReverseMap();
+
                 cfg.CreateMap<User, UserViewModel>()
                     .ForMember(vm => vm.Groups, o => o.MapFrom(u => u.Groups.Select(g => g.UserGroup)))
                     .ReverseMap()
@@ -55,6 +57,20 @@ namespace customer_relations_manager.App_Start
                 .ReverseMap();
 
                 cfg.CreateMap<ActivityCategory, ActivityCategoryViewModel>().ReverseMap();
+                cfg.CreateMap<Activity, ActivityViewModel>()
+                    .AfterMap((a, vm) =>
+                    {
+                        vm.CategoryName = a.Category.Name;
+                        vm.ResponsibleEmail = a.Responsible.Email;
+                        vm.ResponsibleName = a.Responsible.Name;
+                    })
+                    .ReverseMap()
+                    .AfterMap((vm, a) =>
+                    {
+                        a.Category = new ActivityCategory { Name = vm.CategoryName };
+                        a.Responsible = new User { Email = vm.ResponsibleEmail };
+                    });
+                cfg.CreateMap<Activity, ActivityOverviewViewModel>().ReverseMap();
             });
 
             return config;

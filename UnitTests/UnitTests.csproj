@@ -118,7 +118,6 @@
     <Compile Include="Services\GraphService\GraphServiceTest.cs" />
     <Compile Include="Repositories\PersonRepositoryTest.cs" />
     <Compile Include="Services\GraphService\ProductionDataTest.cs" />
-    <Compile Include="Stubs\ActivityRepoStub.cs" />
     <Compile Include="Stubs\AppContextStub.cs" />
     <Compile Include="Stubs\TestDbSet.cs" />
     <Compile Include="Stubs\UnitOfWorkStub.cs" />
