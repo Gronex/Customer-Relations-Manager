@@ -16,6 +16,7 @@
     vm.save = save;
     vm.remove = remove;
     vm.updateResponsible = updateResponsible;
+    vm.updateCompany = updateCompany;
 
     activate();
 
@@ -89,6 +90,11 @@
         .then(function(){
           $state.go("Activities");
         });
+    }
+
+    function updateCompany(company){
+      vm.activity.companyName = company.name;
+      vm.activity.companyId = company.id;
     }
   }
 })();
