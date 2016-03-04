@@ -33,7 +33,7 @@ namespace Core.DomainModels.Activities
         [ForeignKey(nameof(Company))]
         public int? CompanyId { get; set; }
         public virtual Company Company { get; set; }
-        public virtual ICollection<Person> People { get; set; }
+        public virtual ICollection<Person> Contacts { get; set; }
         public virtual  ICollection<ActivityComment> Comments { get; set; }
     }
 }

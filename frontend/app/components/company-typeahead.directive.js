@@ -13,7 +13,8 @@
       scope: {
         isRequired: "=",
         companyName: "=",
-        onSelect: "="
+        onSelect: "=",
+        onRemove: "="
       },
       controller: Controller,
       controllerAs: 'vm',
@@ -54,7 +55,5 @@
       if(typeof(vm.onSelect) === "function")
         vm.onSelect(item);
     }
-
-
   }
 })();

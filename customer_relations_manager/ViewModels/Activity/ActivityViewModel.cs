@@ -24,5 +24,7 @@ namespace customer_relations_manager.ViewModels.Activity
         [Required]
         public DateTime? DueDate { get; set; }
         public DateTime? DueTime { get; set; }
+
+        public IEnumerable<PersonViewModel> Contacts { get; set; }
     }
 }

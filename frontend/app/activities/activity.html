@@ -22,13 +22,14 @@
     </div>
     <div class="row" >
         <div class="col-sm-6">
-            <crm-company-typeahead on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
+            <crm-company-typeahead on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
             <div class="form-group">
                 <label>Contacts</label>
-                <input type="text" ng-model="vm.contact" ng-disabled="!vm.activity.companyId" placeholder="Add Contact" uib-typeahead="contact as contact.name for contact in vm.contacts | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.contactSelected($item)">
+                <input type="text" ng-model="vm.contact" ng-disabled="!vm.activity.companyId" placeholder="Add Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.contactSelected($item)">
+                <br/>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="contact in vm.contacts">
-                        {{contatc.name}} <button type="button" class="close" aria-label="Close" ng-click="vm.remove(contact)"><span aria-hidden="true">&times;</span></button>
+                    <li class="list-group-item" ng-repeat="contact in vm.activity.contacts">
+                        {{contact.name}} <button type="button" class="close" aria-label="Close" ng-click="vm.removeContact(contact)"><span aria-hidden="true">&times;</span></button>
                     </li>
                 </ul>
             </div>

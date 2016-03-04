@@ -17,6 +17,9 @@
     vm.remove = remove;
     vm.updateResponsible = updateResponsible;
     vm.updateCompany = updateCompany;
+    vm.removeCompany = removeCompany;
+    vm.contactSelected = contactSelected;
+    vm.removeContact = removeContact;
 
     activate();
 
@@ -42,7 +45,20 @@
         .then(function(a){
           vm.activity = a;
           vm.time = a.dueTime !== null;
+          getEmployees();
         });
+    }
+
+    function getEmployees(){
+      if(vm.activity.companyId){
+        dataservice.companyEmployees({companyId: vm.activity.companyId})
+          .then(function(data){
+            vm.employees = data;
+            vm.employees = filterList(vm.employees, vm.activity.contacts);
+          });
+      } else {
+        vm.employees = [];
+      }
     }
 
     function save(){
@@ -95,6 +111,32 @@
     function updateCompany(company){
       vm.activity.companyName = company.name;
       vm.activity.companyId = company.id;
+      vm.activity.contacts = [];
+      getEmployees();
+    }
+
+    function removeCompany(company){
+      vm.activity.companyName = undefined;
+      vm.activity.companyId = undefined;
+      getEmployees();
+      vm.activity.contacts = [];
+    }
+
+    function contactSelected(contact){
+      vm.contact = undefined;
+      vm.activity.contacts.push(contact);
+      vm.employees = filterList(vm.employees, vm.activity.contacts);
+    }
+
+    function removeContact(contact){
+      vm.employees.push(contact);
+      _.remove(vm.activity.contacts, function(c){return c.id === contact.id;});
+    }
+
+    function filterList(list, compareList){
+      return _.differenceBy(list, compareList, function(i){
+        return i.id;
+      });
     }
   }
 })();
