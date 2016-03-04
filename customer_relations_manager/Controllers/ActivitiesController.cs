@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using AutoMapper;
+using customer_relations_manager.ViewModels.Activity;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Users;
 using Core.DomainServices;
@@ -10,116 +14,70 @@ using Core.DomainServices.Repositories;
 namespace customer_relations_manager.Controllers
 {
     [Authorize]
-    public class ActivitiesController : ApiController
+    public class ActivitiesController : CrmApiController
     {
         private readonly IUnitOfWork _uow;
         private readonly IActivityRepository _repo;
-        
-        public ActivitiesController(IUnitOfWork uow, IActivityRepository repo)
+        private readonly IMapper _mapper;
+
+        public ActivitiesController(IUnitOfWork uow, IActivityRepository repo, IMapper mapper)
         {
             _uow = uow;
             _repo = repo;
+            _mapper = mapper;
         }
 
         // GET: api/Activities
-        public IEnumerable<Activity> GetActivities()
+        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(int page = 1, int pageSize = 10)
         {
-            //TODO: map to dto
-            return _repo.GetAll();
+            CorrectPageInfo(ref page, ref pageSize);
+            return _repo.GetAll(a => a
+                .OrderBy(ac => ac.DueDate)
+                .ThenBy(ac => ac.DueTime)
+                .ThenBy(ac => ac.Id), page, pageSize)
+                .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }
 
         // GET: api/Activities/5
-        [ResponseType(typeof(Activity))]
-        public async Task<IHttpActionResult> GetActivity(int id)
+        [ResponseType(typeof(ActivityViewModel))]
+        public IHttpActionResult GetActivity(int id)
         {
-            var activity = await _repo.GetByIdAsync(id);
-            if (activity == null)
-            {
-                return NotFound();
-            }
+            var activity = _repo.GetById(id);
+            if (activity == null) return NotFound();
 
-            return Ok(activity);
+            return Ok(_mapper.Map<ActivityViewModel>(activity));
         }
-        /*
+        
         // PUT: api/Activities/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutActivity(int id, Activity activity)
+        public IHttpActionResult PutActivity(int id, ActivityViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
-            if (id != activity.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(activity).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ActivityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            var dbModel = _repo.Update(id, _mapper.Map<Activity>(model));
+            if(dbModel == null) return NotFound();
+            _uow.Save();
+            
             return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST: api/Activities
-        [ResponseType(typeof(Activity))]
-        public async Task<IHttpActionResult> PostActivity(Activity activity)
+        [ResponseType(typeof(ActivityViewModel))]
+        public IHttpActionResult PostActivity(ActivityViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
-            db.Activities.Add(activity);
-            await db.SaveChangesAsync();
+            var dbModel = _repo.Create(_mapper.Map<Activity>(model));
+            _uow.Save();
 
-            return CreatedAtRoute("DefaultApi", new { id = activity.Id }, activity);
+            return Created(dbModel.Id.ToString(), _mapper.Map<ActivityViewModel>(dbModel));
         }
 
         // DELETE: api/Activities/5
-        [ResponseType(typeof(Activity))]
-        public async Task<IHttpActionResult> DeleteActivity(int id)
+        public void DeleteActivity(int id)
         {
-            Activity activity = await db.Activities.FindAsync(id);
-            if (activity == null)
-            {
-                return NotFound();
-            }
-
-            db.Activities.Remove(activity);
-            await db.SaveChangesAsync();
-
-            return Ok(activity);
+            _repo.DeleteByKey(id);
+            _uow.Save();
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool ActivityExists(int id)
-        {
-            return db.Activities.Count(e => e.Id == id) > 0;
-        }
-        */
     }
 }

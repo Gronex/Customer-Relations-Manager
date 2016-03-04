@@ -94,6 +94,10 @@
     <Compile Include="Migrations\201603020946067_ContactAddedToOpportunity.Designer.cs">
       <DependentUpon>201603020946067_ContactAddedToOpportunity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.cs" />
+    <Compile Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.Designer.cs">
+      <DependentUpon>201603031004457_ActivityAjustmentsToFollowModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />
@@ -167,6 +171,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603020946067_ContactAddedToOpportunity.resx">
       <DependentUpon>201603020946067_ContactAddedToOpportunity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.resx">
+      <DependentUpon>201603031004457_ActivityAjustmentsToFollowModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

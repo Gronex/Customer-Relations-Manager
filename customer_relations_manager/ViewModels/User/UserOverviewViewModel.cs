@@ -21,7 +21,8 @@ namespace customer_relations_manager.ViewModels.User
         [Required]
         public string LastName { get; set; }
 
-        public string Name => $"{FirstName} {LastName}";
+        // ReSharper disable once ConvertPropertyToExpressionBody
+        public string Name {get { return $"{FirstName} {LastName}"; } } 
 
         [Required]
         public UserRole Role { get; set; }

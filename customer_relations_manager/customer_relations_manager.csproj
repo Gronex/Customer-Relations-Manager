@@ -562,6 +562,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ActivityCategoriesController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\CrmApiController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
@@ -578,6 +579,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Providers\ApplicationOAutheProvider.cs" />
+    <Compile Include="ViewModels\Activity\ActivityCategoryViewModel.cs" />
+    <Compile Include="ViewModels\Activity\ActivityOverviewViewModel.cs" />
+    <Compile Include="ViewModels\Activity\ActivityViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\Company\CompanyOverviewViewModel.cs" />
     <Compile Include="ViewModels\Company\CompanyViewModel.cs" />

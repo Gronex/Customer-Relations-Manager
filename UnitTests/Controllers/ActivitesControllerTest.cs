@@ -16,29 +16,7 @@ namespace UnitTests.Controllers
         private readonly ActivitiesController _controller;
         public ActivitesControllerTest()
         {
-            _controller = new ActivitiesController(new UnitOfWorkStub(), new ActivityRepoStub());
-        }
-
-        [Fact]
-        public void GetAllActivities()
-        {
-            var activities = _controller.GetActivities();
-            Assert.Equal(activities.Count(), 3);
-        }
-        
-        [Fact]
-        public async void GetSingleActivities()
-        {
-            var result = await _controller.GetActivity(1) as OkNegotiatedContentResult<Activity>;
-            var activity = result?.Content;
-            Assert.Equal(activity?.Name, "Do that one thing");
-        }
-
-        [Fact]
-        public async void GetSingleActivitiesNotFound()
-        {
-            var result = await _controller.GetActivity(4);
-            Assert.IsType<NotFoundResult>(result);
+            
         }
     }
 }

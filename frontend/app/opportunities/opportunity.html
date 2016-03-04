@@ -67,8 +67,8 @@
         <crm-company-typeahead class="col-sm-6" on-select="vm.updateCompany" is-required="true" company-name="vm.opportunity.company.name"></crm-company-typeahead>
         <div class="col-sm-6 form-group">
             <label>Contact</label>
-            <input disabled class="form-control" type="text" ng-model="vm.opportunity.contact.name"/><br>
-            <input type="text" ng-model="vm.person" placeholder="Select Employee" uib-typeahead="person as person.name for person in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateContact($item)">
+            <input disabled ng-if="vm.opportunity.contact.name" class="form-control" type="text" ng-model="vm.opportunity.contact.name"/><br>
+            <input type="text" ng-disabled="!vm.opportunity.company.id" ng-model="vm.person" placeholder="Select Employee" uib-typeahead="person as person.name for person in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateContact($item)">
        </div>
     </div>
     <div class="form-group">
@@ -84,6 +84,6 @@
     <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
     <a ui-sref="Opportunities" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
     <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
-    Remove <i class="fa fa-trash"></i>
-  </button>
+        Remove <i class="fa fa-trash-o"></i>
+    </button>
 </form>

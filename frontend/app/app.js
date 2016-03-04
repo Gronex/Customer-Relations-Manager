@@ -38,6 +38,18 @@
         controller: "User",
         controllerAs: 'vm'
       })
+      .state('Activities', {
+        url: "/activities",
+        templateUrl: "view/app/activities/activities.html",
+        controller: 'Activities',
+        controllerAs: 'vm'
+      })
+      .state("Activity", {
+        url: "/activities/{id}",
+        templateUrl: "view/app/activities/activity.html",
+        controller: "Activity",
+        controllerAs: 'vm'
+      })
       .state("UserGroups", {
         url: "/groups",
         templateUrl: "view/app/user-groups/user-groups.html",
@@ -54,6 +66,12 @@
         url: "/departments",
         templateUrl: "view/app/departments/departments.html",
         controller: "Departments",
+        controllerAs: 'vm'
+      })
+      .state("ActivityCategories", {
+        url: "/activity-categories",
+        templateUrl: "view/app/activity-categories/activity-categories.html",
+        controller: "ActivityCategories",
         controllerAs: 'vm'
       })
       .state("OpportunityCategories", {

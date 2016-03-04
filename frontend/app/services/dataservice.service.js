@@ -19,9 +19,11 @@
       opportunities: createResource("api/opportunities"),
       stages: createResource("api/stages"),
       departments: createResource("api/departments"),
-      opportunityCategories: createResource("api/opportunitycategories"),
+      opportunityCategories: createResource("api/opportunityCategories"),
       people:  createResource("api/persons"),
-      graph: createResource("api/graph")
+      graph: createResource("api/graph"),
+      activityCategories: createResource("api/activityCategories"),
+      activities: createResource("api/activities")
     };
 
     function login(userName, password) {

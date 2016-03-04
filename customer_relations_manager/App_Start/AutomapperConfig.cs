@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using customer_relations_manager.ViewModels;
+using customer_relations_manager.ViewModels.Activity;
 using customer_relations_manager.ViewModels.Company;
 using customer_relations_manager.ViewModels.Opportunity;
 using customer_relations_manager.ViewModels.User;
+using Core.DomainModels.Activities;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
@@ -20,6 +22,8 @@ namespace customer_relations_manager.App_Start
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<DateTime, TimeSpan>().ReverseMap();
+
                 cfg.CreateMap<User, UserViewModel>()
                     .ForMember(vm => vm.Groups, o => o.MapFrom(u => u.Groups.Select(g => g.UserGroup)))
                     .ReverseMap()
@@ -51,6 +55,22 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Person, PersonViewModel>()
                     .ForMember(vm => vm.CompanyName, c => c.MapFrom(p => p.Company.Name))    
                 .ReverseMap();
+
+                cfg.CreateMap<ActivityCategory, ActivityCategoryViewModel>().ReverseMap();
+                cfg.CreateMap<Activity, ActivityViewModel>()
+                    .AfterMap((a, vm) =>
+                    {
+                        vm.CategoryName = a.Category.Name;
+                        vm.ResponsibleEmail = a.Responsible.Email;
+                        vm.ResponsibleName = a.Responsible.Name;
+                    })
+                    .ReverseMap()
+                    .AfterMap((vm, a) =>
+                    {
+                        a.Category = new ActivityCategory { Name = vm.CategoryName };
+                        a.Responsible = new User { Email = vm.ResponsibleEmail };
+                    });
+                cfg.CreateMap<Activity, ActivityOverviewViewModel>().ReverseMap();
             });
 
             return config;

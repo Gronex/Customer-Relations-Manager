@@ -13,7 +13,8 @@
       scope: {
         isRequired: "=",
         companyName: "=",
-        onSelect: "="
+        onSelect: "=",
+        onRemove: "="
       },
       controller: Controller,
       controllerAs: 'vm',
@@ -44,7 +45,7 @@
       return dataservice.companies
         .getAll()
         .then(function (data){
-          vm.companies = data;
+          vm.companies = data.data;
           return vm.companies;
         });
     }
@@ -54,7 +55,5 @@
       if(typeof(vm.onSelect) === "function")
         vm.onSelect(item);
     }
-
-
   }
 })();

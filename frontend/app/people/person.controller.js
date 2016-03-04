@@ -55,7 +55,8 @@
       dataservice.people
         .remove($stateParams)
         .then(function () {
-          $state.go("People");
+          vm.person.companyName = undefined;
+          vm.person.companyId = undefined;
         });
     }
 
