@@ -41,16 +41,16 @@
 
     function productionGraph(config) {
       var production = dataservice.graph
-        .get({id: "production", query: config})
-        .then(function (result) {
-          return convertToDate(result);
-        });
+            .get({id: "production", query: config})
+            .then(function (result) {
+              return convertToDate(result);
+            });
 
       var goals = dataservice.graph
-        .get("goal")
-        .then(function (result) {
-          return convertToDate(result);
-        });
+            .get({id: "goal", query: config})
+            .then(function (result) {
+              return convertToDate(result);
+            });
 
       return $q.all([production, goals])
         .then(function (result) {
