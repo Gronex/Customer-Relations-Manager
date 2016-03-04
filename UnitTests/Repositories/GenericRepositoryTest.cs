@@ -65,7 +65,7 @@ namespace UnitTests.Repositories
         [Fact]
         public void GetAllReturnsPaged1()
         {
-            var result = _repo.Get(orderBy: ug => ug.OrderBy(u => u.Id) ,page: 1, pageSize: 1);
+            var result = _repo.GetPaged(orderBy: ug => ug.OrderBy(u => u.Id) ,page: 1, pageSize: 1);
 
             Assert.Equal(_seedData.Take(1), result.Data);
         }
@@ -74,7 +74,7 @@ namespace UnitTests.Repositories
         public void GetAllReturnsPaged2()
         {
             // only 1 element on second page page
-            var result = _repo.Get(orderBy: ug => ug.OrderBy(u => u.Id), page: 2, pageSize: 4);
+            var result = _repo.GetPaged(orderBy: ug => ug.OrderBy(u => u.Id), page: 2, pageSize: 4);
             
             Assert.Equal(_seedData.Last(), result.Data.Single());
         }

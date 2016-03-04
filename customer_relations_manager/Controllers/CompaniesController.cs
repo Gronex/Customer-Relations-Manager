@@ -26,10 +26,10 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int page = 1, int pageSize = 10)
+        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
-            var data = _repo.Get(c => c
+            var data = _repo.GetPaged(c => c
                 .OrderBy(co => co.Name)
                 .ThenBy(co => co.Id), page, pageSize);
             return data.MapData(_mapper.Map<CompanyOverviewViewModel>);

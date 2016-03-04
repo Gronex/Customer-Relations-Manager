@@ -28,7 +28,7 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Activities
-        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(int page = 1, int pageSize = 10)
+        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
             return _repo.GetAll(a => a

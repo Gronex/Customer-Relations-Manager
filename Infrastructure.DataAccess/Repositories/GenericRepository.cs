@@ -24,14 +24,14 @@ namespace Infrastructure.DataAccess.Repositories
             return FilterLogic(filter, orderBy, null, null);
         }
 
-        public PaginationEnvelope<T> Get(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, int page, int pageSize, Expression<Func<T, bool>> filter = null)
+        public PaginationEnvelope<T> GetPaged(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, int? page = null, int? pageSize = null, Expression<Func<T, bool>> filter = null)
         {
             var data = FilterLogic(filter, orderBy, page, pageSize);
             
             return new PaginationEnvelope<T>
             {
-                PageSize = pageSize,
-                PageNumber = page,
+                PageSize = pageSize ?? -1,
+                PageNumber = page ?? -1,
                 ItemCount = Count(filter),
                 Data = data
             };

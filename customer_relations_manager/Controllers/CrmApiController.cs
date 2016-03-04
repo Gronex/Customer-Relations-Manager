@@ -22,7 +22,7 @@ namespace customer_relations_manager.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="pageSize"></param>
-        protected void CorrectPageInfo(ref int page, ref int pageSize)
+        protected void CorrectPageInfo(ref int? page, ref int? pageSize)
         {
             if (page < 1)
                 page = 1;

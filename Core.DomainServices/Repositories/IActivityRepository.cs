@@ -9,7 +9,7 @@ namespace Core.DomainServices.Repositories
     public interface IActivityRepository
     {
 
-        PaginationEnvelope<Activity> GetAll(Func<IQueryable<Activity>, IOrderedQueryable<Activity>> orderBy, int page, int pageSize);
+        PaginationEnvelope<Activity> GetAll(Func<IQueryable<Activity>, IOrderedQueryable<Activity>> orderBy, int? page = null, int? pageSize = null);
         IEnumerable<Activity> GetAll();
         Activity GetById(int id);
         Activity Update(int id, Activity activity);

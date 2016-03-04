@@ -28,7 +28,7 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Persons
-        public PaginationEnvelope<PersonViewModel> GetAll(int page = 1, int pageSize = 10)
+        public PaginationEnvelope<PersonViewModel> GetAll(int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
             return _repo

@@ -23,9 +23,9 @@ namespace Infrastructure.DataAccess.Repositories
             _userManager = userManager;
         }
 
-        public PaginationEnvelope<Opportunity> GetAll(Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>> orderBy, int page, int pageSize)
+        public PaginationEnvelope<Opportunity> GetAll(Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>> orderBy, int? page = null, int? pageSize = null)
         {
-            return _repo.Get(orderBy, page, pageSize);
+            return _repo.GetPaged(orderBy, page, pageSize);
         }
 
         public IEnumerable<Opportunity> GetAll()

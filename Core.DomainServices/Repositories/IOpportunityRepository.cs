@@ -7,7 +7,7 @@ namespace Core.DomainServices.Repositories
 {
     public interface IOpportunityRepository
     {
-        PaginationEnvelope<Opportunity> GetAll(Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>> orderBy, int page, int pageSize);
+        PaginationEnvelope<Opportunity> GetAll(Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>> orderBy, int? page, int? pageSize);
         IEnumerable<Opportunity> GetAll();
         Opportunity GetById(int id);
         Opportunity Create(Opportunity model, string userName);

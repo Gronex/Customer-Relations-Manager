@@ -37,16 +37,18 @@ namespace customer_relations_manager.Controllers
 
         // GET: api/users
         [HttpGet]
-        public IHttpActionResult GetAll(int page = 1, int pageSize = 10)
+        public IHttpActionResult GetAll(int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
-            var users = _userManager.Users.ToList();
+            var users = _userManager.Users.Where(u => u.Active);
 
-            var userModels = users
-                .Where(u => u.Active).OrderBy(pe => pe.Id)
-                .ThenBy(u => u.LastName)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+            users = users.OrderBy(pe => pe.Id)
+                .ThenBy(u => u.LastName);
+            if (page.HasValue && pageSize.HasValue)
+                users = users
+                    .Skip((page.Value - 1)*pageSize.Value)
+                    .Take(pageSize.Value);
+            var userModels = users.ToList()
                 .Select(u =>
                 {
                     var roles = _userManager.GetRoles(u.Id);
@@ -60,8 +62,8 @@ namespace customer_relations_manager.Controllers
             {
                 Data = userModels,
                 ItemCount = users.Count(u => u.Active),
-                PageSize = pageSize,
-                PageNumber = page
+                PageSize = pageSize ?? -1,
+                PageNumber = page ?? -1
             });
         }
 

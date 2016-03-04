@@ -26,9 +26,9 @@ namespace Core.DomainServices
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null);
 
-        PaginationEnvelope<T> Get(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
-            int page,
-            int pageSize,
+        PaginationEnvelope<T> GetPaged(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
+            int? page = null,
+            int? pageSize = null,
             Expression<Func<T, bool>> filter = null);
 
             /// <summary>
