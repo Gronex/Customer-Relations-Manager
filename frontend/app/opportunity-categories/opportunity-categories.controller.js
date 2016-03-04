@@ -26,7 +26,7 @@
 
     function getOpportunityCategories() {
       dataservice.opportunityCategories
-        .getAll()
+        .get()
         .then(function (data) {
           vm.opportunityCategories = _.orderBy(data, ['name']);
         });

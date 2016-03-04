@@ -43,7 +43,7 @@
 
     function getCompanies() {
       return dataservice.companies
-        .getAll()
+        .get()
         .then(function (data){
           vm.companies = data.data;
           return vm.companies;

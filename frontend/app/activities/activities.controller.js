@@ -24,7 +24,7 @@
 
     function getActivities(){
       return dataservice.activities
-        .getAll({query: vm.pagination})
+        .get({query: vm.pagination})
         .then(function(data){
           vm.itemCount = data.itemCount;
           vm.activities = _.map(data.data, function(a){

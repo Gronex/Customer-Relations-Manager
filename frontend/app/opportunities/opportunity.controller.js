@@ -38,7 +38,7 @@
 
     function getOpportunity() {
       return dataservice.opportunities
-        .getById($stateParams.id)
+        .get($stateParams.id)
         .then(function (data) {
           data.expectedClose = new Date(data.expectedClose);
           data.startDate = new Date(data.startDate);
@@ -81,7 +81,7 @@
 
     function getStages() {
       return dataservice.stages
-        .getAll()
+        .get()
         .then(function (data) {
           vm.stages = data;
         });
@@ -89,7 +89,7 @@
 
     function getDepartments() {
       return dataservice.departments
-        .getAll()
+        .get()
         .then(function (data) {
           vm.departments = data;
         });
@@ -97,7 +97,7 @@
 
     function getCategories() {
       return dataservice.opportunityCategories
-        .getAll()
+        .get()
         .then(function (data) {
           vm.categories = data;
         });

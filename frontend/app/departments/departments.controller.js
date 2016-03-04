@@ -11,7 +11,7 @@
   function Departments(dataservice) {
     var vm = this;
     vm.departments = [];
-    vm.department;
+    vm.department = {};
 
     vm.create = create;
     vm.save = save;
@@ -26,7 +26,7 @@
 
     function getDepartments() {
       dataservice.departments
-        .getAll()
+        .get()
         .then(function (data) {
           vm.departments = _.orderBy(data, ['name']);
         });

@@ -45,7 +45,7 @@
 
     function getGroups() {
       return dataservice.userGroups
-        .getAll()
+        .get()
         .then(function (data) {
           vm.groups = data;
           return vm.groups;
@@ -54,7 +54,7 @@
 
     function getUser(id) {
       return dataservice.users
-        .getById(id)
+        .get(id)
         .then(function (data) {
           vm.user = data;
           return vm.user;

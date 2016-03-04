@@ -41,13 +41,13 @@
 
     function productionGraph(config) {
       var production = dataservice.graph
-        .getById({id: "production", query: config})
+        .get({id: "production", query: config})
         .then(function (result) {
           return convertToDate(result);
         });
 
       var goals = dataservice.graph
-        .getById("goal")
+        .get("goal")
         .then(function (result) {
           return convertToDate(result);
         });

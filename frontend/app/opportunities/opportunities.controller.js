@@ -27,7 +27,7 @@
 
     function getOpportunities() {
       dataservice.opportunities
-        .getAll({query: vm.pagination})
+        .get({query: vm.pagination})
         .then(function (data) {
           vm.itemCount = data.itemCount;
           vm.opportunities = _.map(data.data, function (o) {

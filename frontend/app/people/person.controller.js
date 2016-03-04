@@ -28,7 +28,7 @@
 
     function getPerson() {
       dataservice.people
-        .getById($stateParams.id)
+        .get($stateParams.id)
         .then(function (data) {
           vm.person = data;
         });

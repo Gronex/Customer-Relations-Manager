@@ -42,47 +42,41 @@
       });
     }
 
+    function createResource(url) {
+      return {
+        get:      genericGet(url),
+        create:   genericCreate(url),
+        update:   genericUpdate(url),
+        remove:   genericRemove(url)
+      };
+    }
+
     function genericGet(url){
       return function(args){
-        return $http.get(getUrl(url, args))
+        return $http.get(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
       };
     }
 
-    function createResource(url) {
-      return {
-        getAll:   getAll,
-        getById:  getById,
-        create:   create,
-        update:   update,
-        remove:   remove
-      };
-
-      function getAll(args) {
-        return $http.get(getUrl(url, args), getQuery(args))
-          .then(returnData, handleError);
-      }
-
-      function getById(args) {
-
-        return $http.get(getUrl(url, args), getQuery(args))
-          .then(returnData, handleError);
-      }
-
-      function create(data, args) {
+    function genericCreate(url){
+      return function(data, args) {
         return $http.post(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
-      }
+      };
+    }
 
-      function update(args,data) {
+    function genericUpdate(url){
+      return function update(args,data) {
         return $http.put(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
-      }
+      };
+    }
 
-      function remove(args) {
+    function genericRemove(url){
+      return function remove(args) {
         return $http.delete(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
-      }
+      };
     }
 
     function getQuery(args) {

@@ -26,7 +26,7 @@
 
     function getActivityCategories() {
       dataservice.activityCategories
-        .getAll()
+        .get()
         .then(function (data) {
           vm.activityCategories = data;
         });

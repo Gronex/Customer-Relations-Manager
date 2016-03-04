@@ -25,7 +25,7 @@
 
     function getUsers() {
       return dataservice.users
-        .getAll({query: vm.pagination})
+        .get({query: vm.pagination})
         .then(function (data) {
           vm.itemCount = data.itemCount;
           vm.users = data.data;

@@ -41,7 +41,7 @@
 
     function getActivity(id){
       return dataservice.activities
-        .getById(id)
+        .get(id)
         .then(function(a){
           vm.activity = a;
           vm.time = a.dueTime !== null;
@@ -80,7 +80,7 @@
 
     function getCategories(){
       return dataservice.activityCategories
-        .getAll()
+        .get()
         .then(function(c){
           vm.categories = c;
         });
@@ -88,7 +88,7 @@
 
     function getUsers(){
       dataservice.users
-        .getAll()
+        .get()
         .then(function(result){
           vm.users = result.data;
         });
