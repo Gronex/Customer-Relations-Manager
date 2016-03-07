@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Core.ApplicationServices.ServiceInterfaces;
 using Core.DomainModels.Graph;
 using Core.DomainModels.Users;
 using Core.DomainServices;
-using Core.DomainServices.Services;
 
 namespace customer_relations_manager.Controllers
 {
@@ -35,6 +35,8 @@ namespace customer_relations_manager.Controllers
                     return Ok(_graphService.GenerateGoalDataTable(users, startDate?.Date, endDate?.Date));
                 case "production":
                     return Ok(_graphService.GenerateProductionDataTable(users, startDate?.Date, endDate?.Date));
+                case "test":
+                    return Ok(_graphService.Test(startDate?.Date, endDate?.Date));
                 default:
                     return NotFound();
             }

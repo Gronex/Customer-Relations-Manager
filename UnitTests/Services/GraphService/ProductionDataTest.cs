@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.ApplicationServices.ExtentionMethods;
+using Core.ApplicationServices.ServiceInterfaces;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
-using Core.DomainServices.Services;
 using Xunit;
 
 namespace UnitTests.Services.GraphService

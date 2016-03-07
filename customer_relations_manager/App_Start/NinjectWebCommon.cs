@@ -1,8 +1,8 @@
 using AutoMapper;
 using Core.ApplicationServices.Graph;
+using Core.ApplicationServices.ServiceInterfaces;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
-using Core.DomainServices.Services;
 using Infrastructure.DataAccess;
 using Infrastructure.DataAccess.Repositories;
 using Microsoft.AspNet.Identity;

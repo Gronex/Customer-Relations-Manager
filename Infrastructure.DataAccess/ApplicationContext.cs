@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,14 +19,10 @@ namespace Infrastructure.DataAccess
 {
     public class ApplicationContext : IdentityDbContext<User>, IApplicationContext
     {
-        public ApplicationContext(DbConnection connection) : base(connection, true)
-        {
-            
-        }
 
         public ApplicationContext() : base("DefaultConnection")
         {
-            
+           Database.Log = s => Debug.WriteLine(s);
         }
 
         public static ApplicationContext Create()

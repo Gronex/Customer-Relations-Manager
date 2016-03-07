@@ -12,7 +12,7 @@
     var vm = this;
     vm.opportunities = [];
     vm.pagination = {
-      pageSize: 1,
+      pageSize: 10,
       page: 1
     };
     vm.itemCount = 0;

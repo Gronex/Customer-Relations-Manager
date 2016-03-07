@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Core.DomainModels.Graph;
+using Core.ApplicationServices.Graph.DataHolders;
 using Core.DomainModels.Users;
 
-namespace Core.DomainServices.Services
+namespace Core.ApplicationServices.ServiceInterfaces
 {
     public interface IGraphService
     {
@@ -18,5 +18,7 @@ namespace Core.DomainServices.Services
             DateTime? startDate = null,
             DateTime? endDate = null
         );
+
+        IDictionary<string, IEnumerable<ProductionData>> Test(DateTime? from, DateTime? to);
     }
 }
