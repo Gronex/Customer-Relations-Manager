@@ -17,8 +17,8 @@ namespace Core.DomainServices.Repositories
             int? pageSize = null);
         IEnumerable<ActivityComment> GetAll(int activityId);
         ActivityComment GetById(int activityId, int id);
-        ActivityComment Update(int activityId, string userName, int id, ActivityComment comment);
-        ActivityComment Create(int activityId, string userName, ActivityComment comment);
+        ActivityComment Update(int activityId, string userName, int id, string comment);
+        ActivityComment Create(int activityId, string userName, string comment);
         void DeleteByKey(int activityId, int id);
     }
 }

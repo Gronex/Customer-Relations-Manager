@@ -37,14 +37,14 @@ namespace customer_relations_manager.Controllers.Activities
                 .MapData(_mapper.Map<CommentViewModel>);
         }
 
-        public IHttpActionResult Post(int activityId, CommentViewModel comment)
+        public IHttpActionResult Post(int activityId, [FromBody]string comment)
         {
-            if(comment == null || !ModelState.IsValid) return BadRequest(ModelState);
+            if(string.IsNullOrWhiteSpace(comment)) return BadRequest();
 
-            var dbComment = _repo.Create(activityId, User.Identity.Name, _mapper.Map<ActivityComment>(comment));
+            var dbComment = _repo.Create(activityId, User.Identity.Name, comment);
             if(dbComment == null) return NotFound();
             _uow.Save();
-            return Ok(_mapper.Map<CommentViewModel>(dbComment));
+            return Created(dbComment.Id.ToString(), _mapper.Map<CommentViewModel>(dbComment));
         }
     }
 }

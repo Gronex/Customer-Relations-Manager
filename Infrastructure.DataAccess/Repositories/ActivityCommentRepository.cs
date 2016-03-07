@@ -23,7 +23,7 @@ namespace Infrastructure.DataAccess.Repositories
 
         public PaginationEnvelope<ActivityComment> GetAll(int activityId, Func<IQueryable<ActivityComment>, IOrderedQueryable<ActivityComment>> orderBy, int? page = null, int? pageSize = null)
         {
-            return _repo.GetPaged(cs => cs.OrderBy(c => c.Sent).ThenBy(c => c.Id), page, pageSize,
+            return _repo.GetPaged(cs => cs.OrderByDescending(c => c.Sent).ThenBy(c => c.Id), page, pageSize,
                 ac => ac.ActivityId == activityId);
         }
 
@@ -37,21 +37,23 @@ namespace Infrastructure.DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public ActivityComment Update(int activityId, string userName, int id, ActivityComment comment)
+        public ActivityComment Update(int activityId, string userName, int id, string comment)
         {
             throw new NotImplementedException();
         }
 
-        public ActivityComment Create(int activityId, string userName, ActivityComment comment)
+        public ActivityComment Create(int activityId, string userName, string comment)
         {
-            comment.ActivityId = activityId;
+            var commentObj = new ActivityComment
+            {
+                Text = comment,
+                ActivityId = activityId,
+                UserId = _context.Users.SingleOrDefault(u => u.UserName == userName)?.Id,
+                Sent = DateTime.UtcNow
+            };
 
-            comment.Activity = null;
-            comment.User = null;
-            comment.UserId = _context.Users.SingleOrDefault(u => u.UserName == userName)?.Id;
-            if (comment.UserId == null || !_context.Activities.Any(a => a.Id == activityId)) return null;
-            comment.Sent = DateTime.UtcNow;
-            return _repo.Insert(comment);
+            if (commentObj.UserId == null || !_context.Activities.Any(a => a.Id == activityId)) return null;
+            return _repo.Insert(commentObj);
         }
 
         public void DeleteByKey(int activityId, int id)

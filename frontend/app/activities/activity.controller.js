@@ -20,6 +20,8 @@
     vm.removeCompany = removeCompany;
     vm.contactSelected = contactSelected;
     vm.removeContact = removeContact;
+    vm.commentDataAccess = dataservice.activityComments;
+    vm.commentArgs = {activityId: $stateParams.id};
 
     activate();
 

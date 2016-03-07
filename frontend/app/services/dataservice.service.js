@@ -23,7 +23,8 @@
       people:  createResource("api/persons"),
       graph: createResource("api/graph"),
       activityCategories: createResource("api/activityCategories"),
-      activities: createResource("api/activities")
+      activities: createResource("api/activities"),
+      activityComments: createResource("/api/activities/{activityId}/comments")
     };
 
     function login(userName, password) {
@@ -60,6 +61,8 @@
 
     function genericCreate(url){
       return function(data, args) {
+        // aparently it is not able to figure out it is a string unless i add extra quotes
+        if(typeof(data) === "string") data = '"' + data + '"';
         return $http.post(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
       };
