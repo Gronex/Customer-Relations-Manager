@@ -98,6 +98,7 @@
     <Compile Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.Designer.cs">
       <DependentUpon>201603031004457_ActivityAjustmentsToFollowModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />

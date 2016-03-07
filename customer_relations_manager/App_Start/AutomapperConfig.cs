@@ -9,6 +9,7 @@ using customer_relations_manager.ViewModels.Company;
 using customer_relations_manager.ViewModels.Opportunity;
 using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.Activities;
+using Core.DomainModels.Comments;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
@@ -71,6 +72,10 @@ namespace customer_relations_manager.App_Start
                         a.Responsible = new User { Email = vm.ResponsibleEmail };
                     });
                 cfg.CreateMap<Activity, ActivityOverviewViewModel>().ReverseMap();
+
+
+                cfg.CreateMap<ActivityComment, CommentViewModel>().ReverseMap();
+                cfg.CreateMap<OpportunityComment, CommentViewModel>().ReverseMap();
             });
 
             return config;

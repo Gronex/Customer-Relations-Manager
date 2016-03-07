@@ -61,6 +61,7 @@
     <Compile Include="IApplicationContext.cs" />
     <Compile Include="IGenericRepository.cs" />
     <Compile Include="PaginationEnvelope.cs" />
+    <Compile Include="Repositories\IActivityCommentRepository.cs" />
     <Compile Include="Repositories\IActivityRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Repositories\ICompanyRepository.cs" />

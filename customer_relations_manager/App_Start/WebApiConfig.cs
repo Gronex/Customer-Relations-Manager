@@ -24,17 +24,22 @@ namespace customer_relations_manager
             );
 
             routes.MapHttpRoute(
-                name: "OneLevelNested",
-                routeTemplate: "api/{controller}/{mainId}/{action}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            routes.MapHttpRoute(
                 name: "UserApi",
                 routeTemplate: "api/users/{userId}/{controller}/{id}",
                 defaults: new {id = RouteParameter.Optional }
             );
 
+            routes.MapHttpRoute(
+                name: "ActivityCommentApi",
+                routeTemplate: "api/activities/{activityId}/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+            routes.MapHttpRoute(
+                name: "OneLevelNested",
+                routeTemplate: "api/{controller}/{mainId}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
         }
     }
 }

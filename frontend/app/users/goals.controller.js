@@ -26,7 +26,7 @@
 
 
     function getUserGoals(id) {
-      dataservice.goals.getAll({userId: id})
+      dataservice.goals.get({userId: id})
         .then(function (data) {
           vm.goals = _.orderBy(data, ['year', 'month']);
           return vm.goals;
