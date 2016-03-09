@@ -21,8 +21,10 @@
     // Now set up the states
     $stateProvider
       .state('Home', {
-        url: "/",
-        template: "<h1>Hello world</h1>"
+        url: "/?{fromMonth:int}&{fromYear:int}&{toMonth:int}&{toYear:int}",
+        templateUrl: "view/app/home/home.html",
+        controller: "Home",
+        controllerAs: "vm"
       })
       .state('Users', {
         url: "/users",
@@ -36,16 +38,64 @@
         controller: "User",
         controllerAs: 'vm'
       })
+      .state('Activities', {
+        url: "/activities",
+        templateUrl: "view/app/activities/activities.html",
+        controller: 'Activities',
+        controllerAs: 'vm'
+      })
+      .state("Activity", {
+        url: "/activities/{id}",
+        templateUrl: "view/app/activities/activity.html",
+        controller: "Activity",
+        controllerAs: 'vm'
+      })
       .state("UserGroups", {
         url: "/groups",
         templateUrl: "view/app/user-groups/user-groups.html",
         controller: "UserGroups",
         controllerAs: 'vm'
       })
+      .state("Stages", {
+        url: "/stages",
+        templateUrl: "view/app/stages/stages.html",
+        controller: "Stages",
+        controllerAs: 'vm'
+      })
+      .state("Departments", {
+        url: "/departments",
+        templateUrl: "view/app/departments/departments.html",
+        controller: "Departments",
+        controllerAs: 'vm'
+      })
+      .state("ActivityCategories", {
+        url: "/activity-categories",
+        templateUrl: "view/app/activity-categories/activity-categories.html",
+        controller: "ActivityCategories",
+        controllerAs: 'vm'
+      })
+      .state("OpportunityCategories", {
+        url: "/opportunity-categories",
+        templateUrl: "view/app/opportunity-categories/opportunity-categories.html",
+        controller: "OpportunityCategories",
+        controllerAs: 'vm'
+      })
       .state("Companies", {
         url: "/companies",
         templateUrl: "view/app/companies/companies.html",
         controller: "Companies",
+        controllerAs: 'vm'
+      })
+      .state("People", {
+        url: "/people",
+        templateUrl: "view/app/people/people.html",
+        controller: "People",
+        controllerAs: 'vm'
+      })
+      .state("Person", {
+        url: "/people/{id}",
+        templateUrl: "view/app/people/person.html",
+        controller: "Person",
         controllerAs: 'vm'
       })
       .state("Company", {

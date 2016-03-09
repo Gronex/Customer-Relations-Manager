@@ -18,6 +18,7 @@ namespace customer_relations_manager.ViewModels.Opportunity
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime ExpectedClose { get; set; }
+        public int Percentage { get; set; }
         public StageViewModel Stage { get; set; }
     }
 }

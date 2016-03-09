@@ -14,11 +14,11 @@ namespace customer_relations_manager.Controllers
     [Authorize]
     public class CompaniesController : CrmApiController
     {
-        private readonly ICompanyRepository _repo;
+        private readonly IGenericRepository<Company> _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public CompaniesController(ICompanyRepository repo, IUnitOfWork uow, IMapper mapper)
+        public CompaniesController(IGenericRepository<Company> repo, IUnitOfWork uow, IMapper mapper)
         {
             _repo = repo;
             _uow = uow;
@@ -26,17 +26,20 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CompanyOverviewViewModel> Get()
+        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int? page = null, int? pageSize = null)
         {
-            var data = _repo.GetAll();
-            return data.Select(_mapper.Map<CompanyOverviewViewModel>);
+            CorrectPageInfo(ref page, ref pageSize);
+            var data = _repo.GetPaged(c => c
+                .OrderBy(co => co.Name)
+                .ThenBy(co => co.Id), page, pageSize);
+            return data.MapData(_mapper.Map<CompanyOverviewViewModel>);
         }
 
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<CompanyViewModel>))]
+        [ResponseType(typeof(CompanyViewModel))]
         public IHttpActionResult Get(int id)
         {
-            var data = _repo.GetById(id);
+            var data = _repo.GetByKey(id);
             if(data == null) return NotFound();
 
             return Ok(_mapper.Map<CompanyViewModel>(data));
@@ -47,7 +50,7 @@ namespace customer_relations_manager.Controllers
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
 
-            var dbModel = _repo.Create(_mapper.Map<Company>(model));
+            var dbModel = _repo.Insert(_mapper.Map<Company>(model));
             _uow.Save();
 
             return Created(dbModel.Id.ToString(), _mapper.Map<CompanyViewModel>(dbModel));
@@ -58,7 +61,19 @@ namespace customer_relations_manager.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var dbModel = _repo.Update(id, _mapper.Map<Company>(model));
+            var dbModel = _repo.Update(company =>
+            {
+                var updated = _mapper.Map<Company>(model);
+
+                company.Address = updated.Address;
+                company.City = updated.City;
+                company.Country = updated.Country;
+                company.Name = updated.Name;
+                company.PhoneNumber = updated.PhoneNumber;
+                company.PostalCode = updated.PostalCode;
+                company.WebSite = updated.WebSite;
+            }, id);
+            
             if(dbModel == null) return NotFound();
             _uow.Save();
 
@@ -68,8 +83,18 @@ namespace customer_relations_manager.Controllers
         [HttpDelete]
         public void Delete(int id)
         {
-            _repo.Delete(id);
+            _repo.DeleteByKey(id);
             _uow.Save();
+        }
+
+        [HttpGet]
+        public IHttpActionResult Persons(int mainId)
+        {
+            var company = _repo.GetByKey(mainId);
+            if(company == null) return NotFound();
+
+            var employees = company.Employees;
+            return Ok(employees.Select(_mapper.Map<PersonViewModel>));
         }
     }
 }

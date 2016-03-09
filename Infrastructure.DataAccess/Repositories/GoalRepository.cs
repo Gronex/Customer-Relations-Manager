@@ -11,16 +11,16 @@ namespace Infrastructure.DataAccess.Repositories
 {
     public class GoalRepository : IGoalRepository
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly IGenericRepository<ProductionGoal> _repo;
 
-        public GoalRepository(ApplicationContext context, IGenericRepository<ProductionGoal> repo)
+        public GoalRepository(IApplicationContext context, IGenericRepository<ProductionGoal> repo)
         {
             _context = context;
             _repo = repo;
         }
 
-        public IQueryable<ProductionGoal> GetAll(string userId)
+        public IEnumerable<ProductionGoal> GetAll(string userId)
         {
             return _context.Users.Any(u => u.Id == userId) ? _repo.Get(g => g.UserId == userId) : null;
         }
@@ -44,8 +44,7 @@ namespace Infrastructure.DataAccess.Repositories
             return _repo.UpdateBy(g =>
             {
                 g.Goal = model.Goal;
-                g.Year = model.Year;
-                g.Month = model.Month;
+                g.StartDate = model.StartDate;
             }, g => g.Id == id && g.UserId == userId);
         }
 

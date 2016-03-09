@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,20 +12,17 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainServices;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Infrastructure.DataAccess
 {
-    public class ApplicationContext : IdentityDbContext<User>
+    public class ApplicationContext : IdentityDbContext<User>, IApplicationContext
     {
-        public ApplicationContext(DbConnection connection) : base(connection, true)
-        {
-            
-        }
 
         public ApplicationContext() : base("DefaultConnection")
         {
-            
+           Database.Log = s => Debug.WriteLine(s);
         }
 
         public static ApplicationContext Create()
@@ -45,7 +43,7 @@ namespace Infrastructure.DataAccess
         public DbSet<Stage> Stages { get; set; }
         public DbSet<OpportunityComment> OpportunityComments { get; set; }
         public DbSet<ActivityComment> ActivityComments { get; set; }
-        
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // The DateTime type in .NET has the same range and precision as datetime2 in SQL Server.
@@ -74,6 +72,11 @@ namespace Infrastructure.DataAccess
             modelBuilder.Entity<Opportunity>().HasRequired(o => o.Owner).WithMany(u => u.Opportunities).WillCascadeOnDelete(false);
             
             base.OnModelCreating(modelBuilder);
+        }
+        
+        public void SetState<T>(T entity, EntityState state) where T : class
+        {
+            Entry(entity).State = state;
         }
     }
 }

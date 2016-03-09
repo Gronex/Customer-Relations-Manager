@@ -15,8 +15,16 @@
       userGroups: createResource("/api/usergroups"),
       goals: createResource("/api/users/{userId}/goals"),
       companies: createResource("/api/companies"),
+      companyEmployees: genericGet("/api/companies/{companyId}/persons"),
       opportunities: createResource("api/opportunities"),
-      stages: createResource("api/stages")
+      stages: createResource("api/stages"),
+      departments: createResource("api/departments"),
+      opportunityCategories: createResource("api/opportunityCategories"),
+      people:  createResource("api/persons"),
+      graph: createResource("api/graph"),
+      activityCategories: createResource("api/activityCategories"),
+      activities: createResource("api/activities"),
+      activityComments: createResource("/api/activities/{activityId}/comments")
     };
 
     function login(userName, password) {
@@ -37,54 +45,73 @@
 
     function createResource(url) {
       return {
-        getAll:   getAll,
-        getById:  getById,
-        create:   create,
-        update:   update,
-        remove:   remove
+        get:      genericGet(url),
+        create:   genericCreate(url),
+        update:   genericUpdate(url),
+        remove:   genericRemove(url)
       };
+    }
 
-      function getAll(args) {
-        return $http.get(getUrl(url, args))
+    function genericGet(url){
+      return function(args){
+        return $http.get(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
-      }
+      };
+    }
 
-      function getById(id, args) {
-        return $http.get(getUrl(url, args) + "/" + id)
+    function genericCreate(url){
+      return function(data, args) {
+        // aparently it is not able to figure out it is a string unless i add extra quotes
+        if(typeof(data) === "string") data = '"' + data + '"';
+        return $http.post(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
-      }
+      };
+    }
 
-      function create(data, args) {
-        return $http.post(getUrl(url, args), data)
+    function genericUpdate(url){
+      return function update(args,data) {
+        return $http.put(getUrl(url, args), data, getQuery(args))
           .then(returnData, handleError);
-      }
+      };
+    }
 
-      function update(id, data, args) {
-        return $http.put(getUrl(url, args) + "/" + id, data)
+    function genericRemove(url){
+      return function remove(args) {
+        return $http.delete(getUrl(url, args), getQuery(args))
           .then(returnData, handleError);
-      }
+      };
+    }
 
-      function remove(id, args) {
-        return $http.delete(getUrl(url, args) + "/" + id)
-          .then(returnData, handleError);
-      }
+    function getQuery(args) {
+      if(args) return {params: args.query};
+      return undefined;
+    }
 
-      function getUrl(urlToUpdate, args) {
-        if(!pathRegex.test(urlToUpdate)) return urlToUpdate;
+    function getUrl(urlToUpdate, args) {
 
-        return urlToUpdate.replace(pathRegex, function (match, key) {
-          return args[key];
-        });
+      if(typeof(args) === "string" || typeof(args) === "number")
+        return urlToUpdate + "/" + args;
 
-      }
+      if(args !== undefined && args["id"] !== undefined)
+        urlToUpdate = urlToUpdate  + "/" + args.id;
+
+      if(!pathRegex.test(urlToUpdate)) return urlToUpdate;
+
+      return urlToUpdate.replace(pathRegex, function (match, key) {
+        return args[key];
+      });
+
     }
 
     function handleError(err) {
       $log.error("XHR Failed with code: '" + err.status + "' on '" + err.config.method + " " + err.config.url + "'");
+      if(err.status === 401) authorization.logout();
       return $q.reject(err);
     }
 
     function returnData(response) {
+      if(response.status === 201)
+        return {location: response.headers("location"), data: response.data};
       return response.data;
     }
   }

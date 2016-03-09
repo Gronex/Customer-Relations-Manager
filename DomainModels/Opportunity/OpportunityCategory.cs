@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.DomainModels.Opportunity
 {
@@ -7,9 +8,7 @@ namespace Core.DomainModels.Opportunity
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required, Index(IsUnique = true)]
         public string Name { get; set; }
-
-        public int Value { get; set; }
     }
 }

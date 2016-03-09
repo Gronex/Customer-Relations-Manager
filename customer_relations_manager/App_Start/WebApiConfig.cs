@@ -15,6 +15,8 @@ namespace customer_relations_manager
             // Web API routes
             //config.MapHttpAttributeRoutes();
 
+
+
             routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -25,6 +27,18 @@ namespace customer_relations_manager
                 name: "UserApi",
                 routeTemplate: "api/users/{userId}/{controller}/{id}",
                 defaults: new {id = RouteParameter.Optional }
+            );
+
+            routes.MapHttpRoute(
+                name: "ActivityCommentApi",
+                routeTemplate: "api/activities/{activityId}/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+            routes.MapHttpRoute(
+                name: "OneLevelNested",
+                routeTemplate: "api/{controller}/{mainId}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional }
             );
         }
     }

@@ -1,0 +1,28 @@
+<h2>Comments</h2>
+<div class="row">
+    <div class="panel panel-default">
+        <form ng-submit="vm.send()" class="panel-body" name="comment">
+            <div class="form-group col-sm-11">
+                <label>New Comment</label>
+                <textarea required ng-model="vm.comment" class="form-control" rows="05">
+                </textarea>
+            </div>
+            <button type="submit" ng-disabled="!comment.$valid" class="btn btn-success col-sm-1">Send</button>
+        </form>
+    </div>
+    <div class="panel panel-default" ng-repeat="comment in vm.comments">
+        <div class="panel-body">
+            <div class="col-sm-2">
+                {{comment.userName}} <br/>
+                {{comment.sent | date}} <br/>
+                {{comment.sent | date : 'HH:mm'}}
+            </div>
+            <div class="col-sm-10">
+                <p >
+                    {{comment.text}}
+                </p>
+            </div>
+        </div>
+    </div>
+    <uib-pagination ng-show="vm.commentCount > 1" items-per-page="vm.pagination.pageSize" total-items="vm.commentCount" ng-model="vm.pagination.page" ng-change="vm.getComments()"></uib-pagination>
+</div>

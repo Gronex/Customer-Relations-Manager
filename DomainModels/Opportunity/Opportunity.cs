@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 using Core.DomainModels.Comments;
 using Core.DomainModels.Customers;
 using Core.DomainModels.UserGroups;
@@ -59,8 +60,21 @@ namespace Core.DomainModels.Opportunity
         public int StageId { get; set; }
         public virtual Stage Stage { get; set; }
 
+        [ForeignKey(nameof(Contact))]
+        public int? ContactId { get; set; }
+        public virtual Person Contact { get; set; }
+
         public virtual ICollection<UserGroupOpportunity> UserGroups { get; set; } = new HashSet<UserGroupOpportunity>();
         public virtual ICollection<OpportunityComment> Comments { get; set; } = new HashSet<OpportunityComment>();
 
+
+
+        public static Expression<Func<Opportunity, bool>> InTimeRange(DateTime from, DateTime to)
+        {
+            return o =>
+                from <= o.StartDate && to >= o.StartDate ||
+                from <= o.EndDate && to >= o.EndDate ||
+                from >= o.StartDate && to <= o.EndDate;
+        }
     }
 }

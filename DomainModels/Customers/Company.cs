@@ -27,5 +27,6 @@ namespace Core.DomainModels.Customers
 
         public virtual ICollection<Contract> Contracts { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
+        public virtual ICollection<Person> Employees { get; set; }
     }
 }

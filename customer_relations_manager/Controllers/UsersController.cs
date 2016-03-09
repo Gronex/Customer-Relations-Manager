@@ -37,12 +37,18 @@ namespace customer_relations_manager.Controllers
 
         // GET: api/users
         [HttpGet]
-        public IHttpActionResult GetAll()
+        public IHttpActionResult GetAll(int? page = null, int? pageSize = null)
         {
-            var users = _userManager.Users.ToList();
+            CorrectPageInfo(ref page, ref pageSize);
+            var users = _userManager.Users.Where(u => u.Active);
 
-            var userModels = users
-                .Where(u => u.Active)
+            users = users.OrderBy(pe => pe.Id)
+                .ThenBy(u => u.LastName);
+            if (page.HasValue && pageSize.HasValue)
+                users = users
+                    .Skip((page.Value - 1)*pageSize.Value)
+                    .Take(pageSize.Value);
+            var userModels = users.ToList()
                 .Select(u =>
                 {
                     var roles = _userManager.GetRoles(u.Id);
@@ -52,7 +58,13 @@ namespace customer_relations_manager.Controllers
                         opts => opts.AfterMap((_, res) => res.Role = role));
                 });
             
-            return Ok(userModels);
+            return Ok(new PaginationEnvelope<UserOverviewViewModel>
+            {
+                Data = userModels,
+                ItemCount = users.Count(u => u.Active),
+                PageSize = pageSize ?? -1,
+                PageNumber = page ?? -1
+            });
         }
 
         // GET: api/users/{id}
@@ -147,6 +159,8 @@ namespace customer_relations_manager.Controllers
             if (user == null) return;
 
             user.Active = false;
+            user.EndDate = DateTime.UtcNow.Date;
+
             var roles = _userManager.GetRoles(id).ToArray();
             _userManager.RemoveFromRoles(id, roles);
 

@@ -1,0 +1,22 @@
+<h1>Activities</h1>
+<a type="button" class="btn btn-default pull-right" ui-sref="Activity({id: 'new'})")>New Activity</a>
+<br/>
+<br/>
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Due</th>
+    <th></th>
+  </tr>
+  <tr ng-repeat="activity in vm.activities">
+    <td>{{activity.name}}</td>
+    <td ng-if="!activity.dueTime">{{activity.dueDate | date}}</td>
+    <td ng-if="activity.dueTime">{{activity.dueDate | date}} at {{activity.dueTime | date : 'HH:mm'}}</td>
+    <td>
+      <a ui-sref="Activity({id: activity.id})" class="btn btn-primary">
+        <i class="fa fa-pencil-square-o"></i>
+      </a>
+    </td>
+  </tr>
+</table>
+<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getActivities()"></uib-pagination>

@@ -6,11 +6,13 @@ using System.Web.Http;
 using AutoMapper;
 using customer_relations_manager.ViewModels.Opportunity;
 using Core.DomainModels.Opportunity;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize]
     public class OpportunitiesController : CrmApiController
     {
         private readonly IOpportunityRepository _repo;
@@ -25,10 +27,13 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<OpportunityOverviewViewMode> Get()
+        public PaginationEnvelope<OpportunityOverviewViewMode> GetAll(int? page = null, int? pageSize = null)
         {
-            var data = _repo.GetAll();
-            return data.Select(_mapper.Map<OpportunityOverviewViewMode>);
+            CorrectPageInfo(ref page, ref pageSize);
+            var data = _repo.GetAll(o => o
+                .OrderBy(op => op.Name)
+                .ThenBy(op => op.Id), page, pageSize);
+            return data.MapData(_mapper.Map<OpportunityOverviewViewMode>);
         }
 
         [HttpGet]
@@ -63,6 +68,9 @@ namespace customer_relations_manager.Controllers
 
             var data = _mapper.Map<Opportunity>(model);
             var dbModel = _repo.Update(id, data);
+            if (dbModel == null)
+                return NotFound();
+
             _uow.Save();
             return Ok(_mapper.Map<OpportunityViewModel>(dbModel));
         }

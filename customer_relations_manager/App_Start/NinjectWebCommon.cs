@@ -1,4 +1,6 @@
 using AutoMapper;
+using Core.ApplicationServices.Graph;
+using Core.ApplicationServices.ServiceInterfaces;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess;
@@ -74,7 +76,7 @@ namespace customer_relations_manager.App_Start
             var mapperConfig = AutomapperConfig.ConfigMappings();
 
 
-            kernel.Bind<ApplicationContext>().ToSelf().InRequestScope();
+            kernel.Bind<IApplicationContext>().To<ApplicationContext>().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind<IMapper>().ToConstant(mapperConfig.CreateMapper());
 
@@ -86,10 +88,11 @@ namespace customer_relations_manager.App_Start
 
             kernel.Bind(typeof (IGenericRepository<>)).To(typeof (GenericRepository<>));
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
-            kernel.Bind<IUserGroupRepository>().To<UserGroupRepository>();
             kernel.Bind<IGoalRepository>().To<GoalRepository>();
-            kernel.Bind<ICompanyRepository>().To<CompanyRepository>();
             kernel.Bind<IOpportunityRepository>().To<OpportunityRepository>();
+            kernel.Bind<IGraphService>().To<GraphService>();
+            kernel.Bind<IPersonRepository>().To<PersonRepository>();
+            kernel.Bind<IActivityCommentRepository>().To<ActivityCommentRepository>();
         }        
     }
 }

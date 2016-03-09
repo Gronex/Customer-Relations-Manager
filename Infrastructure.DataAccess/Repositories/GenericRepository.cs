@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,22 +10,31 @@ namespace Infrastructure.DataAccess.Repositories
     public class GenericRepository<T> : IGenericRepository<T>
         where T : class
     {
-        private readonly ApplicationContext _context;
+        private readonly IApplicationContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(ApplicationContext context)
+        public GenericRepository(IApplicationContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
         }
 
-        public IQueryable<T> Get(
-            Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            int? page = null,
-            int? pageSize = null)
+        public IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
-            return FilterLogic(filter, orderBy, page, pageSize);
+            return FilterLogic(filter, orderBy, null, null);
+        }
+
+        public PaginationEnvelope<T> GetPaged(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, int? page = null, int? pageSize = null, Expression<Func<T, bool>> filter = null)
+        {
+            var data = FilterLogic(filter, orderBy, page, pageSize);
+            
+            return new PaginationEnvelope<T>
+            {
+                PageSize = pageSize ?? -1,
+                PageNumber = page ?? -1,
+                ItemCount = Count(filter),
+                Data = data
+            };
         }
 
         public T GetByKey(params object[] key)
@@ -40,7 +50,9 @@ namespace Infrastructure.DataAccess.Repositories
 
         public T Insert(T entity)
         {
-            return _dbSet.Add(entity);
+            var inDb = _dbSet.Add(entity);
+            _context.SetState(inDb, EntityState.Added);
+            return inDb;
         }
 
         public void DeleteByKey(params object[] key)
@@ -72,7 +84,8 @@ namespace Infrastructure.DataAccess.Repositories
         {
             if (entity == null) return null;
             updateFunction(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+
+            _context.SetState(entity, EntityState.Modified);
 
             return entity;
         }
@@ -103,10 +116,12 @@ namespace Infrastructure.DataAccess.Repositories
         {
             if (entity == null) return;
 
-            if (_context.Entry(entity).State == EntityState.Detached)
-                _dbSet.Attach(entity);
-
             _dbSet.Remove(entity);
+        }
+        
+        public int Count(Expression<Func<T, bool>> filter = null)
+        {
+            return filter == null ? _dbSet.Count() : _dbSet.Count(filter);
         }
     }
 }

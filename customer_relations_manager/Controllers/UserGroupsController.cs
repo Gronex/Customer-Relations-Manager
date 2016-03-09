@@ -15,15 +15,15 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Super))]
+    [Authorize]
     public class UserGroupsController : CrmApiController
     {
-        private readonly IUserGroupRepository _repo;
+        private readonly IGenericRepository<UserGroup> _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
         public UserGroupsController(
-            IUserGroupRepository repo,
+            IGenericRepository<UserGroup> repo,
             IUnitOfWork uow,
             IMapper mapper)
         {
@@ -33,61 +33,64 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<UserGroupViewModel> Get()
+        public IEnumerable<GroupViewModel> Get()
         {
-            var inDb = _repo.GetAll().ToList();
+            var inDb = _repo.Get();
 
-            return inDb.Select(ug => _mapper.Map<UserGroupViewModel>(ug));
+            return inDb.Select(ug => _mapper.Map<GroupViewModel>(ug));
         }
 
         [HttpGet]
-        [ResponseType(typeof(UserGroupViewModel))]
+        [ResponseType(typeof(GroupViewModel))]
         public IHttpActionResult Get(int id)
         {
-            var group = _repo.GetById(id);
+            var group = _repo.GetByKey(id);
             if(group == null) return NotFound();
-            return Ok(_mapper.Map<UserGroupViewModel>(group));
+            return Ok(_mapper.Map<GroupViewModel>(group));
         }
 
         [HttpPost]
-        public IHttpActionResult Post(UserGroupViewModel model)
+        [Authorize(Roles = nameof(UserRole.Super))]
+        public IHttpActionResult Post(GroupViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var result = _repo.Create(_mapper.Map<UserGroup>(model));
+            var result = _repo.Insert(_mapper.Map<UserGroup>(model));
             try
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
-            return Created(result.Id.ToString(), _mapper.Map<UserGroupViewModel>(result));
+            return Created(result.Id.ToString(), _mapper.Map<GroupViewModel>(result));
         }
 
         [HttpPut]
-        public IHttpActionResult Put(int id, UserGroupViewModel model)
+        [Authorize(Roles = nameof(UserRole.Super))]
+        public IHttpActionResult Put(int id, GroupViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var updated = _repo.Update(id, _mapper.Map<UserGroup>(model));
+            var updated = _repo.Update(group => group.Name = model.Name, id);
             if(updated == null) return NotFound();
 
             try
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
-            return Ok(_mapper.Map<UserGroupViewModel>(updated));
+            return Ok(_mapper.Map<GroupViewModel>(updated));
         }
 
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
-            _repo.Delete(id);
+            _repo.DeleteByKey(id);
             _uow.Save();
         }
     }

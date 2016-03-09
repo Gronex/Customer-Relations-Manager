@@ -1,0 +1,36 @@
+<h1>OpportunityCategorys</h1>
+
+<form name="add" ng-submit="vm.create()" class="form-inline">
+  <uib-alert ng-if="vm.opportunityCategory.errMsg" close="vm.opportunityCategory.errMsg = undefined;">{{vm.opportunityCategory.errMsg}}</uib-alert>
+  <div class="form-group">
+    <label>Name</label>
+    <input class="form-control" required type="text" ng-model="vm.opportunityCategory.name">
+  </div>
+  <button ng-disabled="!add.$valid" class="btn btn-primary" type="submit">Add <i class="fa fa-plus"></i></button>
+</form>
+<hr>
+
+<div class="row">
+  <uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="opportunityCategory in vm.opportunityCategories">
+      <uib-accordion-heading>
+        {{opportunityCategory.name}}
+        <i ng-if="!opportunityCategory.saved && opportunityCategory.saved !== undefined" class="fa fa-pencil pull-right"></i>
+      </uib-accordion-heading>
+      <uib-alert ng-if="opportunityCategory.errMsg" close="opportunityCategory.errMsg = undefined;">{{vm.opportunityCategory.errMsg}}</uib-alert>
+      <form name="edit" class="form-inline" ng-submit="vm.save(opportunityCategory)">
+        <div class="form-group">
+          <label>Name</label>
+          <input ng-change="opportunityCategory.saved = false" class="form-control" data-error="{{opportunityCategory.errMsg}}" required type="text" ng-model="opportunityCategory.name">
+        </div>
+        <button ng-disabled="!edit.$valid || (opportunityCategory.saved || opportunityCategory.saved == undefined)" type="submit" class="btn btn-primary">Save
+          <i ng-if="!opportunityCategory.saved && opportunityCategory.saved !== undefined" class="fa fa-floppy-o"></i>
+          <i ng-if="opportunityCategory.saved || opportunityCategory.saved == undefined" class="fa fa-check"></i>
+        </button>
+        <button type="button" class="btn btn-danger pull-right" ng-click="vm.remove(opportunityCategory.id)">Remove
+          <i class="fa fa-trash"></i>
+        </button>
+      </form>
+    </uib-accordion-group>
+  </uib-accordion>
+</div>

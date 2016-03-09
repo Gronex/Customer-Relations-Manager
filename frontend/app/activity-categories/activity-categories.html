@@ -1,0 +1,42 @@
+<h1>ActivityCategories</h1>
+
+<form name="add" ng-submit="vm.create()" class="form-inline">
+  <uib-alert ng-if="vm.activityCategory.errMsg" close="vm.activityCategory.errMsg = undefined;">{{vm.activityCategory.errMsg}}</uib-alert>
+  <div class="form-group">
+    <label>Name</label>
+    <input class="form-control" data-error="{{vm.activityCategory.errMsg}}" required type="text" ng-model="vm.activityCategory.name">
+  </div>
+  <div class="form-group">
+      <input class="form-control" data-error="{{vm.activityCategory.errMsg}}" required type="number" min="0" max="100" ng-model="vm.activityCategory.value">
+  </div>
+  <button ng-disabled="!add.$valid" class="btn btn-primary" type="submit">Add <i class="fa fa-plus"></i></button>
+</form>
+<hr>
+
+<div class="row">
+  <uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="activityCategory in vm.activityCategories">
+      <uib-accordion-heading>
+        {{activityCategory.name}}<small> - {{activityCategory.value}}</small>
+        <i ng-if="!activityCategory.saved && activityCategory.saved !== undefined" class="fa fa-pencil pull-right"></i>
+      </uib-accordion-heading>
+      <uib-alert ng-if="activityCategory.errMsg" close="activityCategory.errMsg = undefined;">{{vm.activityCategory.errMsg}}</uib-alert>
+      <form name="edit" class="form-inline" ng-submit="vm.save(activityCategory)">
+        <div class="form-group">
+          <label>Name</label>
+          <input ng-change="activityCategory.saved = false" class="form-control" data-error="{{activityCategory.errMsg}}" required type="text" ng-model="activityCategory.name">
+        </div>
+        <div class="form-group">
+            <input ng-change="activityCategory.saved = false" class="form-control" data-error="{{activityCategory.errMsg}}" required type="number" min="0" max="100" ng-model="activityCategory.value">
+        </div>
+        <button ng-disabled="!edit.$valid || (activityCategory.saved || activityCategory.saved == undefined)" type="submit" class="btn btn-primary">Save
+          <i ng-if="!activityCategory.saved && activityCategory.saved !== undefined" class="fa fa-floppy-o"></i>
+          <i ng-if="activityCategory.saved || activityCategory.saved == undefined" class="fa fa-check"></i>
+        </button>
+        <button type="button" class="btn btn-danger pull-right" ng-click="vm.remove(activityCategory.id)">Remove
+          <i class="fa fa-trash"></i>
+        </button>
+      </form>
+    </uib-accordion-group>
+  </uib-accordion>
+</div>

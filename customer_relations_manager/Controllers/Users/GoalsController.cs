@@ -64,7 +64,7 @@ namespace customer_relations_manager.Controllers.Users
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
@@ -85,7 +85,7 @@ namespace customer_relations_manager.Controllers.Users
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }

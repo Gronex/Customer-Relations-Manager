@@ -22,13 +22,16 @@ namespace Core.DomainServices
         /// <param name="page">User with Page size, requires orderby to be set</param>
         /// <param name="pageSize">used with page, requires orderby to be set</param>
         /// <returns></returns>
-        IQueryable<T> Get(
+        IEnumerable<T> Get(
             Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            int? page = null, 
-            int? pageSize = null);
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null);
 
-        /// <summary>
+        PaginationEnvelope<T> GetPaged(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
+            int? page = null,
+            int? pageSize = null,
+            Expression<Func<T, bool>> filter = null);
+
+            /// <summary>
         /// Returns an entity with the given key, or null in none exist
         /// </summary>
         /// <param name="key"></param>
@@ -77,5 +80,7 @@ namespace Core.DomainServices
         /// <param name="selector">selector to for finding the single element in the database</param>
         /// <returns>The updated entity, or null if it was not found</returns>
         T UpdateBy(Action<T> updateFunction, Expression<Func<T, bool>> selector);
+
+        int Count(Expression<Func<T, bool>> filter = null);
     }
 }

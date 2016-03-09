@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Results;
@@ -17,7 +18,7 @@ namespace UnitTests.Controllers
     public class UsersGroupControllerTest
     {
         private readonly UserGroupsController _controller;
-        private readonly IUserGroupRepository _repo;
+        private readonly IGenericRepository<UserGroup> _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
@@ -25,7 +26,7 @@ namespace UnitTests.Controllers
         {
             _mapper = AutomapperConfig.ConfigMappings().CreateMapper();
 
-            _repo = Substitute.For<IUserGroupRepository>();
+            _repo = Substitute.For<IGenericRepository<UserGroup>>();
 
             _uow = Substitute.For<IUnitOfWork>();
             _controller = new UserGroupsController(_repo, _uow, _mapper);
@@ -41,7 +42,7 @@ namespace UnitTests.Controllers
                 new UserGroup() {Id = 3, Name = "Grp3"},
                 new UserGroup() {Id = 4, Name = "Grp4"}
             };
-            _repo.GetAll().Returns(x => data.AsQueryable());
+            _repo.Get().Returns(x => data);
 
             var result = _controller.Get();
             Assert.Equal(4, result.Count());
@@ -51,10 +52,10 @@ namespace UnitTests.Controllers
         public void GetIsCorrectData()
         {
             var data = new UserGroup() { Id = 1, Name = "Grp1" };
-            _repo.GetById(Arg.Any<int>()).Returns(x => data);
+            _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
 
-            var result = _controller.Get(1) as OkNegotiatedContentResult<UserGroupViewModel>;
-            var dataViewModel = _mapper.Map<UserGroupViewModel>(data);
+            var result = _controller.Get(1) as OkNegotiatedContentResult<GroupViewModel>;
+            var dataViewModel = _mapper.Map<GroupViewModel>(data);
             // Only testing one, since there is no reason the 
             // system should have chosen the same string and object comparison
             // compares on reference
@@ -64,73 +65,55 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetById(Arg.Any<int>()).Returns(x => null);
+            _repo.GetByKey(Arg.Any<int>()).Returns(x => null);
 
             var result = _controller.Get(1);
             Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
-        public void CreateCallsCreate()
+        public void CreateCallsInsert()
         {
             var data = new UserGroup{Id = 1, Name = "Grp1"};
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
-            _repo.Create(Arg.Any<UserGroup>()).Returns(data);
+            _repo.Insert(Arg.Any<UserGroup>()).Returns(data);
 
             _controller.Post(dataViewModel);
-            _repo.ReceivedWithAnyArgs().Create(data);
+            _repo.ReceivedWithAnyArgs().Insert(data);
         }
 
         [Fact]
         public void CreateSaves()
         {
             var data = new UserGroup { Id = 1, Name = "Grp1" };
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
-            _repo.Create(Arg.Any<UserGroup>()).Returns(data);
+            _repo.Insert(Arg.Any<UserGroup>()).Returns(data);
 
             _controller.Post(dataViewModel);
             _uow.ReceivedWithAnyArgs().Save();
         }
 
-        // TODO: Fugire out how to do this right
-        //[Fact]
-        //public void CreateFailsOnMissingName()
-        //{
-        //    var dataViewModel = new UserGroupViewModel { Id = 1 };
-        //    var result = _controller.Post(dataViewModel);
-        //    Assert.IsType<BadRequestResult>(result);
-        //}
-
-        //[Fact]
-        //public void CreateFailsOnEmptyName()
-        //{
-        //    var dataViewModel = new UserGroupViewModel { Id = 1, Name = ""};
-
-        //    var result = _controller.Post(dataViewModel);
-        //    Assert.IsType<BadRequestResult>(result);
-        //}
-
         [Fact]
-        public void UpdateCallsCreate()
+        public void UpdateCallsUpdateInRepo()
         {
             var data = new UserGroup { Id = 1, Name = "Grp1" };
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
-            _repo.Update(1, Arg.Any<UserGroup>()).Returns(data);
+            _repo.Update(Arg.Any<Action<UserGroup>>(), 1).Returns(data);
 
             _controller.Put(1, dataViewModel);
-            _repo.ReceivedWithAnyArgs().Update(1, data);
+            _repo.ReceivedWithAnyArgs().Update(Arg.Any<Action<UserGroup>>(), 1);
         }
 
         [Fact]
         public void UpdateSaves()
         {
             var data = new UserGroup { Id = 1, Name = "Grp1" };
-            var dataViewModel = new UserGroupViewModel { Id = 1, Name = "Grp1" };
+            var dataViewModel = new GroupViewModel { Id = 1, Name = "Grp1" };
 
-            _repo.Update(1,Arg.Any<UserGroup>()).Returns(data);
+            _repo.Update(Arg.Any<Action<UserGroup>>(), 1).Returns(data);
 
             _controller.Put(1, dataViewModel);
             _uow.ReceivedWithAnyArgs().Save();
@@ -139,8 +122,6 @@ namespace UnitTests.Controllers
         [Fact]
         public void DeleteSaves()
         {
-            _repo.Delete(1);
-
             _controller.Delete(1);
             _uow.ReceivedWithAnyArgs().Save();
         }
@@ -149,7 +130,7 @@ namespace UnitTests.Controllers
         public void DeleteCallsDelete()
         {
             _controller.Delete(1);
-            _repo.ReceivedWithAnyArgs().Delete(1);
+            _repo.ReceivedWithAnyArgs().DeleteByKey(1);
         }
     }
 }

@@ -1,0 +1,13 @@
+<div class="form-group">
+    <label>Company</label>
+    <input ng-if="vm.isRequired && vm.companyName" class="form-control" ng-required="vm.isRequired" disabled type="text" ng-model="vm.companyName">
+    <div class="input-group" ng-if="!vm.isRequired && vm.companyName">
+        <input class="form-control" ng-required="vm.isRequired" disabled type="text" ng-model="vm.companyName">
+        <div class="input-group-addon">
+            <a href ng-click="vm.onRemove()"><i class="fa fa-times"></i></a>
+        </div>
+    </div>
+    <br/>
+    <input type="text" ng-model="vm.company" placeholder="Select company" uib-typeahead="company as company.name for company in vm.companies | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.companySelected($item)">
+
+</div>

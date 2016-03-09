@@ -6,11 +6,13 @@ using System.Web.Http;
 using AutoMapper;
 using customer_relations_manager.ViewModels.Opportunity;
 using Core.DomainModels.Opportunity;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize]
     public class StagesController : CrmApiController
     {
         private readonly IUnitOfWork _uow;
@@ -23,11 +25,11 @@ namespace customer_relations_manager.Controllers
             _mapper = mapper;
             _repo = repo;
         }
-
+        
         [HttpGet]
-        public IEnumerable<StageViewModel> Get()
+        public IEnumerable<StageViewModel> GetAll()
         {
-            var stages = _repo.Get();
+            var stages = _repo.Get(orderBy: s => s.OrderBy(st => st.Value));
             return stages.Select(_mapper.Map<StageViewModel>);
         }
 
@@ -40,6 +42,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<StageViewModel>(stage));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(StageViewModel model)
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
@@ -49,7 +52,7 @@ namespace customer_relations_manager.Controllers
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
@@ -57,6 +60,7 @@ namespace customer_relations_manager.Controllers
             return Created(dbModel.Id.ToString(), _mapper.Map<StageViewModel>(dbModel));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, StageViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -71,7 +75,7 @@ namespace customer_relations_manager.Controllers
             {
                 _uow.Save();
             }
-            catch (DuplicateKeyException)
+            catch (DuplicateException)
             {
                 return Duplicate(model);
             }
@@ -79,6 +83,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_mapper.Map<StageViewModel>(dbModel));
         }
 
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
             _repo.DeleteByKey(id);

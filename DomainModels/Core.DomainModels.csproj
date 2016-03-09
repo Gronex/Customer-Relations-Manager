@@ -66,6 +66,8 @@
     <Compile Include="Customers\Company.cs" />
     <Compile Include="Customers\Contract.cs" />
     <Compile Include="Customers\Person.cs" />
+    <Compile Include="Graph\DataPoint.cs" />
+    <Compile Include="Graph\DataSet.cs" />
     <Compile Include="Opportunity\Department.cs" />
     <Compile Include="Opportunity\FileIndex.cs" />
     <Compile Include="Opportunity\Opportunity.cs" />

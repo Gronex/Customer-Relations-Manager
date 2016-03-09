@@ -1,0 +1,48 @@
+<h1>Stages</h1>
+
+<form name="add" ng-submit="vm.create()" class="form-inline">
+  <uib-alert ng-if="vm.stage.errMsg" close="vm.stage.errMsg = undefined;">{{vm.stage.errMsg}}</uib-alert>
+  <div class="form-group">
+    <label>Name</label>
+    <input class="form-control" data-error="{{vm.stage.errMsg}}" required type="text" ng-model="vm.stage.name">
+  </div>
+  <div class="form-group">
+    <div class="input-group">
+      <input class="form-control" data-error="{{vm.stage.errMsg}}" required type="number" min="0" max="100" ng-model="vm.stage.value">
+      <div class="input-group-addon">%</div>
+    </div>
+  </div>
+  <button ng-disabled="!add.$valid" class="btn btn-primary" type="submit">Add <i class="fa fa-plus"></i></button>
+</form>
+<hr>
+
+<div class="row">
+  <uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="stage in vm.stages">
+      <uib-accordion-heading>
+        {{stage.name}}<small> - {{stage.value}}%</small>
+        <i ng-if="!stage.saved && stage.saved !== undefined" class="fa fa-pencil pull-right"></i>
+      </uib-accordion-heading>
+      <uib-alert ng-if="stage.errMsg" close="stage.errMsg = undefined;">{{vm.stage.errMsg}}</uib-alert>
+      <form name="edit" class="form-inline" ng-submit="vm.save(stage)">
+        <div class="form-group">
+          <label>Name</label>
+          <input ng-change="stage.saved = false" class="form-control" data-error="{{stage.errMsg}}" required type="text" ng-model="stage.name">
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <input ng-change="stage.saved = false" class="form-control" data-error="{{stage.errMsg}}" required type="number" min="0" max="100" ng-model="stage.value">
+            <div class="input-group-addon">%</div>
+          </div>
+        </div>
+        <button ng-disabled="!edit.$valid || (stage.saved || stage.saved == undefined)" type="submit" class="btn btn-primary">Save
+          <i ng-if="!stage.saved && stage.saved !== undefined" class="fa fa-floppy-o"></i>
+          <i ng-if="stage.saved || stage.saved == undefined" class="fa fa-check"></i>
+        </button>
+        <button type="button" class="btn btn-danger pull-right" ng-click="vm.remove(stage.id)">Remove
+          <i class="fa fa-trash"></i>
+        </button>
+      </form>
+    </uib-accordion-group>
+  </uib-accordion>
+</div>

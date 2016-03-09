@@ -9,8 +9,6 @@
   <button class="btn btn-primary" type="submit">Add <i class="fa fa-plus"></i></button>
 </form>
 
-<!-- todo: Redo -->
-
 <div class="row">
   <uib-accordion close-others="true">
     <uib-accordion-group ng-repeat="group in vm.groups">
@@ -34,29 +32,3 @@
     </uib-accordion-group>
   </uib-accordion>
 </div>
-
-    <!-- <li ng-repeat="group in vm.groups">
-        <div class="collapsible-header">
-          <i class="material-icons">group</i>{{group.name}}
-          <i ng-if="!group.saved && group.saved !== undefined" class="material-icons right">edit</i></div>
-        <div class="collapsible-body">
-            <form name="edit">
-              <p class="red-text text-darken-2" ng-if="group.errMsg">
-                {{group.errMsg}}
-              </p>
-              <div input-field>
-                <input ng-change="group.saved = false" ng-minlength="1" required type="text" ng-model="group.name">
-                <label>Name</label>
-              </div>
-              <button ng-disabled="!edit.$valid || (group.saved || group.saved == undefined)" type="button" class="btn waves-effect wave-light" ng-click="vm.save(group)">Save
-                <i ng-if="!group.saved && group.saved !== undefined" class="material-icons right">save</i>
-                <i ng-if="group.saved || group.saved == undefined" class="material-icons right">done</i>
-              </button>
-              <button type="submit" class="btn waves-effect wave-light red lighten-2 right" ng-click="vm.remove(group.id)">Remove
-                <i class="material-icons right">remove_circle_outline</i>
-              </button>
-            </form>
-            <p>
-            </p>
-        </div>
-    </li> -->

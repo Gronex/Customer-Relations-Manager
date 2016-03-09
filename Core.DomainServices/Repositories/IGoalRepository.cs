@@ -9,7 +9,7 @@ namespace Core.DomainServices.Repositories
 {
     public interface IGoalRepository
     {
-        IQueryable<ProductionGoal> GetAll(string userId);
+        IEnumerable<ProductionGoal> GetAll(string userId);
         ProductionGoal GetById(string userId, int id);
         ProductionGoal Create(string userId, ProductionGoal model);
         ProductionGoal Update(string userId, int id, ProductionGoal model);

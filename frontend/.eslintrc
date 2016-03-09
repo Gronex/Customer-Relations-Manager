@@ -22,6 +22,7 @@
     "globals": {
       "angular": true,
       "_": true,
-      "$": true
+      "$": true,
+      "google": true
     }
 }

@@ -12,6 +12,7 @@
     var vm = this;
     vm.editing = false;
     vm.company = {};
+    vm.employees = [];
 
     vm.save = save;
     vm.remove = remove;
@@ -21,6 +22,7 @@
     function activate() {
       if($stateParams.id !== 'new'){
         getCompany($stateParams.id);
+        getEmployees($stateParams.id);
       }
     }
 
@@ -31,6 +33,14 @@
         vm.company = data;
         vm.editing = true;
       });
+    }
+
+    function getEmployees(id){
+      dataservice
+        .companyEmployees({companyId: id})
+        .then(function(data){
+          vm.employees = data;
+        });
     }
 
     function save() {

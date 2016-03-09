@@ -16,5 +16,18 @@ namespace customer_relations_manager.Controllers
             var result = new NegotiatedContentResult<T>(HttpStatusCode.Conflict, model, this);
             return result;
         }
+
+        /// <summary>
+        /// Updates the pagination request arguments if they are not at resonable values
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        protected void CorrectPageInfo(ref int? page, ref int? pageSize)
+        {
+            if (page < 1)
+                page = 1;
+            if (pageSize < 1)
+                pageSize = 10;
+        }
     }
 }
