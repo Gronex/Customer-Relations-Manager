@@ -63,6 +63,11 @@ namespace Infrastructure.DataAccess.Repositories
             model.Category = category;
             model.Stage = stage;
 
+            // To make sure nothing is messing up
+            model.StartDate = model.StartDate.Date;
+            model.EndDate = model.EndDate.Date;
+            model.ExpectedClose = model.ExpectedClose.Date;
+
 
             // Copy groups of the owner to the opportunity
             var groups = model.Owner.Groups.Select(g => g.UserGroup);
@@ -86,9 +91,9 @@ namespace Infrastructure.DataAccess.Repositories
                 o.Description = model.Description;
                 o.Amount = model.Amount;
                 o.Department = o.Department;
-                o.EndDate = model.EndDate;
-                o.StartDate = model.StartDate;
-                o.ExpectedClose = model.ExpectedClose;
+                o.EndDate = model.EndDate.Date;
+                o.StartDate = model.StartDate.Date;
+                o.ExpectedClose = model.ExpectedClose.Date;
                 o.HourlyPrice = model.HourlyPrice;
                 o.Percentage = model.Percentage;
 

@@ -35,7 +35,7 @@ namespace Core.ApplicationServices.Graph
                 .ToDictionary(g => g.Key.Email, group => group.Select(g => new UserGraphData
                 {
                     Value = g.Goal,
-                    Period = g.StartDate,
+                    Period = DateTime.SpecifyKind(g.StartDate.Date, DateTimeKind.Utc),
                     User = new SimpleUser
                     {
                         Email = group.Key.Email,
@@ -77,7 +77,7 @@ namespace Core.ApplicationServices.Graph
                     FirstName = o.User.FirstName,
                     LastName = o.User.LastName
                 },
-                Period = o.Month,
+                Period = o.Month.Date,
                 Value = o.Sum
             }));
         }
