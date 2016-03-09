@@ -14,17 +14,15 @@ namespace customer_relations_manager.Controllers
 {
     public class GraphController : ApiController
     {
-        private readonly IGenericRepository<User> _userRepo;
+        private readonly IGenericRepository<ProductionGoal> _goalRepo;
         private readonly IGenericRepository<Opportunity> _opportunityRepo;
         private readonly IGraphService _graphService;
         
-        public GraphController(IGenericRepository<User> userRepo, IGenericRepository<Opportunity> opportunityRepo, IGraphService graphService)
+        public GraphController(IGenericRepository<ProductionGoal> goalRepo, IGenericRepository<Opportunity> opportunityRepo, IGraphService graphService)
         {
-            _userRepo = userRepo;
+            _goalRepo = goalRepo;
             _opportunityRepo = opportunityRepo;
             _graphService = graphService;
-
-
         }
 
         [HttpGet]
@@ -38,8 +36,9 @@ namespace customer_relations_manager.Controllers
             switch (id)
             {
                 case "goal":
-                    var users = _userRepo.Get();
-                    return Ok(_graphService.GenerateGoalDataTable(users, startDate.Value.Date, endDate.Value.Date));
+                    var goals = _goalRepo.Get(g => g.StartDate <= endDate.Value);
+                    return Ok(_graphService.GenerateGoalDataTable(goals, startDate.Value.Date));
+                    //return Ok(_graphService.GenerateGoalDataTable(users, startDate.Value.Date, endDate.Value.Date));
                 case "production":
                     var opportunities = _opportunityRepo.Get(Opportunity.InTimeRange(startDate.Value.Date, endDate.Value.Date));
                     return Ok(_graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date));

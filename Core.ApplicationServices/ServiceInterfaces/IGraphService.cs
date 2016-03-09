@@ -14,6 +14,7 @@ namespace Core.ApplicationServices.ServiceInterfaces
             DateTime? endDate = null
         );
 
-        IDictionary<string, IEnumerable<ProductionData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to);
+        IDictionary<string, IEnumerable<UserGraphData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to);
+        IDictionary<string, IEnumerable<UserGraphData>> GenerateGoalDataTable(IEnumerable<ProductionGoal> goals, DateTime startDate);
     }
 }

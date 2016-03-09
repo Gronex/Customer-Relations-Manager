@@ -82,7 +82,7 @@ namespace UnitTests.Services.GraphService
             };
             var result = _service.GenerateProductionDataTable(opportunity, DateTime.Today, DateTime.Today.AddMonths(1));
 
-            Assert.Equal(new List<double> {10.0}, result["user1"].Select(r => r.Sum));
+            Assert.Equal(new List<double> {10.0}, result["user1"].Select(r => r.Value));
         }
 
         [Fact]
@@ -104,8 +104,8 @@ namespace UnitTests.Services.GraphService
             var month1 = result["user1"].SingleOrDefault(r => r.Period == DateTime.Today.RoundToMonth());
             var month2 = result["user1"].SingleOrDefault(r => r.Period == DateTime.Today.RoundToMonth().AddMonths(1));
 
-            Assert.Equal(5.0, month1?.Sum);
-            Assert.Equal(5.0, month2?.Sum);
+            Assert.Equal(5.0, month1?.Value);
+            Assert.Equal(5.0, month2?.Value);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace UnitTests.Services.GraphService
             };
             var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
 
-            Assert.Equal(10.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Sum);
+            Assert.Equal(10.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Value);
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace UnitTests.Services.GraphService
             };
             var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
 
-            Assert.Equal(20.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Sum);
+            Assert.Equal(20.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Value);
         }
     }
 }

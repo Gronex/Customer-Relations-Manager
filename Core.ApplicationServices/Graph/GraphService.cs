@@ -72,7 +72,35 @@ namespace Core.ApplicationServices.Graph
             return data;
         }
 
-        public IDictionary<string, IEnumerable<ProductionData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to)
+        public IDictionary<string, IEnumerable<UserGraphData>> GenerateGoalDataTable(IEnumerable<ProductionGoal> goals, DateTime startDate)
+        {
+            return goals.GroupBy(g => g.User)
+                .SelectMany(
+                    gr =>
+                        gr.OrderBy(g => g.StartDate)
+                        .WhereWithLookahead((c, n) => n == null || n.StartDate > startDate)
+                        .Select(g =>
+                        {
+                            if (g.StartDate < startDate) g.StartDate = startDate;
+                            return g;
+                        }))
+                .GroupBy(g => g.User)
+                .ToDictionary(g => g.Key.Email, group => group.Select(g => new UserGraphData
+                {
+                    Value = g.Goal,
+                    Period = g.StartDate,
+                    User = new SimpleUser
+                    {
+                        Email = group.Key.Email,
+                        FirstName = group.Key.FirstName,
+                        LastName = group.Key.LastName
+                    }
+                }).OrderBy(g => g.Period).AsEnumerable());
+        }
+
+        
+
+        public IDictionary<string, IEnumerable<UserGraphData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to)
         {
             return opportunities.SelectMany(o =>
             {
@@ -94,7 +122,7 @@ namespace Core.ApplicationServices.Graph
                 o.Key.User,
                 o.Key.Month,
                 Sum = o.Sum(os => os.Amount)
-            }).GroupBy(o => o.User.Email).ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new ProductionData
+            }).GroupBy(o => o.User.Email).ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new UserGraphData
             {
                 User = new SimpleUser
                 {
@@ -103,7 +131,7 @@ namespace Core.ApplicationServices.Graph
                     LastName = o.User.LastName
                 },
                 Period = o.Month,
-                Sum = o.Sum
+                Value = o.Sum
             }));
         } 
 
