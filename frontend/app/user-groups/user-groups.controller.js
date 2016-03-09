@@ -25,7 +25,7 @@
 
     function getGroups() {
       dataservice.userGroups
-        .getAll()
+        .get()
         .then(function (groups) {
           vm.groups = groups;
           return vm.groups;
