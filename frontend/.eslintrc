@@ -23,6 +23,7 @@
       "angular": true,
       "_": true,
       "$": true,
-      "google": true
+      "google": true,
+      "moment": true
     }
 }
