@@ -19,59 +19,6 @@ namespace Core.ApplicationServices.Graph
     public class GraphService : IGraphService
     {
 
-        public IDictionary<object, List<object>> GenerateGoalDataTable(
-            IEnumerable<User> users,
-            DateTime? startDate = null,
-            DateTime? endDate = null)
-        {
-            var usersWithGoals = users
-                .Where(u => u.Goals.Any(g => !endDate.HasValue || g.StartDate <= endDate)).ToList();
-
-            var data = new Dictionary<object, List<object>> {{"header", new List<object>()}};
-
-            var minDate = startDate ?? usersWithGoals.Select(u => u.Goals.Min(g => g.StartDate)).Min();
-            var maxDate = endDate ?? usersWithGoals.Select(u => u.Goals.Max(g => g.StartDate)).Max();
-
-            foreach (var user in usersWithGoals)
-            {
-                var currentDate = minDate;
-                data["header"].Add(user.Name);
-
-                var goals = user.Goals
-                    .OrderBy(g => g.StartDate);
-                var lastGoal = goals.LastOrDefault(g => g.StartDate <= minDate);
-
-                foreach (var goal in goals.Where(g => g.StartDate >= minDate && g.StartDate <= maxDate))
-                {
-                    while (goal.StartDate > currentDate)
-                    {
-                        if (lastGoal == null || lastGoal.StartDate < minDate)
-                        {
-                            AddOrCreate(data, currentDate, null);
-                            currentDate = currentDate.AddMonths(1);
-                            continue;
-                        }
-                        AddOrCreate(data, currentDate, lastGoal.Goal);
-                        currentDate = currentDate.AddMonths(1);
-                    }
-                    lastGoal = goal;
-                }
-
-                while (maxDate >= currentDate)
-                {
-                    if (lastGoal == null)
-                    {
-                        AddOrCreate(data, currentDate, null);
-                        continue;
-                    }
-                    AddOrCreate(data, currentDate, lastGoal.Goal);
-                    currentDate = currentDate.AddMonths(1);
-                }
-            }
-
-            return data;
-        }
-
         public IDictionary<string, IEnumerable<UserGraphData>> GenerateGoalDataTable(IEnumerable<ProductionGoal> goals, DateTime startDate)
         {
             return goals.GroupBy(g => g.User)
@@ -133,16 +80,7 @@ namespace Core.ApplicationServices.Graph
                 Period = o.Month,
                 Value = o.Sum
             }));
-        } 
-
-        private static void AddOrCreate(IDictionary<object, List<object>> dict, object key, object value)
-        {
-            if (dict.ContainsKey(key))
-                dict[key].Add(value);
-            else
-                dict.Add(key, new List<object> { value });
         }
-
 
         public IEnumerable<Tuple<DateTime, double>> SpreadOutEarnings(Opportunity opportunity)
         {
@@ -170,60 +108,5 @@ namespace Core.ApplicationServices.Graph
 
             return Math.Abs(d1.Month - d2.Month + 12*(d1.Year - d2.Year)) + extraMonth;
         }
-
-        public static IEnumerable<ProductionGoal> BuffOutGoals(IEnumerable<ProductionGoal> goalList, DateTime? finalDate = null)
-        {
-
-
-            var goals = goalList.ToList();
-            if(!goals.Any()) return goals;
-            
-            var firstGoal = goals.FirstOrDefault();
-            var lastGoal = goals.LastOrDefault();
-
-            if(finalDate == null) finalDate = lastGoal.StartDate;
-
-
-            var difference = MonthDifference(firstGoal.StartDate, finalDate.Value);
-            
-            if (goals.Count > difference) return goals;
-
-            var toAdd = new List<ProductionGoal>();
-            var last = firstGoal;
-
-            foreach (var goal in goals)
-            {
-                if (last.StartDate.AddMonths(1) == goal.StartDate)
-                {
-                    last = goal;
-                    continue;
-                }
-                while (last.StartDate.AddMonths(1) < goal.StartDate)
-                {
-                    last = new ProductionGoal
-                    {
-                        StartDate = last.StartDate.AddMonths(1),
-                        Goal = last.Goal
-                    };
-                    toAdd.Add(last);
-                }
-            }
-            last = lastGoal;
-            var remainder = MonthDifference(lastGoal.StartDate, finalDate.Value);
-
-            for (var i = 1; i <= remainder; i++)
-            {
-                toAdd.Add(new ProductionGoal
-                {
-                    StartDate = last.StartDate.AddMonths(i),
-                    Goal = last.Goal
-                });
-            }
-            goals.AddRange(toAdd);
-
-            return goals.OrderBy(g => g.StartDate);
-        }
-
-         
     }
 }
