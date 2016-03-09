@@ -32,6 +32,13 @@ namespace customer_relations_manager.Controllers
             if (!startDate.HasValue) startDate = new DateTime(year, 1, 1);
             if (!endDate.HasValue) endDate = new DateTime(year+1, 1, 1);
 
+            if (startDate > endDate)
+            {
+                var temp = startDate;
+                startDate = endDate;
+                endDate = temp;
+            }
+
             // Since i cant figure out how to make it do this automaticaly
             switch (id)
             {
