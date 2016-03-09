@@ -43,8 +43,8 @@
       vm.filter = _.merge({
         fromMonth: 1,
         fromYear: today.getFullYear(),
-        toMonth: 12,
-        toYear: today.getFullYear()
+        toMonth: 1,
+        toYear: today.getFullYear() + 1
       },$stateParams);
     }
   }
