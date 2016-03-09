@@ -68,7 +68,7 @@
           var valueHolder = _.find(data[key], function(p){return p.period.getTime() === date.getTime();});
           if(valueHolder)
             row.push(valueHolder.value);
-          else row.push(0);
+          else row.push(undefined);
         }
         result.push(row);
       });
@@ -128,7 +128,7 @@
           }
           data.addRows(prodData);
           var goalSeries = {};
-          goalSeries[emails.length] = {type: 'line'};
+          goalSeries[emails.length ] = {type: 'line'};
 
           return {
             data: data,
