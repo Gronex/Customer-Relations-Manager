@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.ApplicationServices.ExtentionMethods;
+using Core.ApplicationServices.Graph.DataHolders;
 using Core.ApplicationServices.ServiceInterfaces;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
@@ -20,51 +21,50 @@ namespace UnitTests.Services.GraphService
         }
 
         [Fact]
-        public void ContainsAllHeaders()
+        public void ContainsUsers()
         {
-            var users = new List<User>
+            var opportunities = new List<Opportunity>
             {
-                new User { FirstName = "user1", LastName = "Last", Opportunities = new List<Opportunity>
+                new Opportunity
                 {
-                    new Opportunity {Amount = 10, StartDate = DateTime.Today.Date, EndDate = DateTime.Today.Date.AddMonths(1)}
-                } },
-                new User { FirstName = "user2", LastName = "Last", Opportunities = new List<Opportunity>
+                    Amount = 10, StartDate = DateTime.Today.Date, EndDate = DateTime.Today.Date.AddMonths(1), Owner = new User {Email = "user1"}
+                },
+                new Opportunity
                 {
-                    new Opportunity {Amount = 10, StartDate = DateTime.Today.Date, EndDate = DateTime.Today.Date.AddMonths(1)}
-                } },
-                new User { FirstName = "user3", LastName = "Last", Opportunities = new List<Opportunity>
+                    Amount = 10, StartDate = DateTime.Today.Date, EndDate = DateTime.Today.Date.AddMonths(1), Owner = new User {Email = "user1"}
+                },
+                new Opportunity
                 {
-                    new Opportunity {Amount = 10, StartDate = DateTime.Today.Date, EndDate = DateTime.Today.Date.AddMonths(1)}
-                } },
+                    Amount = 10, StartDate = DateTime.Today.Date, EndDate = DateTime.Today.Date.AddMonths(1), Owner = new User {Email = "user2"}
+                }
             };
 
-            var result = _service.GenerateProductionDataTable(users);
+            var result = _service.GenerateProductionDataTable(opportunities, DateTime.MinValue, DateTime.MaxValue);
 
             
-            var expectedHeaders = users.Select(u => u.Name);
+            var users = new List<string> { "user1", "user2"};
 
-            Assert.Equal(result["header"], expectedHeaders);
+            Assert.Equal(result.Keys.ToList(), users);
         }
 
         [Fact]
-        public void OnlyContainsData()
+        public void RoundingToMonth()
         {
-            var users = new List<User>
+            var date = new DateTime(2016, 3, 15);
+            var opportunity = new List<Opportunity>
             {
-                new User { FirstName = "user1", LastName = "Last", Opportunities = new List<Opportunity>
+                new Opportunity
                 {
-                    new Opportunity {Amount = 10, StartDate = DateTime.Today.Date, EndDate = DateTime.Today.Date.AddMonths(1)}
-                } },
-                new User { FirstName = "user2", LastName = "Last", Opportunities = new List<Opportunity>()},
-                new User { FirstName = "user3", LastName = "Last", Opportunities = new List<Opportunity>()},
+                    Amount = 10,
+                    StartDate = date,
+                    EndDate = date.AddMonths(1),
+                    Owner = new User { Email = "user1"}
+                }
             };
 
-            var result = _service.GenerateProductionDataTable(users);
-
-
-            var expectedHeaders = new List<object> {"user1 Last"};
-
-            Assert.Equal(result["header"], expectedHeaders);
+            var targetDate = new DateTime(2016, 3, 20);
+            var result = _service.GenerateProductionDataTable(opportunity, targetDate, targetDate.AddMonths(1));
+            Assert.NotEmpty(result["user1"]);
         }
 
         [Fact]
@@ -76,17 +76,13 @@ namespace UnitTests.Services.GraphService
                 {
                     Amount = 10,
                     StartDate = DateTime.Today.Date,
-                    EndDate = DateTime.Today.Date.AddMonths(1)
+                    EndDate = DateTime.Today.Date.AddMonths(1),
+                    Owner = new User { Email = "user1"}
                 }
             };
-            var users = new List<User>
-            {
-                new User { FirstName = "user1", LastName = "Last", Opportunities =  opportunity}
-            };
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.Today, DateTime.Today.AddMonths(1));
 
-            var result = _service.GenerateProductionDataTable(users);
-
-            Assert.Equal(new List<object> {10.0}, result[DateTime.Today.RoundToMonth()]);
+            Assert.Equal(new List<double> {10.0}, result["user1"].Select(r => r.Sum));
         }
 
         [Fact]
@@ -98,122 +94,64 @@ namespace UnitTests.Services.GraphService
                 {
                     Amount = 10,
                     StartDate = DateTime.Today.Date,
-                    EndDate = DateTime.Today.Date.AddMonths(2)
+                    EndDate = DateTime.Today.Date.AddMonths(2),
+                    Owner = new User { Email = "user1"}
                 }
             };
-            var users = new List<User>
-            {
-                new User { FirstName = "user1", LastName = "Last", Opportunities =  opportunity}
-            };
 
-            var result = _service.GenerateProductionDataTable(users);
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
 
-            Assert.Equal(new List<object> { 5.0 }, result[DateTime.Today.RoundToMonth()]);
-            Assert.Equal(new List<object> { 5.0 }, result[DateTime.Today.RoundToMonth().AddMonths(1)]);
+            var month1 = result["user1"].SingleOrDefault(r => r.Period == DateTime.Today.RoundToMonth());
+            var month2 = result["user1"].SingleOrDefault(r => r.Period == DateTime.Today.RoundToMonth().AddMonths(1));
+
+            Assert.Equal(5.0, month1?.Sum);
+            Assert.Equal(5.0, month2?.Sum);
         }
 
         [Fact]
         public void DataForLessThanAMonth()
         {
+            var startDate = new DateTime(2016,1,1).Date; // Cant do today since it will at the en of the month breake the test
             var opportunity = new List<Opportunity>
             {
                 new Opportunity
                 {
                     Amount = 10,
-                    StartDate = DateTime.Today,
-                    EndDate = DateTime.Today.AddDays(1)
+                    StartDate = startDate,
+                    EndDate = startDate.AddDays(1),
+                    Owner = new User {Email = "user1"}
                 }
             };
-            var users = new List<User>
-            {
-                new User { FirstName = "user1", LastName = "Last", Opportunities =  opportunity}
-            };
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
 
-            var result = _service.GenerateProductionDataTable(users);
-
-            Assert.Equal(new List<object> { 10.0 }, result[DateTime.Today.RoundToMonth()]);
+            Assert.Equal(10.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Sum);
         }
 
         [Fact]
         public void DifferentDatesInSameMonthIsSummerized()
         {
+            var user = new User {Email = "user1"};
+            var startDate = new DateTime(2016,1,1).Date; // Cant do today since it will at the en of the month breake the test
             var opportunity = new List<Opportunity>
             {
                 new Opportunity
                 {
                     Amount = 10,
-                    StartDate = DateTime.Today,
-                    EndDate = DateTime.Today.AddDays(1)
+                    StartDate = startDate,
+                    EndDate = startDate.AddDays(1),
+                    Owner = user
                 },
                 new Opportunity
                 {
                     Amount = 10,
-                    StartDate = DateTime.Today.AddDays(2),
-                    EndDate = DateTime.Today.AddDays(5)
+                    StartDate = startDate.AddDays(2),
+                    EndDate = startDate.AddDays(5),
+                    Owner = user
                 }
             };
-            var users = new List<User>
-            {
-                new User { FirstName = "user1", LastName = "Last", Opportunities =  opportunity}
-            };
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
 
-            var result = _service.GenerateProductionDataTable(users);
-
-            Assert.Equal(new List<object> { 20.0 }, result[DateTime.Today.RoundToMonth()]);
-        }
-
-        [Fact]
-        public void EvensOutDataInStart()
-        {
-            var users = new List<User>
-            {
-                new User { FirstName = "user1", LastName = "Last", Opportunities = new List<Opportunity> {
-                    new Opportunity{
-                        Amount = 10,
-                        StartDate = DateTime.Today,
-                        EndDate = DateTime.Today.AddDays(1)
-                    }}
-                },
-                new User { FirstName = "user2", LastName = "Last", Opportunities = new List<Opportunity> {
-                    new Opportunity
-                    {
-                        Amount = 10,
-                        StartDate = DateTime.Today.AddMonths(1),
-                        EndDate = DateTime.Today.AddMonths(1)
-                    }}
-                }
-            };
-
-            var result = _service.GenerateProductionDataTable(users);
-
-            Assert.Equal(2, result[DateTime.Today.RoundToMonth()].Count);
-        }
-
-        [Fact]
-        public void EvensOutDataInEnd()
-        {
-            var users = new List<User>
-            {
-                new User { FirstName = "user1", LastName = "Last", Opportunities = new List<Opportunity> {
-                    new Opportunity{
-                        Amount = 10,
-                        StartDate = DateTime.Today,
-                        EndDate = DateTime.Today.AddDays(1)
-                    }}
-                },
-                new User { FirstName = "user2", LastName = "Last", Opportunities = new List<Opportunity> {
-                    new Opportunity
-                    {
-                        Amount = 10,
-                        StartDate = DateTime.Today.AddMonths(1),
-                        EndDate = DateTime.Today.AddMonths(1)
-                    }}
-                }
-            };
-
-            var result = _service.GenerateProductionDataTable(users);
-
-            Assert.Equal(2, result[DateTime.Today.RoundToMonth().AddMonths(1)].Count);
+            Assert.Equal(20.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Sum);
         }
     }
 }

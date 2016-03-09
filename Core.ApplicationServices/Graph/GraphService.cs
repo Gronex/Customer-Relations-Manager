@@ -18,18 +18,6 @@ namespace Core.ApplicationServices.Graph
 {
     public class GraphService : IGraphService
     {
-        private readonly IApplicationContext _contexr;
-
-        public GraphService()
-        {
-            
-        }
-
-        public GraphService(IApplicationContext contexr)
-        {
-            // TODO: Remove and let filtering happen in repo
-            _contexr = contexr;
-        }
 
         public IDictionary<object, List<object>> GenerateGoalDataTable(
             IEnumerable<User> users,
@@ -84,59 +72,8 @@ namespace Core.ApplicationServices.Graph
             return data;
         }
 
-        public IDictionary<object, List<object>> GenerateProductionDataTable(
-            IEnumerable<User> users,
-            DateTime? startDate = null,
-            DateTime? endDate = null)
+        public IDictionary<string, IEnumerable<ProductionData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to)
         {
-            var usableUsers = users.Where(u => u.Opportunities.Any(o => (!endDate.HasValue || o.StartDate <= endDate) && (!startDate.HasValue || o.EndDate >= startDate))).ToList();
-
-            var data = new Dictionary<object, List<object>>();
-
-            var minDate = startDate ?? usableUsers.Select(u => u.Opportunities.Min(g => g.StartDate)).Min().RoundToMonth();
-            var maxDate = endDate ?? usableUsers.Select(u => u.Opportunities.Max(g => g.EndDate)).Max().RoundToMonth();
-
-            foreach (var user in usableUsers)
-            {
-                var currentDate = minDate;
-                AddOrCreate(data, "header", user.Name);
-
-                var earnings = user.Opportunities
-                    .SelectMany(SpreadOutEarnings)
-                    .GroupBy(e => e.Item1)
-                    .Where(o => o.Key >= minDate && o.Key <= maxDate)
-                    .OrderBy(e => e.Key);
-
-                foreach (var earning in earnings)
-                {
-                    while (earning.Key > currentDate)
-                    {
-                        AddOrCreate(data, currentDate, null);
-                        currentDate = currentDate.AddMonths(1);
-                    }
-
-                    AddOrCreate(data, earning.Key, earning.Sum(e => e.Item2));
-                    currentDate = currentDate.AddMonths(1);
-                }
-
-                while (currentDate <= maxDate)
-                {
-                    AddOrCreate(data, currentDate, null);
-                    currentDate = currentDate.AddMonths(1);
-                }
-            }
-
-            return data;
-        }
-
-        public IDictionary<string, IEnumerable<ProductionData>> Test(DateTime? from, DateTime? to)
-        {
-            if (!from.HasValue) from = new DateTime(2016, 1, 1);
-            if (!to.HasValue) to = new DateTime(2016, 1, 1);
-
-            // Should be an argument
-            var opportunities = _contexr.Opportunities.Where(Opportunity.InTimeRange(from.Value, to.Value)).ToList();
-
             return opportunities.SelectMany(o =>
             {
                 var earningPerMonth = SpreadOutEarnings(o);
@@ -151,7 +88,7 @@ namespace Core.ApplicationServices.Graph
                     },
                     Month = epm.Item1,
                     Amount = epm.Item2
-                });
+                }).Where(epm => epm.Month >= from.RoundToMonth() && epm.Month <= to.RoundToMonth());
             }).GroupBy(o => new {o.Month, o.User}).Select(o => new
             {
                 o.Key.User,

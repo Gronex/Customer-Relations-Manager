@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Core.ApplicationServices.ServiceInterfaces;
 using Core.DomainModels.Graph;
+using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 
@@ -14,11 +15,13 @@ namespace customer_relations_manager.Controllers
     public class GraphController : ApiController
     {
         private readonly IGenericRepository<User> _userRepo;
+        private readonly IGenericRepository<Opportunity> _opportunityRepo;
         private readonly IGraphService _graphService;
         
-        public GraphController(IGenericRepository<User> userRepo, IGraphService graphService)
+        public GraphController(IGenericRepository<User> userRepo, IGenericRepository<Opportunity> opportunityRepo, IGraphService graphService)
         {
             _userRepo = userRepo;
+            _opportunityRepo = opportunityRepo;
             _graphService = graphService;
 
 
@@ -27,16 +30,19 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         public IHttpActionResult Get(string id, [FromUri]DateTime? startDate = null, [FromUri]DateTime? endDate = null)
         {
+            var year = DateTime.UtcNow.Year;
+            if (!startDate.HasValue) startDate = new DateTime(year, 1, 1);
+            if (!endDate.HasValue) endDate = new DateTime(year+1, 1, 1);
+
             // Since i cant figure out how to make it do this automaticaly
-            var users = _userRepo.Get();
             switch (id)
             {
                 case "goal":
-                    return Ok(_graphService.GenerateGoalDataTable(users, startDate?.Date, endDate?.Date));
+                    var users = _userRepo.Get();
+                    return Ok(_graphService.GenerateGoalDataTable(users, startDate.Value.Date, endDate.Value.Date));
                 case "production":
-                    return Ok(_graphService.GenerateProductionDataTable(users, startDate?.Date, endDate?.Date));
-                case "test":
-                    return Ok(_graphService.Test(startDate?.Date, endDate?.Date));
+                    var opportunities = _opportunityRepo.Get(Opportunity.InTimeRange(startDate.Value.Date, endDate.Value.Date));
+                    return Ok(_graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date));
                 default:
                     return NotFound();
             }

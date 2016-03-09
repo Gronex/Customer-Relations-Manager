@@ -30,7 +30,7 @@
 
       var config = {
         startDate: new Date(Date.UTC(vm.filter.fromYear, vm.filter.fromMonth - 1)),
-        toDate: new Date(Date.UTC(vm.filter.toYear, vm.filter.toMonth - 1))
+        endDate: new Date(Date.UTC(vm.filter.toYear, vm.filter.toMonth - 1))
       };
       graph.productionGraph(config)
         .then(function (result) {
