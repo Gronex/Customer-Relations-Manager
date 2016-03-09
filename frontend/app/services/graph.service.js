@@ -41,7 +41,7 @@
       var res = {};
       for(var key of keys){
         res[key] = _.map(data[key], function(p){
-          p.period = new Date(p.period);
+          p.period = moment.utc(p.period);
           return p;
         });
       }
@@ -49,11 +49,11 @@
     }
 
     function forRange(from, to, callback){
-      var date = from;
+      var date = moment.utc(from);
       while(date < to){
         callback(date);
-        date = new Date(date);
-        date.setMonth(date.getMonth() + 1);
+        date = date.clone();
+        date.add(1, 'M');
       }
     }
 
@@ -63,9 +63,9 @@
 
       forRange(startDate, endDate, function(date){
         var row = [];
-        row.push(date);
+        row.push(date.format('ll'));
         for(var key of keys){
-          var valueHolder = _.find(data[key], function(p){return p.period.getTime() === date.getTime();});
+          var valueHolder = _.find(data[key], function(p){return p.period.isSame(date);});
           if(valueHolder)
             row.push(valueHolder.value);
           else row.push(undefined);
@@ -87,13 +87,13 @@
       forRange(startDate, endDate, function(date){
         var sum = 0;
         for(var key of keys){
-          var d = _.find(data[key], function(g){return g.period.getTime() === date.getTime();});
+          var d = _.find(data[key], function(g){return g.period.isSame(date);});
           if(d)
             sums[key] = d.value;
           if(sums[key])
             sum += sums[key];
         }
-        res.push([new Date(date), sum]);
+        res.push([date.format(), sum]);
       });
       return res;
     }
@@ -110,7 +110,7 @@
         .then(function (result) {
 
           var data = new google.visualization.DataTable();
-          data.addColumn('date', 'Month');
+          data.addColumn('string', 'Month');
 
           var emails = Object.keys(result.goals);
           for (var email of emails) {
@@ -121,7 +121,6 @@
 
           var prodData = handleProductionData(result.production, emails, config.startDate, config.endDate);
           var goalData = handleGoalData(result.goals, emails, config.startDate, config.endDate);
-          console.log(goalData);
 
           for(var i in prodData){
             prodData[i].push(goalData[i][1]);
