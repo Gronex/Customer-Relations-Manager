@@ -127,7 +127,7 @@
           }
           data.addRows(prodData);
           var goalSeries = {};
-          goalSeries[emails.length ] = {type: 'line'};
+          goalSeries[emails.length] = {type: 'line'};
 
           return {
             data: data,
@@ -137,9 +137,8 @@
               legend: {position: 'top', maxLines: 3},
               hAxis: {title: "Time"},
               vAxis: {title: "DKK"},
-              seriesType: "area",
-              series: goalSeries,
-              crosshair: { trigger: 'both' }
+              seriesType: "bars",
+              series: goalSeries
             },
             tableOptions: {
               width: '100%',
