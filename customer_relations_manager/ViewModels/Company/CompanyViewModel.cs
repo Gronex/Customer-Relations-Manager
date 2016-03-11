@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
-namespace customer_relations_manager.ViewModels
+namespace customer_relations_manager.ViewModels.Company
 {
     public class CompanyViewModel
     {
@@ -12,9 +8,12 @@ namespace customer_relations_manager.ViewModels
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
+        [Required]
         public string City { get; set; }
+        [Required]
         public string Country { get; set; }
 
+        [Required]
         public int? PostalCode { get; set; }
         public string WebSite { get; set; }
     }

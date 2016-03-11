@@ -98,6 +98,10 @@
     <Compile Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.Designer.cs">
       <DependentUpon>201603031004457_ActivityAjustmentsToFollowModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603111256517_CompanyRequiredFields.cs" />
+    <Compile Include="Migrations\201603111256517_CompanyRequiredFields.Designer.cs">
+      <DependentUpon>201603111256517_CompanyRequiredFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
@@ -175,6 +179,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.resx">
       <DependentUpon>201603031004457_ActivityAjustmentsToFollowModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603111256517_CompanyRequiredFields.resx">
+      <DependentUpon>201603111256517_CompanyRequiredFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
