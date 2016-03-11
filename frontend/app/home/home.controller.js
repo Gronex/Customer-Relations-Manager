@@ -34,8 +34,8 @@
       };
       graph.productionGraph(config)
         .then(function (result) {
-          graph.drawChart(result.data, result.graphOptions);
-          graph.drawTable(result.data, result.tableOptions);
+          graph.drawChart(result.rows, result.cols, result.graphOptions);
+          graph.drawTable(result.rows, result.cols, result.tableOptions);
         });
     }
 

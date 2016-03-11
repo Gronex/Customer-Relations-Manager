@@ -18,22 +18,30 @@
       drawTable: drawTable
     };
 
-    function drawChart(data, options, divId) {
+    function drawChart(rows, cols, options, divId) {
 
       google.charts.setOnLoadCallback(function () {
         if(!divId) divId = 'chart_div';
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.ComboChart(document.getElementById(divId));
-        chart.draw(data, options);
+        var table = new google.visualization.DataTable({
+          cols: cols,
+          rows: rows
+        });
+        chart.draw(table, options);
       });
     }
 
-    function drawTable(data, options, divId) {
+    function drawTable(rows, cols, options, divId) {
       google.charts.setOnLoadCallback(function () {
         if(!divId) divId = 'table_div';
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.Table(document.getElementById(divId));
-        chart.draw(data, options);
+        var table = new google.visualization.DataTable({
+          cols: cols,
+          rows: rows
+        });
+        chart.draw(table, options);
       });
     }
 
@@ -63,15 +71,16 @@
 
       forRange(startDate, endDate, function(date){
         var row = [];
-        row.push(date.format('ll'));
+        row.push({v: date.toDate()});
         for(var key of keys){
           var valueHolder = _.find(data[key], function(p){return p.period.isSame(date);});
           if(valueHolder)
-            row.push(valueHolder.value);
+            row.push({v: valueHolder.value});
           else row.push(undefined);
         }
-        result.push(row);
+        result.push({c: row});
       });
+      console.log(result);
       return result;
     }
 
@@ -93,7 +102,7 @@
           if(sums[key])
             sum += sums[key];
         }
-        res.push([date.format(), sum]);
+        res.push([{v: date.toDate()},  {v: sum } ]);
       });
       return res;
     }
@@ -108,29 +117,30 @@
 
       return $q.all({production: production, goals: goals})
         .then(function (result) {
+          var data = [];
+          var headers = [];
 
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Month');
+          headers.push({label: 'Month', type: 'date'});
 
           var emails = Object.keys(result.goals);
           for (var email of emails) {
             var user = _.head(result.goals[email]).user;
-            data.addColumn('number', user.firstName + " " + user.lastName);
+            headers.push({label: user.firstName + " " + user.lastName, type: 'number'});
           }
-          data.addColumn('number', 'Goal');
+          headers.push({label: 'Goal', type: 'number'});
 
-          var prodData = handleProductionData(result.production, emails, config.startDate, config.endDate);
+          data = handleProductionData(result.production, emails, config.startDate, config.endDate);
           var goalData = handleGoalData(result.goals, emails, config.startDate, config.endDate);
 
-          for(var i in prodData){
-            prodData[i].push(goalData[i][1]);
+          for(var i in data){
+            data[i].c.push(goalData[i][1]);
           }
-          data.addRows(prodData);
           var goalSeries = {};
           goalSeries[emails.length] = {type: 'line'};
 
           return {
-            data: data,
+            cols: headers,
+            rows: data,
             graphOptions: {
               title: 'Production',
               isStacked: true,
