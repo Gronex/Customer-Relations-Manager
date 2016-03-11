@@ -60,11 +60,11 @@ const monthFormat = "MMM YYYY"
       }
     }
 
-    function handleProductionData(data, keys, startDate, endDate){
+    function handleProductionData(data, keys, filter){
       var result = [];
       data = convertToDate(data,keys);
 
-      forRange(startDate, endDate, function(date){
+      forRange(filter.from, filter.to, function(date){
         var row = [];
         row.push({v: date.toDate(), f: date.format(monthFormat)});
         for(var key of keys){
@@ -78,7 +78,7 @@ const monthFormat = "MMM YYYY"
       return result;
     }
 
-    function handleGoalData(data, keys, startDate, endDate){
+    function handleGoalData(data, keys, filter){
       data = convertToDate(data,keys);
       var res = [];
       var sums = {};
@@ -87,7 +87,7 @@ const monthFormat = "MMM YYYY"
         sums[key] = 0;
       }
 
-      forRange(startDate, endDate, function(date){
+      forRange(filter.from, filter.to, function(date){
         var sum = 0;
         for(var key of keys){
           var d = _.find(data[key], function(g){return g.period.isSame(date);});
@@ -103,11 +103,20 @@ const monthFormat = "MMM YYYY"
 
     function productionGraph(config) {
       var headers = [];
+      var filter = {};
       var production = dataservice.graph
-            .get({id: "production", query: config});
+            .get({id: "production", query: config})
+            .then(function(result){
+              filter = {
+                from: moment(result.from),
+                to: moment(result.to)
+              };
+              return result.data;
+            });
 
       var goals = dataservice.graph
-            .get({id: "goal", query: config});
+            .get({id: "goal", query: config})
+            .then(function(result){return result.data;});
 
       return $q.all({production: production, goals: goals})
         .then(function (result) {
@@ -123,8 +132,8 @@ const monthFormat = "MMM YYYY"
           }
           headers.push({label: 'Goal', type: 'number'});
 
-          data = handleProductionData(result.production, emails, config.startDate, config.endDate);
-          var goalData = handleGoalData(result.goals, emails, config.startDate, config.endDate);
+          data = handleProductionData(result.production, emails, filter);
+          var goalData = handleGoalData(result.goals, emails, filter);
 
           for(var i in data){
             data[i].c.push(goalData[i][1]);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Core.ApplicationServices.Graph.DataHolders;
 using Core.ApplicationServices.ServiceInterfaces;
 using Core.DomainModels.Graph;
 using Core.DomainModels.Opportunity;
@@ -44,11 +45,21 @@ namespace customer_relations_manager.Controllers
             {
                 case "goal":
                     var goals = _goalRepo.Get(g => g.StartDate <= endDate.Value);
-                    return Ok(_graphService.GenerateGoalDataTable(goals, startDate.Value.Date));
+                    return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
+                    {
+                        From = startDate.Value,
+                        To = endDate.Value,
+                        Data = _graphService.GenerateGoalDataTable(goals, startDate.Value.Date),
+                    });
                     //return Ok(_graphService.GenerateGoalDataTable(users, startDate.Value.Date, endDate.Value.Date));
                 case "production":
                     var opportunities = _opportunityRepo.Get(Opportunity.InTimeRange(startDate.Value.Date, endDate.Value.Date));
-                    return Ok(_graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date));
+                     return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
+                    {
+                        From = startDate.Value,
+                        To = endDate.Value,
+                        Data = _graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date)
+                    });
                 default:
                     return NotFound();
             }

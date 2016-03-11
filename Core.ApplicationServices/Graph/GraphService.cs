@@ -64,12 +64,14 @@ namespace Core.ApplicationServices.Graph
                     Month = epm.Item1,
                     Amount = epm.Item2
                 }).Where(epm => epm.Month >= from.RoundToMonth() && epm.Month <= to.RoundToMonth());
-            }).GroupBy(o => new {o.Month, o.User}).Select(o => new
+            }).GroupBy(o => new {o.Month, o.User})
+            .Select(o => new
             {
                 o.Key.User,
                 o.Key.Month,
                 Sum = o.Sum(os => os.Amount)
-            }).GroupBy(o => o.User.Email).ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new UserGraphData
+            }).GroupBy(o => o.User.Email)
+            .ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new UserGraphData
             {
                 User = new SimpleUser
                 {
