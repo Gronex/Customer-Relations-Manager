@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  const dateFormatString = 'YYYY-MM-DD';
+
   angular
     .module('CRM')
     .controller('Home', Home);
@@ -10,12 +12,10 @@
   /* @ngInject */
   function Home(graph, $state, $stateParams) {
     var vm = this;
-    var today = new Date();
-
     vm.filter = {};
+    var filter = {};
 
     vm.getProductionGraph = getProductionGraph;
-
 
     activate();
 
@@ -25,27 +25,31 @@
     }
 
     function getProductionGraph(){
+      filter.fromDate = moment(filter.fromDate).format(dateFormatString);
+      filter.toDate = moment(filter.toDate).format(dateFormatString);
 
-      $state.go("Home", vm.filter, {notify: false});
-
+      $state.go("Home", filter, {notify: false});
       var config = {
-        startDate: new Date(Date.UTC(vm.filter.fromYear, vm.filter.fromMonth - 1)),
-        endDate: new Date(Date.UTC(vm.filter.toYear, vm.filter.toMonth - 1))
+        startDate: vm.filter.fromDate,
+        endDate: vm.filter.toDate
       };
       graph.productionGraph(config)
         .then(function (result) {
-          graph.drawChart(result.rows, result.cols, result.graphOptions);
-          graph.drawTable(result.rows, result.cols, result.tableOptions);
+          graph.drawChart(result.data, result.graphOptions);
+          graph.drawTable(result.data, result.tableOptions);
         });
     }
 
     function setupFilter() {
-      vm.filter = _.merge({
-        fromMonth: 1,
-        fromYear: today.getFullYear(),
-        toMonth: 1,
-        toYear: today.getFullYear() + 1
+      filter = _.merge({
+        fromDate: moment.utc().startOf('year').format(dateFormatString),
+        toDate: moment.utc().add(1, 'year').startOf('year').format(dateFormatString)
       },$stateParams);
+
+      vm.filter = {
+        fromDate: moment.utc(filter.fromDate).toDate(),
+        toDate: moment.utc(filter.toDate).toDate()
+      };
     }
   }
 })();

@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+const monthFormat = "MMM YYYY"
+
   angular
     .module('CRM')
     .service('graph', graph );
@@ -18,29 +20,22 @@
       drawTable: drawTable
     };
 
-    function drawChart(rows, cols, options, divId) {
-
+    function drawChart(data, options, divId) {
       google.charts.setOnLoadCallback(function () {
         if(!divId) divId = 'chart_div';
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.ComboChart(document.getElementById(divId));
-        var table = new google.visualization.DataTable({
-          cols: cols,
-          rows: rows
-        });
+        var table = new google.visualization.DataTable(data);
         chart.draw(table, options);
       });
     }
 
-    function drawTable(rows, cols, options, divId) {
+    function drawTable(data, options, divId) {
       google.charts.setOnLoadCallback(function () {
         if(!divId) divId = 'table_div';
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.Table(document.getElementById(divId));
-        var table = new google.visualization.DataTable({
-          cols: cols,
-          rows: rows
-        });
+        var table = new google.visualization.DataTable(data);
         chart.draw(table, options);
       });
     }
@@ -71,7 +66,7 @@
 
       forRange(startDate, endDate, function(date){
         var row = [];
-        row.push({v: date.toDate()});
+        row.push({v: date.toDate(), f: date.format(monthFormat)});
         for(var key of keys){
           var valueHolder = _.find(data[key], function(p){return p.period.isSame(date);});
           if(valueHolder)
@@ -101,7 +96,7 @@
           if(sums[key])
             sum += sums[key];
         }
-        res.push([{v: date.toDate()},  {v: sum } ]);
+        res.push([{v: date.toDate(), f: date.format(monthFormat)},  {v: sum } ]);
       });
       return res;
     }
@@ -119,7 +114,7 @@
           var data = [];
           var headers = [];
 
-          headers.push({label: 'Month', type: 'date'});
+          headers.push({label: 'Month', type: 'date', format: "MMM"});
 
           var emails = Object.keys(result.goals);
           for (var email of emails) {
@@ -138,15 +133,17 @@
           goalSeries[emails.length] = {type: 'line'};
 
           return {
-            cols: headers,
-            rows: data,
+            data: {
+              cols: headers,
+              rows: data
+            },
             graphOptions: {
               title: 'Production',
               isStacked: true,
               legend: {position: 'top', maxLines: 3},
-              hAxis: {title: "Time"},
+              hAxis: {title: "Time", format: "MMM yyyy"},
               vAxis: {title: "DKK"},
-              seriesType: "bars",
+              seriesType: "steppedArea",
               series: goalSeries
             },
             tableOptions: {

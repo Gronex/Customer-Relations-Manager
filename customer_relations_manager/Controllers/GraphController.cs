@@ -30,7 +30,7 @@ namespace customer_relations_manager.Controllers
         {
             var year = DateTime.UtcNow.Year;
             if (!startDate.HasValue) startDate = new DateTime(year, 1, 1);
-            if (!endDate.HasValue) endDate = new DateTime(year+1, 1, 1);
+            if (!endDate.HasValue) endDate = startDate.Value.AddYears(1);
 
             if (startDate > endDate)
             {
