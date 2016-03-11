@@ -80,7 +80,6 @@
         }
         result.push({c: row});
       });
-      console.log(result);
       return result;
     }
 
