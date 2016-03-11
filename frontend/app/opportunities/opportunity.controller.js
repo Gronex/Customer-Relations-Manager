@@ -57,13 +57,13 @@
         .update($stateParams.id, vm.opportunity)
         .then(function () {
           $state.go("Opportunities");
-        });
+        }, handleRequestError);
       } else {
         return dataservice.opportunities
         .create(vm.opportunity)
         .then(function () {
           $state.go("Opportunities");
-        });
+        }, handleRequestError);
       }
     }
 
@@ -120,6 +120,12 @@
     function updateContact(contact){
       vm.opportunity.contact = contact;
       vm.person = undefined;
+    }
+
+    function handleRequestError(err){
+      if(err.status === 400){
+        vm.modelState = err.data;
+      }
     }
   }
 })();

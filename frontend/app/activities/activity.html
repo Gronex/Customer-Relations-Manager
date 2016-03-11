@@ -1,5 +1,7 @@
 <h1 ng-if="vm.editing">Activity: {{vm.activity.name}}</h1>
 <h1 ng-if="!vm.editing">New Activity</h1>
+
+<crm-modelstate-feedback model-state="vm.modelState"></crm-modelstate-feedback>
 <form ng-submit="vm.save()">
     <div class="checkbox">
         <label>
@@ -8,7 +10,7 @@
     </div>
     <div class="form-group">
         <label>Name</label>
-        <input class="form-control" type="text" ng-model="vm.activity.name"/> 
+        <input class="form-control" type="text" ng-model="vm.activity.name" required/> 
     </div>
     <div class="form-group">
         <select class="form-control" ng-model="vm.activity.categoryName" required>
@@ -17,7 +19,7 @@
     </div>
     <div class="form-group">
         <label>Responsible</label>
-        <input class="form-control" type="text" ng-model="vm.activity.responsibleName" disabled/><br/>
+        <input class="form-control" type="text" ng-model="vm.activity.responsibleName" disabled required/><br/>
         <input type="text" ng-model="vm.responsible" placeholder="Select Responsible" uib-typeahead="responsible as responsible.name for responsible in vm.users | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateResponsible($item)"><br/>
     </div>
     <div class="row" >
@@ -38,7 +40,7 @@
         <div class="well well-sm col-sm-6">
             <div class="row">
                 <div class="col-sm-6" >
-                    <uib-datepicker ng-model="vm.activity.dueDate"></uib-datepicker>
+                    <uib-datepicker ng-model="vm.activity.dueDate" required></uib-datepicker>
                 </div>
                 <div class="col-sm-6">
                     <div class="checkbox">

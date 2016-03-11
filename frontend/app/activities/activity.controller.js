@@ -70,13 +70,13 @@
           .update($stateParams.id, vm.activity)
           .then(function(){
             $state.go("Activities");
-          });
+          }, handleRequestError);
       } else {
         dataservice.activities
           .create(vm.activity)
           .then(function(result){
             $state.go("Activity", {id: result.location});
-          });
+          }, handleRequestError);
       }
     }
 
@@ -139,6 +139,11 @@
       return _.differenceBy(list, compareList, function(i){
         return i.id;
       });
+    }
+    function handleRequestError(err){
+      if(err.status === 400){
+        vm.modelState = err.data;
+      }
     }
   }
 })();
