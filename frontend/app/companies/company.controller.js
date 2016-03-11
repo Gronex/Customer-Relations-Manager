@@ -28,7 +28,7 @@
 
     function getCompany(id) {
       dataservice.companies
-      .getById(id)
+      .get(id)
       .then(function (data) {
         vm.company = data;
         vm.editing = true;

@@ -59,4 +59,4 @@
 </form>
 
 <hr/>
-<crm-comment-list backend-access="vm.commentDataAccess" call-args="vm.commentArgs" test-test="false"></crm-comment-list>
+<crm-comment-list ng-if="vm.editing" backend-access="vm.commentDataAccess" call-args="vm.commentArgs" test-test="false"></crm-comment-list>
