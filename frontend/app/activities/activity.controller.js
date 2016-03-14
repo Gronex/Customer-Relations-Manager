@@ -16,9 +16,12 @@
     vm.save = save;
     vm.remove = remove;
     vm.updateResponsible = updateResponsible;
+    vm.addInterest = addInterest;
+    vm.removeInterest = removeInterest;
     vm.updateCompany = updateCompany;
     vm.removeCompany = removeCompany;
     vm.contactSelected = contactSelected;
+    vm.primaryContactSelected = primaryContactSelected;
     vm.removeContact = removeContact;
     vm.commentDataAccess = dataservice.activityComments;
     vm.commentArgs = {activityId: $stateParams.id};
@@ -133,6 +136,21 @@
     function removeContact(contact){
       vm.employees.push(contact);
       _.remove(vm.activity.secondaryContacts, function(c){return c.id === contact.id;});
+    }
+
+    function addInterest(responsible){
+      vm.activity.secondaryResponsibles.push(responsible);
+      vm.interest = null;
+    }
+
+    function removeInterest(responsibility) {
+      _.remove(vm.activity.secondaryResponsibles, function(r){return r.email === responsibility.email;});
+    }
+
+    function primaryContactSelected(contact){
+      vm.activity.primaryContactId = contact.id;
+      vm.activity.primaryContactName = contact.name;
+      vm.primaryContact = null;
     }
 
     function filterList(list, compareList){

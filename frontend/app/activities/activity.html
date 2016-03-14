@@ -36,10 +36,18 @@
     </div>
     <div class="row" >
         <div class="col-sm-6">
-            <crm-company-typeahead on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
+            <div class="row">
+            <crm-company-typeahead class="col-sm-6" on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
+            <div class="col-sm-6">
+                 <label>Primary Contact</label>
+                 <input class="form-control" disabled ng-model="vm.activity.primaryContactName"/><br/>
+                 <input type="text" ng-model="vm.primaryContact" ng-disabled="!vm.activity.companyId" placeholder="Select Primary Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.primaryContactSelected($item)">
+                <br/>
+            </div>
+            </div>
             <div class="form-group">
                 <label>Contacts</label>
-                <input type="text" ng-model="vm.contact" ng-disabled="!vm.activity.companyId" placeholder="Add Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.contactSelected($item)">
+                <input type="text" ng-model="vm.contact" ng-disabled="!vm.activity.companyId || !vm.activity.primaryContactId" placeholder="Add Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.contactSelected($item)">
                 <br/>
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="contact in vm.activity.secondaryContacts">
