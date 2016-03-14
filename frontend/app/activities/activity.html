@@ -17,10 +17,22 @@
             <option ng-repeat="category in vm.categories">{{category.name}}</option>
         </select>
     </div>
-    <div class="form-group">
-        <label>Responsible</label>
-        <input class="form-control" type="text" ng-model="vm.activity.responsibleName" disabled required/><br/>
-        <input type="text" ng-model="vm.responsible" placeholder="Select Responsible" uib-typeahead="responsible as responsible.name for responsible in vm.users | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateResponsible($item)"><br/>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Responsible</label>
+            <input class="form-control" type="text" ng-model="vm.activity.responsibleName" disabled required/><br/>
+            <input type="text" ng-model="vm.responsible" placeholder="Select Responsible" uib-typeahead="responsible as responsible.name for responsible in vm.users | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateResponsible($item)"><br/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Interests</label>
+            <input type="text" ng-model="vm.interest" placeholder="Select Responsible" uib-typeahead="responsible as responsible.name for responsible in vm.users | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.addInterest($item)"><br/>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="interest in vm.activity.secondaryResponsibles">
+                    {{interest.name}}
+                    <button type="button" ng-click="vm.removeInterest(interest)" class="close"><i class="fa fa-times"></i></button>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="row" >
         <div class="col-sm-6">
@@ -30,8 +42,8 @@
                 <input type="text" ng-model="vm.contact" ng-disabled="!vm.activity.companyId" placeholder="Add Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.contactSelected($item)">
                 <br/>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="contact in vm.activity.contacts">
-                        {{contact.name}} <button type="button" class="close" aria-label="Close" ng-click="vm.removeContact(contact)"><span aria-hidden="true">&times;</span></button>
+                    <li class="list-group-item" ng-repeat="contact in vm.activity.secondaryContacts">
+                        {{contact.name}} <button type="button" class="close" ng-click="vm.removeContact(contact)"><i class="fa fa-times"></i></button>
                     </li>
                 </ul>
             </div>

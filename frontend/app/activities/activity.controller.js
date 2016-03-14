@@ -56,7 +56,7 @@
         dataservice.companyEmployees({companyId: vm.activity.companyId})
           .then(function(data){
             vm.employees = data;
-            vm.employees = filterList(vm.employees, vm.activity.contacts);
+            vm.employees = filterList(vm.employees, vm.activity.secondaryContacts);
           });
       } else {
         vm.employees = [];
@@ -113,7 +113,7 @@
     function updateCompany(company){
       vm.activity.companyName = company.name;
       vm.activity.companyId = company.id;
-      vm.activity.contacts = [];
+      vm.activity.secondaryContacts = [];
       getEmployees();
     }
 
@@ -121,18 +121,18 @@
       vm.activity.companyName = undefined;
       vm.activity.companyId = undefined;
       getEmployees();
-      vm.activity.contacts = [];
+      vm.activity.secondaryContacts = [];
     }
 
     function contactSelected(contact){
       vm.contact = undefined;
-      vm.activity.contacts.push(contact);
-      vm.employees = filterList(vm.employees, vm.activity.contacts);
+      vm.activity.secondaryContacts.push(contact);
+      vm.employees = filterList(vm.employees, vm.activity.secondaryContacts);
     }
 
     function removeContact(contact){
       vm.employees.push(contact);
-      _.remove(vm.activity.contacts, function(c){return c.id === contact.id;});
+      _.remove(vm.activity.secondaryContacts, function(c){return c.id === contact.id;});
     }
 
     function filterList(list, compareList){
