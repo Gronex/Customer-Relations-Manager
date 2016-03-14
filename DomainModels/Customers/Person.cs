@@ -32,5 +32,9 @@ namespace Core.DomainModels.Customers
         public virtual ICollection<Activity> Activities { get; set; }
         [InverseProperty(nameof(Activity.SecondaryContacts))]
         public virtual ICollection<Activity> SecondaryActivities { get; set; }
+
+        // ReSharper disable once ConvertPropertyToExpressionBody
+        [NotMapped]
+        public string Name { get { return $"{FirstName} {LastName}"; } }
     }
 }

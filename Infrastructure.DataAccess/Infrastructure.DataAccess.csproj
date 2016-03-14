@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Extentions\EntityExtentions.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.Designer.cs">
       <DependentUpon>201602161303314_UniqueYearMonthUser.cs</DependentUpon>

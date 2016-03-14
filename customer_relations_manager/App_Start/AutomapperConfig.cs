@@ -76,6 +76,7 @@ namespace customer_relations_manager.App_Start
 
                 cfg.CreateMap<ActivityComment, CommentViewModel>().ReverseMap();
                 cfg.CreateMap<OpportunityComment, CommentViewModel>().ReverseMap();
+                cfg.CreateMap<Person, PersonOverviewViewModel>().ReverseMap();
             });
 
             return config;

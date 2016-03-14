@@ -12,5 +12,8 @@ namespace customer_relations_manager.ViewModels.Activity
         public bool Done { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime? DueTime { get; set; }
+        public string PrimaryResponsibleName { get; set; }
+        public string PrimaryContactName { get; set; }
+        public string CompanyName { get; set; }
     }
 }
