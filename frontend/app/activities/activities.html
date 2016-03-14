@@ -16,8 +16,8 @@
         <td>{{activity.companyName}}</td>
         <td>{{activity.primaryResponsibleName}}</td>
         <td>{{activity.primaryContactName}}</td>
-        <td ng-if="!activity.dueTime">{{activity.dueDate | date}}</td>
-        <td ng-if="activity.dueTime">{{activity.dueDate | date}} at {{activity.dueTime | date : 'HH:mm'}}</td>
+        <td ng-if="!activity.dueTime">{{activity.dueDate | moment}}</td>
+        <td ng-if="activity.dueTime">{{activity.dueDate | moment}} at {{activity.dueTime | moment : 'HH:mm'}}</td>
         <td>
             <a ui-sref="Activity({id: activity.id})" class="btn btn-primary">
                 <i class="fa fa-pencil-square-o"></i>

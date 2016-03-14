@@ -28,8 +28,9 @@
         .then(function(data){
           vm.itemCount = data.itemCount;
           vm.activities = _.map(data.data, function(a){
+            a.dueDate = moment.utc(a.dueDate);
             if(a.dueTime)
-              a.dueTime = new Date(a.dueTime);
+              a.dueTime = moment.utc(a.dueTime);
             return a;
           });
         });
