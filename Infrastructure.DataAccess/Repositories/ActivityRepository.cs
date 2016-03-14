@@ -45,10 +45,10 @@ namespace Infrastructure.DataAccess.Repositories
                 a.DueDate = activity.DueDate;
                 a.DueTime = activity.DueTime;
 
-                if (a.Responsible.Email != activity.Responsible.Email)
+                if (a.PrimaryResponsible.Email != activity.PrimaryResponsible.Email)
                 {
-                    var dbResp = _context.Users.SingleOrDefault(u => u.Email == activity.Responsible.Email);
-                    if (dbResp != null) a.ResponsibleId = dbResp.Id;
+                    var dbResp = _context.Users.SingleOrDefault(u => u.Email == activity.PrimaryResponsible.Email);
+                    if (dbResp != null) a.PrimaryResponsibleId = dbResp.Id;
                 }
 
                 // people are updated on their own
@@ -62,19 +62,19 @@ namespace Infrastructure.DataAccess.Repositories
 
                 if (!a.CompanyId.HasValue)
                 {
-                    foreach (var contact in a.Contacts)
+                    foreach (var contact in a.SecondaryContacts)
                     {
-                        a.Contacts.Remove(contact);
+                        a.SecondaryContacts.Remove(contact);
                     }
                 }
                 else
                 {
-                    var newContacts = activity.Contacts.Select(c => c.Id);
+                    var newContacts = activity.SecondaryContacts.Select(c => c.Id);
                     var updatedContacts = _context.Persons
                         .Where(p => p.CompanyId == a.CompanyId)
                         .Where(p => newContacts.Any(c => p.Id == c));
                     
-                    UpdateContacts(a.Contacts, updatedContacts);
+                    UpdateContacts(a.SecondaryContacts, updatedContacts);
                 }
 
 
@@ -89,9 +89,9 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Activity Create(Activity activity)
         {
-            var dbResp = _context.Users.SingleOrDefault(u => u.Email == activity.Responsible.Email);
+            var dbResp = _context.Users.SingleOrDefault(u => u.Email == activity.PrimaryResponsible.Email);
             if (dbResp == null) return null;
-            activity.Responsible = dbResp;
+            activity.PrimaryResponsible = dbResp;
             // if we get null that is fine, then we just don't set the company
             activity.Company = _context.Companies.SingleOrDefault(c => c.Id == activity.CompanyId);
 
@@ -99,14 +99,14 @@ namespace Infrastructure.DataAccess.Repositories
             if (category == null) return null;
             activity.Category = category;
 
-            var newContacts = activity.Contacts.Select(c => c.Id);
+            var newContacts = activity.SecondaryContacts.Select(c => c.Id);
             var updatedContacts = _context.Persons
                 .Where(p => p.CompanyId == activity.CompanyId)
                 .Where(p => newContacts.Any(c => p.Id == c));
 
-            activity.Contacts = new List<Person>();
+            activity.SecondaryContacts = new List<Person>();
 
-            UpdateContacts(activity.Contacts, updatedContacts);
+            UpdateContacts(activity.SecondaryContacts, updatedContacts);
 
             return _repo.Insert(activity);
         }

@@ -62,14 +62,14 @@ namespace customer_relations_manager.App_Start
                     .AfterMap((a, vm) =>
                     {
                         vm.CategoryName = a.Category.Name;
-                        vm.ResponsibleEmail = a.Responsible.Email;
-                        vm.ResponsibleName = a.Responsible.Name;
+                        vm.ResponsibleEmail = a.PrimaryResponsible.Email;
+                        vm.ResponsibleName = a.PrimaryResponsible.Name;
                     })
                     .ReverseMap()
                     .AfterMap((vm, a) =>
                     {
                         a.Category = new ActivityCategory { Name = vm.CategoryName };
-                        a.Responsible = new User { Email = vm.ResponsibleEmail };
+                        a.PrimaryResponsible = new User { Email = vm.ResponsibleEmail };
                     });
                 cfg.CreateMap<Activity, ActivityOverviewViewModel>().ReverseMap();
 

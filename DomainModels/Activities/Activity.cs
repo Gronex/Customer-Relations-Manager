@@ -26,14 +26,24 @@ namespace Core.DomainModels.Activities
 
         public DateTime? DueTime { get; set; }
         
-        [Required, ForeignKey(nameof(Responsible))]
-        public string ResponsibleId { get; set; }
-        public virtual User Responsible { get; set; }
+        [Required, ForeignKey(nameof(PrimaryResponsible))]
+        public string PrimaryResponsibleId { get; set; }
+        [InverseProperty(nameof(User.Activities))]
+        public virtual User PrimaryResponsible { get; set; }
 
         [ForeignKey(nameof(Company))]
         public int? CompanyId { get; set; }
         public virtual Company Company { get; set; }
-        public virtual ICollection<Person> Contacts { get; set; }
-        public virtual  ICollection<ActivityComment> Comments { get; set; }
+
+        [ForeignKey(nameof(PrimaryContact))]
+        public int? PrimaryContactId { get; set; }
+        [InverseProperty(nameof(Person.Activities))]
+        public virtual Person PrimaryContact { get; set; }
+
+        [InverseProperty(nameof(Person.SecondaryActivities))]
+        public virtual ICollection<Person> SecondaryContacts { get; set; }
+        [InverseProperty(nameof(User.SecondaryActivities))]
+        public virtual ICollection<User> SecondaryResponsibles { get; set; }
+        public virtual ICollection<ActivityComment> Comments { get; set; }
     }
 }

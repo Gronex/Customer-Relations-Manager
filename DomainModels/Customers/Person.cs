@@ -28,7 +28,9 @@ namespace Core.DomainModels.Customers
         public virtual Company Company { get; set; }
 
         public virtual ICollection<Contract> Contracts { get; set; }
-
+        [InverseProperty(nameof(Activity.PrimaryContact))]
         public virtual ICollection<Activity> Activities { get; set; }
+        [InverseProperty(nameof(Activity.SecondaryContacts))]
+        public virtual ICollection<Activity> SecondaryActivities { get; set; }
     }
 }
