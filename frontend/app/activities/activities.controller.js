@@ -29,8 +29,15 @@
           vm.itemCount = data.itemCount;
           vm.activities = _.map(data.data, function(a){
             a.dueDate = moment.utc(a.dueDate);
-            if(a.dueTime)
-              a.dueTime = moment.utc(a.dueTime);
+            a.dueDate.local();
+            if(a.dueTimeStart){
+              a.dueTimeStart = moment.utc(a.dueTimeStart);
+              a.dueTimeStart.local();
+            }
+            if(a.dueTimeEnd){
+              a.dueTimeEnd = moment.utc(a.dueTimeEnd);
+              a.dueTimeEnd.local();
+            }
             return a;
           });
         });

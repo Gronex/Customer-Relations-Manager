@@ -2,7 +2,7 @@
 <h1 ng-if="!vm.editing">New Activity</h1>
 
 <crm-modelstate-feedback model-state="vm.modelState"></crm-modelstate-feedback>
-<form ng-submit="vm.save()">
+<form name="activityForm" ng-submit="vm.save()">
     <div class="checkbox">
         <label>
             <input type="checkbox" ng-model="vm.activity.done"/> Done
@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
         <label>Name</label>
-        <input class="form-control" type="text" ng-model="vm.activity.name" required/> 
+        <input class="form-control" type="text" ng-model="vm.activity.name" required/>
     </div>
     <div class="form-group">
         <select class="form-control" ng-model="vm.activity.categoryName" required>
@@ -34,16 +34,16 @@
             </ul>
         </div>
     </div>
-    <div class="row" >
+    <div class="row">
         <div class="col-sm-6">
             <div class="row">
-            <crm-company-typeahead class="col-sm-6" on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
-            <div class="col-sm-6">
-                 <label>Primary Contact</label>
-                 <input class="form-control" disabled ng-model="vm.activity.primaryContactName"/><br/>
-                 <input type="text" ng-model="vm.primaryContact" ng-disabled="!vm.activity.companyId" placeholder="Select Primary Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.primaryContactSelected($item)">
-                <br/>
-            </div>
+                <crm-company-typeahead class="col-sm-6" on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
+                <div class="col-sm-6">
+                    <label>Primary Contact</label>
+                    <input class="form-control" disabled ng-model="vm.activity.primaryContactName" /><br/>
+                    <input type="text" ng-model="vm.primaryContact" ng-disabled="!vm.activity.companyId" placeholder="Select Primary Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.primaryContactSelected($item)">
+                    <br/>
+                </div>
             </div>
             <div class="form-group">
                 <label>Contacts</label>
@@ -59,26 +59,28 @@
         <label>Due</label>
         <div class="well well-sm col-sm-6">
             <div class="row">
-                <div class="col-sm-6" >
+                <div class="col-sm-6">
                     <uib-datepicker ng-model="vm.activity.dueDate" required></uib-datepicker>
                 </div>
                 <div class="col-sm-6">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="vm.time"/> Time?
+                            <input type="checkbox" ng-model="vm.time" ng-change="vm.timeChange()" /> Time?
                         </label>
-                        <uib-timepicker ng-if="vm.time" ng-model="vm.activity.dueTime" hour-step="1" minute-step="15" show-meridian="false"></uib-timepicker>
+                        <div ng-if="vm.time">
+                            <uib-timepicker ng-required="vm.time || vm.activity.dueTimeStart" class="pull-left" ng-model="vm.activity.dueTimeStart" hour-step="1" minute-step="15" show-meridian="false"></uib-timepicker>
+                            <uib-timepicker class="pull-right" ng-model="vm.activity.dueTimeEnd" hour-step="1" minute-step="15" show-meridian="false"></uib-timepicker>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
+    <button class="btn btn-primary" ng-disabled="!activityForm.$valid" type="submit">Save <i class="fa fa-floppy-o"></i></button>
     <a ui-sref="Activities" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
     <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
         Remove <i class="fa fa-trash-o"></i>
     </button>
 </form>
-
 <hr/>
 <crm-comment-list ng-if="vm.editing" backend-access="vm.commentDataAccess" call-args="vm.commentArgs" test-test="false"></crm-comment-list>

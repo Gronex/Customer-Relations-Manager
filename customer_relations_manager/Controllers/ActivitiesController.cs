@@ -33,7 +33,8 @@ namespace customer_relations_manager.Controllers
             CorrectPageInfo(ref page, ref pageSize);
             return _repo.GetAll(a => a
                 .OrderBy(ac => ac.DueDate)
-                .ThenBy(ac => ac.DueTime)
+                .ThenBy(ac => ac.DueTimeStart)
+                .ThenBy(ac => ac.DueTimeEnd)
                 .ThenBy(ac => ac.Id), page, pageSize)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }

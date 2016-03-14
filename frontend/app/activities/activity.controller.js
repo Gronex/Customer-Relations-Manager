@@ -25,6 +25,7 @@
     vm.removeContact = removeContact;
     vm.commentDataAccess = dataservice.activityComments;
     vm.commentArgs = {activityId: $stateParams.id};
+    vm.timeChange = timeChange;
 
     activate();
 
@@ -49,7 +50,7 @@
         .get(id)
         .then(function(a){
           vm.activity = a;
-          vm.time = a.dueTime !== null;
+          vm.time = a.dueTimeStart !== null;
           getEmployees();
         });
     }
@@ -151,6 +152,13 @@
       vm.activity.primaryContactId = contact.id;
       vm.activity.primaryContactName = contact.name;
       vm.primaryContact = null;
+    }
+
+    function timeChange(){
+      if(!vm.time){
+        vm.activity.dueTimeStart = null;
+        vm.activity.dueTimeEnd = null;
+      }
     }
 
     function filterList(list, compareList){

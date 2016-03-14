@@ -44,8 +44,12 @@ namespace Infrastructure.DataAccess.Repositories
             {
                 a.Name = activity.Name;
                 a.Done = activity.Done;
-                a.DueDate = activity.DueDate;
-                a.DueTime = activity.DueTime;
+                a.DueDate = activity.DueDate.ToUniversalTime().Date;
+                a.DueTimeStart = activity.DueTimeStart?.ToUniversalTime();
+                if (activity.DueTimeEnd.HasValue && !activity.DueTimeStart.HasValue)
+                    a.DueTimeEnd = null;
+                else
+                    a.DueTimeEnd = activity.DueTimeEnd?.ToUniversalTime();
 
                 if (a.PrimaryResponsible.Email != activity.PrimaryResponsible.Email)
                 {
@@ -100,6 +104,13 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Activity Create(Activity activity)
         {
+            activity.DueDate = activity.DueDate.ToUniversalTime().Date;
+            activity.DueTimeStart = activity.DueTimeStart?.ToUniversalTime();
+            if (activity.DueTimeEnd.HasValue && !activity.DueTimeStart.HasValue)
+                activity.DueTimeEnd = null;
+            else
+                activity.DueTimeEnd = activity.DueTimeEnd?.ToUniversalTime();
+
             activity.PrimaryResponsible = _context.Users.SingleOrExcept(u => u.Email == activity.PrimaryResponsible.Email);
             activity.Category = _context.ActivityCategories.SingleOrExcept(c => c.Name == activity.Category.Name);
 

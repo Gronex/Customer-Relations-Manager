@@ -24,7 +24,8 @@ namespace Core.DomainModels.Activities
 
         public DateTime DueDate { get; set; }
 
-        public DateTime? DueTime { get; set; }
+        public DateTime? DueTimeStart { get; set; }
+        public DateTime? DueTimeEnd { get; set; }
         
         [Required, ForeignKey(nameof(PrimaryResponsible))]
         public string PrimaryResponsibleId { get; set; }

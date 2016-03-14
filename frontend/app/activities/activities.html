@@ -9,6 +9,7 @@
         <th>Owner</th>
         <th>Contact</th>
         <th>Due</th>
+        <th>Time</th>
         <th></th>
     </tr>
     <tr ng-repeat="activity in vm.activities">
@@ -16,8 +17,14 @@
         <td>{{activity.companyName}}</td>
         <td>{{activity.primaryResponsibleName}}</td>
         <td>{{activity.primaryContactName}}</td>
-        <td ng-if="!activity.dueTime">{{activity.dueDate | moment}}</td>
-        <td ng-if="activity.dueTime">{{activity.dueDate | moment}} at {{activity.dueTime | moment : 'HH:mm'}}</td>
+        <td>
+            {{activity.dueDate | moment}}
+        </td>
+        <td>
+            <span ng-if="activity.dueTimeStart">from {{activity.dueTimeStart | moment : 'HH:mm'}}</span>
+            <span ng-if="activity.dueTimeEnd">to {{activity.dueTimeEnd | moment : 'HH:mm'}}</span>
+
+        </td>
         <td>
             <a ui-sref="Activity({id: activity.id})" class="btn btn-primary">
                 <i class="fa fa-pencil-square-o"></i>

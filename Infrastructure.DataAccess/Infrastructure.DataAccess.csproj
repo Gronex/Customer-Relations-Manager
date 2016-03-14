@@ -108,6 +108,10 @@
     <Compile Include="Migrations\201603140828502_ActivityUpdate.Designer.cs">
       <DependentUpon>201603140828502_ActivityUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603141324421_ActivityTimeRange.cs" />
+    <Compile Include="Migrations\201603141324421_ActivityTimeRange.Designer.cs">
+      <DependentUpon>201603141324421_ActivityTimeRange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
@@ -191,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603140828502_ActivityUpdate.resx">
       <DependentUpon>201603140828502_ActivityUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603141324421_ActivityTimeRange.resx">
+      <DependentUpon>201603141324421_ActivityTimeRange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
