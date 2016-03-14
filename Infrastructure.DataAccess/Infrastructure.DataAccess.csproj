@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Extentions\EntityExtentions.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.Designer.cs">
       <DependentUpon>201602161303314_UniqueYearMonthUser.cs</DependentUpon>
@@ -101,6 +103,14 @@
     <Compile Include="Migrations\201603111256517_CompanyRequiredFields.cs" />
     <Compile Include="Migrations\201603111256517_CompanyRequiredFields.Designer.cs">
       <DependentUpon>201603111256517_CompanyRequiredFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603140828502_ActivityUpdate.cs" />
+    <Compile Include="Migrations\201603140828502_ActivityUpdate.Designer.cs">
+      <DependentUpon>201603140828502_ActivityUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603141324421_ActivityTimeRange.cs" />
+    <Compile Include="Migrations\201603141324421_ActivityTimeRange.Designer.cs">
+      <DependentUpon>201603141324421_ActivityTimeRange.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
@@ -182,6 +192,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603111256517_CompanyRequiredFields.resx">
       <DependentUpon>201603111256517_CompanyRequiredFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603140828502_ActivityUpdate.resx">
+      <DependentUpon>201603140828502_ActivityUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603141324421_ActivityTimeRange.resx">
+      <DependentUpon>201603141324421_ActivityTimeRange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

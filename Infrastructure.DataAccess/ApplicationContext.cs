@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -48,7 +49,7 @@ namespace Infrastructure.DataAccess
         {
             // The DateTime type in .NET has the same range and precision as datetime2 in SQL Server.
             // Configure DateTime type to use SQL server datetime2 instead.
-            // TODO: Cannot be there when testing 
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
             modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
 
             // Multi column keys
@@ -57,7 +58,6 @@ namespace Infrastructure.DataAccess
 
             modelBuilder.Entity<UserGroupOpportunity>()
                 .HasKey(ugo => new { ugo.OpportunityId, ugo.UserGroupId });
-
 
             // Consider setting max length on string properties.
             // http://dba.stackexchange.com/questions/48408/ef-code-first-uses-nvarcharmax-for-all-strings-will-this-hurt-query-performan

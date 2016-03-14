@@ -42,7 +42,6 @@
 
     function getComments(){
       var args = _.merge(angular.copy(vm.callArgs), {query: vm.pagination});
-      console.log(vm.pagination);
       return vm.backendAccess
         .get(args)
         .then(function(result){

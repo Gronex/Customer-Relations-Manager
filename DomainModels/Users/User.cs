@@ -36,7 +36,10 @@ namespace Core.DomainModels.Users
         public virtual ViewSettings ViewSettings { get; set; }
 
         public virtual ICollection<ProductionGoal> Goals { get; set; }
+        [InverseProperty(nameof(Activity.PrimaryResponsible))]
         public virtual ICollection<Activity> Activities { get; set; }
+        [InverseProperty(nameof(Activity.SecondaryResponsibles))]
+        public virtual ICollection<Activity> SecondaryActivities { get; set; }
         public virtual ICollection<Opportunity.Opportunity> Opportunities { get; set; }
 
         public virtual ICollection<UserGroupUser> Groups { get; set; }

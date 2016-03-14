@@ -28,8 +28,16 @@
         .then(function(data){
           vm.itemCount = data.itemCount;
           vm.activities = _.map(data.data, function(a){
-            if(a.dueTime)
-              a.dueTime = new Date(a.dueTime);
+            a.dueDate = moment.utc(a.dueDate);
+            a.dueDate.local();
+            if(a.dueTimeStart){
+              a.dueTimeStart = moment.utc(a.dueTimeStart);
+              a.dueTimeStart.local();
+            }
+            if(a.dueTimeEnd){
+              a.dueTimeEnd = moment.utc(a.dueTimeEnd);
+              a.dueTimeEnd.local();
+            }
             return a;
           });
         });

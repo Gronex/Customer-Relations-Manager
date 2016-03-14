@@ -23,8 +23,12 @@ namespace customer_relations_manager.ViewModels.Activity
         public int? CompanyId { get; set; }
         [Required]
         public DateTime? DueDate { get; set; }
-        public DateTime? DueTime { get; set; }
+        public DateTime? DueTimeStart { get; set; }
+        public DateTime? DueTimeEnd { get; set; }
 
-        public IEnumerable<PersonViewModel> Contacts { get; set; }
+        public int? PrimaryContactId { get; set; }
+        public string PrimaryContactName { get; set; }
+        public IEnumerable<PersonOverviewViewModel> SecondaryContacts { get; set; }
+        public IEnumerable<UserOverviewViewModel> SecondaryResponsibles { get; set; }
     }
 }

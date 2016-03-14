@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Customers;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Extentions;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -42,16 +44,24 @@ namespace Infrastructure.DataAccess.Repositories
             {
                 a.Name = activity.Name;
                 a.Done = activity.Done;
-                a.DueDate = activity.DueDate;
-                a.DueTime = activity.DueTime;
+                a.DueDate = activity.DueDate.ToUniversalTime().Date;
+                a.DueTimeStart = activity.DueTimeStart?.ToUniversalTime();
+                if (activity.DueTimeEnd.HasValue && !activity.DueTimeStart.HasValue)
+                    a.DueTimeEnd = null;
+                else
+                    a.DueTimeEnd = activity.DueTimeEnd?.ToUniversalTime();
 
-                if (a.Responsible.Email != activity.Responsible.Email)
+                if (a.PrimaryResponsible.Email != activity.PrimaryResponsible.Email)
                 {
-                    var dbResp = _context.Users.SingleOrDefault(u => u.Email == activity.Responsible.Email);
-                    if (dbResp != null) a.ResponsibleId = dbResp.Id;
+                    a.PrimaryResponsibleId = _context.Users
+                        .SingleOrExcept(u => u.Email == activity.PrimaryResponsible.Email).Id;
                 }
 
-                // people are updated on their own
+                var newResponsibles = activity.SecondaryResponsibles.Select(c => c.Email);
+                var updatedResponsibles = _context.Users
+                    .Where(p => newResponsibles.Any(c => p.Email == c));
+                Update(a.SecondaryResponsibles, updatedResponsibles);
+
 
                 if (a.CompanyId != activity.CompanyId)
                 {
@@ -60,21 +70,26 @@ namespace Infrastructure.DataAccess.Repositories
                     if (a.Company == null) a.CompanyId = null;
                 }
 
-                if (!a.CompanyId.HasValue)
+                if (a.CompanyId.HasValue)
                 {
-                    foreach (var contact in a.Contacts)
-                    {
-                        a.Contacts.Remove(contact);
-                    }
-                }
-                else
-                {
-                    var newContacts = activity.Contacts.Select(c => c.Id);
+                    a.PrimaryContact = _context.Persons
+                        .Where(p => p.CompanyId == a.CompanyId && p.CompanyId.HasValue)
+                        .SingleOrDefault(p => p.Id == activity.PrimaryContactId);
+
+                    var newContacts = activity.SecondaryContacts.Select(c => c.Id);
                     var updatedContacts = _context.Persons
                         .Where(p => p.CompanyId == a.CompanyId)
                         .Where(p => newContacts.Any(c => p.Id == c));
-                    
-                    UpdateContacts(a.Contacts, updatedContacts);
+                    Update(a.SecondaryContacts, updatedContacts);
+                }
+                else
+                {
+                    a.PrimaryContact = null;
+                    a.PrimaryContactId = null;
+                    foreach (var contact in a.SecondaryContacts)
+                    {
+                        a.SecondaryContacts.Remove(contact);
+                    }
                 }
 
 
@@ -89,24 +104,36 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Activity Create(Activity activity)
         {
-            var dbResp = _context.Users.SingleOrDefault(u => u.Email == activity.Responsible.Email);
-            if (dbResp == null) return null;
-            activity.Responsible = dbResp;
+            activity.DueDate = activity.DueDate.ToUniversalTime().Date;
+            activity.DueTimeStart = activity.DueTimeStart?.ToUniversalTime();
+            if (activity.DueTimeEnd.HasValue && !activity.DueTimeStart.HasValue)
+                activity.DueTimeEnd = null;
+            else
+                activity.DueTimeEnd = activity.DueTimeEnd?.ToUniversalTime();
+
+            activity.PrimaryResponsible = _context.Users.SingleOrExcept(u => u.Email == activity.PrimaryResponsible.Email);
+            activity.Category = _context.ActivityCategories.SingleOrExcept(c => c.Name == activity.Category.Name);
+
             // if we get null that is fine, then we just don't set the company
             activity.Company = _context.Companies.SingleOrDefault(c => c.Id == activity.CompanyId);
+            activity.PrimaryContact = _context.Persons
+                .Where(p => p.CompanyId == activity.CompanyId && p.CompanyId.HasValue)
+                .SingleOrDefault(p => p.Id == activity.PrimaryContactId);
 
-            var category = _context.ActivityCategories.SingleOrDefault(c => c.Name == activity.Category.Name);
-            if (category == null) return null;
-            activity.Category = category;
+            // Update secondary responsibles
+            var newResponsibles = activity.SecondaryResponsibles.Select(c => c.Email);
+            var updatedResponsibles = _context.Users
+                .Where(p => newResponsibles.Any(c => p.Email == c));
+            activity.SecondaryResponsibles = new List<User>();
+            Update(activity.SecondaryResponsibles, updatedResponsibles);
 
-            var newContacts = activity.Contacts.Select(c => c.Id);
+            // Update secondary contacts
+            var newContacts = activity.SecondaryContacts.Select(c => c.Id);
             var updatedContacts = _context.Persons
                 .Where(p => p.CompanyId == activity.CompanyId)
                 .Where(p => newContacts.Any(c => p.Id == c));
-
-            activity.Contacts = new List<Person>();
-
-            UpdateContacts(activity.Contacts, updatedContacts);
+            activity.SecondaryContacts = new List<Person>();
+            Update(activity.SecondaryContacts, updatedContacts);
 
             return _repo.Insert(activity);
         }
@@ -116,11 +143,11 @@ namespace Infrastructure.DataAccess.Repositories
             _repo.DeleteByKey(id);
         }
 
-        private static void UpdateContacts(ICollection<Person> inDb, IQueryable<Person> updated)
+        private static void Update<T>(ICollection<T> inDb, IQueryable<T> updated)
         {
             var toRemove = inDb.Except(updated).ToList();
             var toAdd = updated.ToList().Except(inDb).ToList();
-            
+
             toRemove.ForEach(p => inDb.Remove(p));
             toAdd.ForEach(inDb.Add);
         }
