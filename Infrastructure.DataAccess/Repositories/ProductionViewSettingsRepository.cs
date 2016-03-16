@@ -37,19 +37,8 @@ namespace Infrastructure.DataAccess.Repositories
 
         public ProductionViewSettings Create(ProductionViewSettings model, string userName)
         {
-            var settings = new ProductionViewSettings
-            {
-                Name = model.Name,
-                Private = model.Private,
-                Weighted = model.Weighted,
-                OwnerId = _context.Users.Single(u => u.UserName == userName).Id,
-                Categories = new List<OpportunityCategory>(),
-                Departments = new List<Department>(),
-                Stages = new List<Stage>(),
-                UserGroups = new List<UserGroup>(),
-                Users = new List<User>()
-            };
-
+            var settings = Correct(model, userName);
+            
             return _repo.Insert(settings);
         }
 
@@ -58,11 +47,19 @@ namespace Infrastructure.DataAccess.Repositories
             return _repo.Update(pvs =>
             {
                 if (!HasRights(userName, pvs.OwnerId)) throw new NotAllowedException();
-
+                
+                var settings = Correct(model, userName);
+                
                 pvs.Name = model.Name;
                 pvs.Private = model.Private;
                 pvs.Weighted = model.Weighted;
-            }, id);
+
+                pvs.Categories.ReplaceCollection(settings.Categories);
+                pvs.Departments.ReplaceCollection(settings.Departments);
+                pvs.Stages.ReplaceCollection(settings.Stages);
+                pvs.UserGroups.ReplaceCollection(settings.UserGroups);
+                pvs.Users.ReplaceCollection(settings.Users);
+            }, true, id);
         }
 
         public void Delete(int id, string userName)
@@ -78,6 +75,27 @@ namespace Infrastructure.DataAccess.Repositories
             return user.Id == userId || user.Roles.Join(_context.Roles.Where(r => r.Name == nameof(UserRole.Super)),
                 ur => ur.RoleId, r => r.Id,
                 (ur, r) => r).Any();
+        }
+
+        public ProductionViewSettings Correct(ProductionViewSettings model, string userName = null)
+        {
+            var catIds = model.Categories.Select(c => c.Id);
+            var depIds = model.Departments.Select(d => d.Id);
+            var stageIds = model.Stages.Select(s => s.Id);
+            var grpIds = model.UserGroups.Select(g => g.Id);
+            var userEmails = model.Users.Select(u => u.Email);
+            return new ProductionViewSettings
+            {
+                Name = model.Name,
+                Private = model.Private,
+                Weighted = model.Weighted,
+                OwnerId = userName == null ? null : _context.Users.Single(u => u.UserName == userName).Id,
+                Categories = _context.OpportunityCategories.Where(oc => catIds.Contains(oc.Id)).ToList(),
+                Departments = _context.Departments.Where(od => depIds.Contains(od.Id)).ToList(),
+                Stages = _context.Stages.Where(os => stageIds.Contains(os.Id)).ToList(),
+                UserGroups = _context.UserGroups.Where(ug =>grpIds.Contains(ug.Id)).ToList(),
+                Users = _context.Users.Where(us => userEmails.Contains(us.Email)).ToList()
+            };
         }
     }
 }
