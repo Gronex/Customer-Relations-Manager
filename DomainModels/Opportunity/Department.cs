@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Core.DomainModels.ViewSettings;
 
 namespace Core.DomainModels.Opportunity
 {
@@ -8,6 +10,8 @@ namespace Core.DomainModels.Opportunity
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }    
+        public string Name { get; set; }
+
+        public virtual ICollection<ProductionViewSettings> ProductionViewSettings { get; set; }
     }
 }

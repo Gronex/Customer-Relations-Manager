@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Core.DomainModels.ViewSettings;
 
 namespace Core.DomainModels.UserGroups
 {
@@ -15,5 +16,6 @@ namespace Core.DomainModels.UserGroups
         public virtual ICollection<UserGroupUser> UserGroupUsers { get; set; }
         
         public virtual ICollection<UserGroupOpportunity> UserGroupOpportunities { get; set; }
+        public virtual ICollection<ProductionViewSettings> ProductionViewSettings { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Comments;
 using Core.DomainModels.UserGroups;
+using Core.DomainModels.ViewSettings;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -33,7 +34,8 @@ namespace Core.DomainModels.Users
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";
 
-        public virtual ViewSettings ViewSettings { get; set; }
+        [InverseProperty(nameof(ViewSettings.ProductionViewSettings.Owner))]
+        public virtual ICollection<ProductionViewSettings> ProductionViewSettings { get; set; }
 
         public virtual ICollection<ProductionGoal> Goals { get; set; }
         [InverseProperty(nameof(Activity.PrimaryResponsible))]
@@ -45,6 +47,7 @@ namespace Core.DomainModels.Users
         public virtual ICollection<UserGroupUser> Groups { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<ProductionViewSettings> ProductionViewSettingsFilter { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager, string authenticationType)
         {

@@ -8,6 +8,7 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainModels.ViewSettings;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Core.DomainServices
@@ -27,8 +28,9 @@ namespace Core.DomainServices
         DbSet<Stage> Stages { get; set; }
         DbSet<OpportunityComment> OpportunityComments { get; set; }
         DbSet<ActivityComment> ActivityComments { get; set; }
+        DbSet<ProductionViewSettings> ProductionViewSettings { get; set; }
 
-        // Identity stuff
+            // Identity stuff
         IDbSet<User> Users { get; set; }
         IDbSet<IdentityRole> Roles { get; set; }
 

@@ -13,6 +13,7 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -44,6 +45,7 @@ namespace Infrastructure.DataAccess
         public DbSet<Stage> Stages { get; set; }
         public DbSet<OpportunityComment> OpportunityComments { get; set; }
         public DbSet<ActivityComment> ActivityComments { get; set; }
+        public DbSet<ProductionViewSettings> ProductionViewSettings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
