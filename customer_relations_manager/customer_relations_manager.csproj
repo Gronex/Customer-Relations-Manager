@@ -571,11 +571,15 @@
     <Compile Include="Controllers\OpportunitiesController.cs" />
     <Compile Include="Controllers\OpportunityCategoriesController.cs" />
     <Compile Include="Controllers\PersonsController.cs" />
+    <Compile Include="Controllers\ProductionGraphFiltersController.cs" />
     <Compile Include="Controllers\StagesController.cs" />
     <Compile Include="Controllers\Users\GoalsController.cs" />
     <Compile Include="Controllers\UserGroupsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ActivitiesController.cs" />
+    <Compile Include="Filters\DuplicateExceptionFilterAttribute.cs" />
+    <Compile Include="Filters\NotAllowedExceptionFilterAttribute.cs" />
+    <Compile Include="Filters\NotFoundExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -590,6 +594,8 @@
     <Compile Include="ViewModels\Company\PersonViewModel.cs" />
     <Compile Include="ViewModels\CommentViewModel.cs" />
     <Compile Include="ViewModels\GoalViewModel.cs" />
+    <Compile Include="ViewModels\GraphFilter\ProductionGraph\ProductionGraphFilterOverviewViewModel.cs" />
+    <Compile Include="ViewModels\GraphFilter\ProductionGraph\ProductionGraphFilterViewModel.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityOverviewViewMode.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityViewModel.cs" />
     <Compile Include="ViewModels\Opportunity\StageViewModel.cs" />

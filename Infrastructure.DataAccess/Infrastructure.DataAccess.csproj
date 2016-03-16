@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\NotAllowedException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Extentions\EntityExtentions.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Repositories\GoalRepository.cs" />
     <Compile Include="Repositories\OpportunityRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
+    <Compile Include="Repositories\ProductionViewSettingsRepository.cs" />
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

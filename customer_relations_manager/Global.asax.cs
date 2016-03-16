@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using customer_relations_manager.App_Start;
+using customer_relations_manager.Filters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -18,6 +19,7 @@ namespace customer_relations_manager
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            FilterConfig.RegisterGlobalHttpFilters(GlobalConfiguration.Configuration.Filters); 
             WebApiConfig.Register(RouteTable.Routes);
             SerializationSettings(GlobalConfiguration.Configuration);
         }

@@ -6,6 +6,7 @@ using AutoMapper;
 using customer_relations_manager.ViewModels;
 using customer_relations_manager.ViewModels.Activity;
 using customer_relations_manager.ViewModels.Company;
+using customer_relations_manager.ViewModels.GraphFilter.ProductionGraph;
 using customer_relations_manager.ViewModels.Opportunity;
 using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.Activities;
@@ -14,6 +15,7 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainModels.ViewSettings;
 
 namespace customer_relations_manager.App_Start
 {
@@ -77,6 +79,9 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<ActivityComment, CommentViewModel>().ReverseMap();
                 cfg.CreateMap<OpportunityComment, CommentViewModel>().ReverseMap();
                 cfg.CreateMap<Person, PersonOverviewViewModel>().ReverseMap();
+
+                cfg.CreateMap<ProductionGraphFilterOverviewViewModel, ProductionViewSettings>().ReverseMap();
+                cfg.CreateMap<ProductionGraphFilterViewModel, ProductionViewSettings>().ReverseMap();
             });
 
             return config;

@@ -60,14 +60,7 @@ namespace customer_relations_manager.Controllers.Users
             if(dbData == null)
                 return NotFound();
 
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
             return Created(dbData.Id.ToString(), _mapper.Map<GoalViewModel>(dbData));
         }
 
@@ -81,14 +74,7 @@ namespace customer_relations_manager.Controllers.Users
             var dbData = _repo.Update(userId, id, data);
             if (dbData == null)
                 return NotFound();
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
             return Ok(_mapper.Map<GoalViewModel>(dbData));
         }
         

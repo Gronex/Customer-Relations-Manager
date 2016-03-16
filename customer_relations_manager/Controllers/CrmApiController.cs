@@ -10,13 +10,6 @@ namespace customer_relations_manager.Controllers
 {
     public abstract class CrmApiController : ApiController
     {
-
-        protected IHttpActionResult Duplicate<T>(T model)
-        {
-            var result = new NegotiatedContentResult<T>(HttpStatusCode.Conflict, model, this);
-            return result;
-        }
-
         /// <summary>
         /// Updates the pagination request arguments if they are not at resonable values
         /// </summary>
