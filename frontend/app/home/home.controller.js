@@ -41,7 +41,7 @@
         endDate: vm.filter.toDate,
         departments: _.map(vm.advancedFilter.departments, "id"),
         stages: _.map(vm.advancedFilter.stages, "id"),
-        userGroups: _.map(vm.advancedFilter.stagesuserGroups, "id"),
+        userGroups: _.map(vm.advancedFilter.userGroups, "id"),
         users: _.map(vm.advancedFilter.users, "email"),
         categories: _.map(vm.advancedFilter.categories, "id"),
         weighted: vm.advancedFilter.weighted
