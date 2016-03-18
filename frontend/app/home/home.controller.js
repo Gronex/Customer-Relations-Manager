@@ -7,15 +7,15 @@
     .module('CRM')
     .controller('Home', Home);
 
-  Home.$inject = ['$scope', 'graph', '$state', '$stateParams', 'dataservice'];
+  Home.$inject = ['$scope', 'graph', '$state', '$stateParams', 'dataservice', '$uibModal'];
 
   /* @ngInject */
-  function Home($scope, graph, $state, $stateParams, dataservice) {
+  function Home($scope, graph, $state, $stateParams, dataservice, $modal) {
     var vm = this;
     vm.filter = {};
     vm.savedFilter = {name: "select filter"};
     vm.savedFilters = [];
-    vm.advancedFilter = {};
+    vm.advancedFilter = { private: true};
     var filter = {};
 
     vm.getProductionGraph = getProductionGraph;
@@ -115,10 +115,37 @@
 
     function save(state){
       if(state === "new"){
+        $modal.open({
+          templateUrl: "view/app/home/save-modal.html",
+          controllerAs: 'vm',
+          controller: 'SaveModal',
+          resolve: {
+            save: function(){
+              return function(name){
+                vm.advancedFilter.name = name;
+                dataservice.productionGraphFilters
+                  .create(vm.advancedFilter)
+                  .then(function(result){
+                    var data = {id: result.location, name: result.data.name};
+                    vm.savedFilters.push(data);
+                    vm.advancedFilter = result.data;
+                    vm.savedFilter = data;
+                  });
+              };
+            },
+            cancel: function(){}
+          }
+        });
         console.log("save...");
         console.log(vm.advancedFilter);
       } else {
         console.log("save");
+        dataservice.productionGraphFilters
+          .update(vm.savedFilter.id, vm.advancedFilter)
+          .then(function(f){
+            vm.advancedFilterChanged = false;
+            vm.advancedFilter = f;
+          });
         console.log(vm.advancedFilter);
       }
     }
