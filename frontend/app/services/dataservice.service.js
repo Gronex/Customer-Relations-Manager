@@ -24,7 +24,8 @@
       graph: createResource("api/graph"),
       activityCategories: createResource("api/activityCategories"),
       activities: createResource("api/activities"),
-      activityComments: createResource("/api/activities/{activityId}/comments")
+      activityComments: createResource("/api/activities/{activityId}/comments"),
+      productionGraphFilters: createResource("/api/productiongraphfilters")
     };
 
     function login(userName, password) {

@@ -48,14 +48,7 @@ namespace customer_relations_manager.Controllers
             if(!ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Insert(_mapper.Map<Stage>(model));
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
 
             return Created(dbModel.Id.ToString(), _mapper.Map<StageViewModel>(dbModel));
         }
@@ -71,14 +64,7 @@ namespace customer_relations_manager.Controllers
                 s.Value = model.Value;
             }, id);
 
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
 
             return Ok(_mapper.Map<StageViewModel>(dbModel));
         }

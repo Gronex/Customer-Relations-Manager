@@ -1,0 +1,15 @@
+<form ng-submit="vm.save()">
+    <div class="modal-header">
+        <h2>Save as</h2>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Name</label>
+            <input required ng-model="vm.name" type="text" class="form-control"/>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ng-click="vm.cancel()" class="btn btn-default pull-right">Cancel</button>
+        <button type="submit" class="btn btn-success pull-right">Save</button>
+    </div>
+</form>

@@ -16,5 +16,15 @@ namespace Infrastructure.DataAccess.Extentions
             if (result == null) throw new NotFoundException();
             return result;
         }
+        
+
+        public static void ReplaceCollection<T>(this ICollection<T> collection, IEnumerable<T> updatedCollection)
+        {
+            collection.Clear();
+            foreach (var item in updatedCollection)
+            {
+                collection.Add(item);
+            }
+        }
     }
 }

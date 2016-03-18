@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Core.DomainModels.UserGroups;
 using Core.DomainServices;
 using Infrastructure.DataAccess;
+using Infrastructure.DataAccess.Exceptions;
 using Infrastructure.DataAccess.Repositories;
 using UnitTests.Stubs;
 using Xunit;
@@ -83,7 +84,7 @@ namespace UnitTests.Repositories
         public void UpdateSuccess()
         {
             var data = new UserGroup { Name = "Test data" };
-            var dbData = _context.UserGroups.Add(data);
+            _context.UserGroups.Add(data);
             
             _repo.Update(ug => ug.Name = "New test data", 5);
 
@@ -95,8 +96,13 @@ namespace UnitTests.Repositories
         [Fact]
         public void UpdateFail()
         {
-            
-            var result = _repo.Update(ug => ug.Name = "New test data", -1);
+            Assert.Throws(typeof (NotFoundException),() => _repo.Update(ug => ug.Name = "New test data", -1));
+        }
+
+        [Fact]
+        public void UpdateFailWithoutThrowing()
+        {
+            var result = _repo.Update(ug => ug.Name = "New test data", false, -1);
             Assert.Null(result);
         }
 
@@ -112,6 +118,20 @@ namespace UnitTests.Repositories
             _repo.DeleteByKey(dbData.Id);
             // Check if it was deleted
             Assert.Null(_context.UserGroups.Find(5));
+        }
+
+        [Fact]
+        public void DeleteBySuccess()
+        {
+            var data = new UserGroup { Name = "Test data" };
+            var dbData = _context.UserGroups.Add(data);
+
+            // Verify the data was added
+            Assert.NotNull(_context.UserGroups.SingleOrDefault(ug => ug.Name == "Test data"));
+
+            _repo.DeleteBy(ug => ug.Name == "Test data");
+            // Check if it was deleted
+            Assert.Null(_context.UserGroups.SingleOrDefault(ug => ug.Name == "Test data"));
         }
 
         [Fact]

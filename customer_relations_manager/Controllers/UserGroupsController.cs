@@ -56,14 +56,7 @@ namespace customer_relations_manager.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = _repo.Insert(_mapper.Map<UserGroup>(model));
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
             return Created(result.Id.ToString(), _mapper.Map<GroupViewModel>(result));
         }
 
@@ -75,14 +68,7 @@ namespace customer_relations_manager.Controllers
             var updated = _repo.Update(group => group.Name = model.Name, id);
             if(updated == null) return NotFound();
 
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
             return Ok(_mapper.Map<GroupViewModel>(updated));
         }
 

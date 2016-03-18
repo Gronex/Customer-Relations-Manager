@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="ExtentionMethods\DateTimeExtentions.cs" />
     <Compile Include="ExtentionMethods\EnumerableExtentions.cs" />
+    <Compile Include="ExtentionMethods\ExpressionExtentions.cs" />
     <Compile Include="Graph\DataHolders\GraphEnvelope.cs" />
     <Compile Include="Graph\DataHolders\ProductionData.cs" />
     <Compile Include="Graph\DataHolders\SimpleUser.cs" />
