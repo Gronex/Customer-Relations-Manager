@@ -38,8 +38,15 @@
       $state.go("Home", filter, {notify: false});
       var config = {
         startDate: vm.filter.fromDate,
-        endDate: vm.filter.toDate
+        endDate: vm.filter.toDate,
+        departments: _.map(vm.advancedFilter.departments, "id"),
+        stages: _.map(vm.advancedFilter.stages, "id"),
+        userGroups: _.map(vm.advancedFilter.stagesuserGroups, "id"),
+        users: _.map(vm.advancedFilter.users, "email"),
+        categories: _.map(vm.advancedFilter.categories, "id"),
+        weighted: vm.advancedFilter.weighted
       };
+
       graph.productionGraph(config)
         .then(function (result) {
           graph.drawChart(result.data, result.graphOptions);
