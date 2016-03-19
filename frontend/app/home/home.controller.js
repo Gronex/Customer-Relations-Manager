@@ -21,6 +21,7 @@
     vm.getProductionGraph = getProductionGraph;
     vm.getFilter = getFilter;
     vm.save = save;
+    vm.resetFilter = resetFilter;
 
     activate();
 
@@ -155,6 +156,11 @@
           });
         console.log(vm.advancedFilter);
       }
+    }
+
+    function resetFilter(){
+      vm.savedFilter = {};
+      vm.advancedFilter = {};
     }
   }
 })();
