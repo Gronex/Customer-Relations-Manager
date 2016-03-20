@@ -75,7 +75,7 @@ namespace customer_relations_manager.Controllers
                     {
                         From = startDate.Value,
                         To = endDate.Value,
-                        Data = _graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date)
+                        Data = _graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date, weighted)
                     });
                 default:
                     return NotFound();

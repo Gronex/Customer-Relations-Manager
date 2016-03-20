@@ -39,7 +39,7 @@ namespace UnitTests.Services.GraphService
                 }
             };
 
-            var result = _service.GenerateProductionDataTable(opportunities, DateTime.MinValue, DateTime.MaxValue);
+            var result = _service.GenerateProductionDataTable(opportunities, DateTime.MinValue, DateTime.MaxValue, false);
 
             
             var users = new List<string> { "user1", "user2"};
@@ -63,7 +63,7 @@ namespace UnitTests.Services.GraphService
             };
 
             var targetDate = new DateTime(2016, 3, 20);
-            var result = _service.GenerateProductionDataTable(opportunity, targetDate, targetDate.AddMonths(1));
+            var result = _service.GenerateProductionDataTable(opportunity, targetDate, targetDate.AddMonths(1), false);
             Assert.NotEmpty(result["user1"]);
         }
 
@@ -80,7 +80,7 @@ namespace UnitTests.Services.GraphService
                     Owner = new User { Email = "user1"}
                 }
             };
-            var result = _service.GenerateProductionDataTable(opportunity, DateTime.Today, DateTime.Today.AddMonths(1));
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.Today, DateTime.Today.AddMonths(1), false);
 
             Assert.Equal(new List<double> {10.0}, result["user1"].Select(r => r.Value));
         }
@@ -99,7 +99,7 @@ namespace UnitTests.Services.GraphService
                 }
             };
 
-            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue, false);
 
             var month1 = result["user1"].SingleOrDefault(r => r.Period == DateTime.Today.RoundToMonth());
             var month2 = result["user1"].SingleOrDefault(r => r.Period == DateTime.Today.RoundToMonth().AddMonths(1));
@@ -122,7 +122,7 @@ namespace UnitTests.Services.GraphService
                     Owner = new User {Email = "user1"}
                 }
             };
-            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue, false);
 
             Assert.Equal(10.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Value);
         }
@@ -149,9 +149,30 @@ namespace UnitTests.Services.GraphService
                     Owner = user
                 }
             };
-            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue);
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue, false);
 
             Assert.Equal(20.0, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Value);
+        }
+
+        [Fact]
+        public void WeightingAsPercentage()
+        {
+            var user = new User { Email = "user1" };
+            var startDate = new DateTime(2016, 1, 1).Date; // Cant do today since it will at the en of the month breake the test
+            var opportunity = new List<Opportunity>
+            {
+                new Opportunity
+                {
+                    Amount = 1000,
+                    StartDate = startDate,
+                    EndDate = startDate.AddDays(1),
+                    Owner = user,
+                    Percentage = 50
+                }
+            };
+            var result = _service.GenerateProductionDataTable(opportunity, DateTime.MinValue, DateTime.MaxValue, true);
+
+            Assert.Equal(500, result["user1"].SingleOrDefault(r => r.Period == startDate.RoundToMonth())?.Value);
         }
     }
 }
