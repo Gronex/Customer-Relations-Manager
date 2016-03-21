@@ -48,14 +48,7 @@ namespace customer_relations_manager.Controllers
         public IHttpActionResult Post(CategoryViewModel model)
         {
             var dbModel = _repo.Insert(_mapper.Map<OpportunityCategory>(model));
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Conflict();
-            }
+            _uow.Save();
 
             return Created(dbModel.Id.ToString(), _mapper.Map<CategoryViewModel>(dbModel));
         }
@@ -70,15 +63,7 @@ namespace customer_relations_manager.Controllers
             }, id);
 
             if (dbModel == null) return NotFound();
-
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Conflict();
-            }
+            _uow.Save();
 
             return Ok(_mapper.Map<CategoryViewModel>(dbModel));
         }

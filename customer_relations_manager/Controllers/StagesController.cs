@@ -19,7 +19,7 @@ namespace customer_relations_manager.Controllers
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Stage> _repo;
 
-        public StagesController(IUnitOfWork uow, IMapper mapper, IGenericRepository<Stage> repo)
+        public StagesController(IGenericRepository<Stage> repo, IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
             _mapper = mapper;
@@ -56,7 +56,7 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, StageViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(s =>
             {

@@ -46,9 +46,9 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Opportunity, OpportunityViewModel>()
                     .ForMember(vm => vm.Groups, c => c.MapFrom(o => o.UserGroups.Select(ug => ug.UserGroup)))
                     .ReverseMap()
-                    .ForMember(vm => vm.StartDate, c => c.MapFrom(o => o.StartDate.Value.Date))
-                    .ForMember(vm => vm.EndDate, c => c.MapFrom(o => o.EndDate.Value.Date))
-                    .ForMember(vm => vm.ExpectedClose, c => c.MapFrom(o => o.ExpectedClose.Value.Date));
+                    .ForMember(vm => vm.StartDate, c => c.MapFrom(o => o.StartDate != null ? o.StartDate.Value.Date : (DateTime?) null))
+                    .ForMember(vm => vm.EndDate, c => c.MapFrom(o => o.EndDate != null ? o.EndDate.Value.Date : (DateTime?) null))
+                    .ForMember(vm => vm.ExpectedClose, c => c.MapFrom(o => o.ExpectedClose != null ? o.ExpectedClose.Value.Date : (DateTime?) null));
 
                 cfg.CreateMap<Opportunity, OpportunityOverviewViewMode>().ReverseMap();
                 cfg.CreateMap<Stage, StageViewModel>().ReverseMap();
@@ -63,9 +63,9 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Activity, ActivityViewModel>()
                     .AfterMap((a, vm) =>
                     {
-                        vm.CategoryName = a.Category.Name;
-                        vm.ResponsibleEmail = a.PrimaryResponsible.Email;
-                        vm.ResponsibleName = a.PrimaryResponsible.Name;
+                        vm.CategoryName = a.Category?.Name;
+                        vm.ResponsibleEmail = a.PrimaryResponsible?.Email;
+                        vm.ResponsibleName = a.PrimaryResponsible?.Name;
                     })
                     .ReverseMap()
                     .AfterMap((vm, a) =>

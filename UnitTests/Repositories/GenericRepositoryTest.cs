@@ -165,5 +165,29 @@ namespace UnitTests.Repositories
             var data = _repo.Create();
             Assert.NotNull(data);
         }
+
+        [Fact]
+        public void UpdateByUpdates()
+        {
+            var data = _repo.UpdateBy(ug =>
+            {
+                ug.Name = "updated name";
+            },ug => ug.Name == "Test Group1");
+            Assert.Equal("updated name", data.Name);
+        }
+
+        [Fact]
+        public void TotalCountCounts()
+        {
+            var count = _repo.Count();
+            Assert.Equal(5, count);
+        }
+
+        [Fact]
+        public void TotalCountCountsWithFilter()
+        {
+            var count = _repo.Count(ug => ug.Name.Contains("1"));
+            Assert.Equal(1, count);
+        }
     }
 }
