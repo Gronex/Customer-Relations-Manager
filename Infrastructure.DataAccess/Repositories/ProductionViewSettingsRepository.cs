@@ -79,22 +79,22 @@ namespace Infrastructure.DataAccess.Repositories
 
         public ProductionViewSettings Correct(ProductionViewSettings model, string userName = null)
         {
-            var catIds = model.Categories.Select(c => c.Id);
-            var depIds = model.Departments.Select(d => d.Id);
-            var stageIds = model.Stages.Select(s => s.Id);
-            var grpIds = model.UserGroups.Select(g => g.Id);
-            var userEmails = model.Users.Select(u => u.Email);
+            var catIds = model.Categories?.Select(c => c.Id);
+            var depIds = model.Departments?.Select(d => d.Id);
+            var stageIds = model.Stages?.Select(s => s.Id);
+            var grpIds = model.UserGroups?.Select(g => g.Id);
+            var userEmails = model.Users?.Select(u => u.Email);
             return new ProductionViewSettings
             {
                 Name = model.Name,
                 Private = model.Private,
                 Weighted = model.Weighted,
                 OwnerId = userName == null ? null : _context.Users.Single(u => u.UserName == userName).Id,
-                Categories = _context.OpportunityCategories.Where(oc => catIds.Contains(oc.Id)).ToList(),
-                Departments = _context.Departments.Where(od => depIds.Contains(od.Id)).ToList(),
-                Stages = _context.Stages.Where(os => stageIds.Contains(os.Id)).ToList(),
-                UserGroups = _context.UserGroups.Where(ug =>grpIds.Contains(ug.Id)).ToList(),
-                Users = _context.Users.Where(us => userEmails.Contains(us.Email)).ToList()
+                Categories = catIds != null ? _context.OpportunityCategories.Where(oc => catIds.Contains(oc.Id)).ToList() : new List<OpportunityCategory>(),
+                Departments = depIds != null ?  _context.Departments.Where(od => depIds.Contains(od.Id)).ToList() : new List<Department>(),
+                Stages = stageIds != null ? _context.Stages.Where(os => stageIds.Contains(os.Id)).ToList() : new List<Stage>(),
+                UserGroups = grpIds != null ? _context.UserGroups.Where(ug =>grpIds.Contains(ug.Id)).ToList() : new List<UserGroup>(),
+                Users = userEmails != null ? _context.Users.Where(us => userEmails.Contains(us.Email)).ToList() : new List<User>()
             };
         }
     }
