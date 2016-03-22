@@ -134,7 +134,13 @@ namespace UnitTests.Repositories
                 StartDate = DateTime.Now.Date,
                 EndDate = DateTime.Now.Date,
                 ExpectedClose = DateTime.Now.Date,
-                Owner = new User { Id = "1"}
+                Owner = new User { Id = "1"},
+                Amount = 100,
+                Contact = new Person { Id = 1},
+                Description = "desc",
+                HourlyPrice = 100,
+                Name = "name",
+                Percentage = 100
             });
 
             Assert.Equal(new
@@ -146,7 +152,13 @@ namespace UnitTests.Repositories
                     StartDate = DateTime.Now.Date,
                     EndDate = DateTime.Now.Date,
                     ExpectedClose = DateTime.Now.Date,
-                    Owner = "1"
+                    Owner = "1",
+                    Amount = 100,
+                    Contact = 1,
+                    Description = "desc",
+                    HourlyPrice = 100,
+                    Name = "name",
+                    Percentage = 100
             }, new
                 {
                     Stage = result.Stage.Id,
@@ -156,8 +168,14 @@ namespace UnitTests.Repositories
                     StartDate = DateTime.Now.Date,
                     EndDate = DateTime.Now.Date,
                     ExpectedClose = DateTime.Now.Date,
-                    Owner = result.Owner.Id
-                });
+                    Owner = result.Owner.Id,
+                    Amount = 100,
+                    Contact = result.Contact.Id,
+                    Description = "desc",
+                    HourlyPrice = 100,
+                    Name = "name",
+                    Percentage = 100
+            });
         }
         
         [Theory]
@@ -215,6 +233,7 @@ namespace UnitTests.Repositories
             _context.OpportunityCategories.Add(new OpportunityCategory { Id = 1 });
             _context.Departments.Add(new Department { Id = 1 });
             _context.Companies.Add(new Company { Id = 1 });
+            _context.Persons.Add(new Person { Id = 1, CompanyId = 1});
         }
     }
 }
