@@ -14,7 +14,7 @@
 
       var navbar = {
         label: "CRM",
-        link: "Home",
+        link: user ? "Home.Dashboard" : "Home",
         left: [],
         right: []
       };
@@ -85,7 +85,7 @@
               link: "Logout"
             }
           ]
-        })
+        });
       } else {
         navbar.right.push({
           label: "Log in",

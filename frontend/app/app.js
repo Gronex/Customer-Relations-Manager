@@ -21,9 +21,15 @@
     // Now set up the states
     $stateProvider
       .state('Home', {
-        url: "/?{fromDate:\\d{4}-\\d{2}-\\d{2}}&{toDate:\\d{4}-\\d{2}-\\d{2}}",
+        url: "/",
         templateUrl: "view/app/home/home.html",
         controller: "Home",
+        controllerAs: "vm"
+      })
+      .state('Home.Dashboard', {
+        url: "dashboard/?{fromDate:\\d{4}-\\d{2}-\\d{2}}&{toDate:\\d{4}-\\d{2}-\\d{2}}",
+        templateUrl: "view/app/home/dashboard.html",
+        controller: "Dashboard",
         controllerAs: "vm"
       })
       .state('Users', {
