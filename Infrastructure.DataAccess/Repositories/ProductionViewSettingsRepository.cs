@@ -25,9 +25,13 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public IEnumerable<ProductionViewSettings> GetAll()
+        public IEnumerable<ProductionViewSettings> GetAll(string userName)
         {
-            return _repo.Get();
+            var user = _context.Users.SingleOrExcept(u => u.UserName == userName).Id;
+            var result = _context.Roles.Where(r => r.Users.Any(u => u.UserId == user)).Any(r => r.Name == nameof(UserRole.Super)) 
+                ? _repo.Get() 
+                : _repo.Get(pvs => !pvs.Private || pvs.OwnerId == user);
+            return result;
         }
 
         public ProductionViewSettings GetById(int id)

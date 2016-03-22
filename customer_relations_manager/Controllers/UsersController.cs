@@ -18,7 +18,7 @@ using Microsoft.Owin.Security;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Super))]
+    [Authorize]
     public class UsersController : CrmApiController
     {
         // Standard asp.net classes to manage users.
@@ -69,6 +69,7 @@ namespace customer_relations_manager.Controllers
 
         // GET: api/users/{id}
         [HttpGet]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public async Task<IHttpActionResult> Get(string id)
         {
             var user = _userManager.FindById(id);
@@ -86,6 +87,7 @@ namespace customer_relations_manager.Controllers
 
         // POST: api/users
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public async Task<IHttpActionResult> Post(UserViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -123,6 +125,7 @@ namespace customer_relations_manager.Controllers
 
         // PUT: api/users/{id}
         [HttpPut]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public async Task<IHttpActionResult> Put(string id, UserViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -153,6 +156,7 @@ namespace customer_relations_manager.Controllers
 
         // DELETE: api/users/{id}
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void RemoveUser(string id)
         {
             var user = _userManager.FindById(id);

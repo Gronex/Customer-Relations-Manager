@@ -49,7 +49,7 @@ namespace UnitTests.Repositories
 
             _generic.Get().Returns(_context.ProductionViewSettings);
 
-            Assert.Equal(3, _repo.GetAll().Count());
+            Assert.Equal(3, _repo.GetAll("test").Count());
         }
 
         [Fact]

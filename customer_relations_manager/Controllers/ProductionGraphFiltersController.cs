@@ -10,6 +10,7 @@ using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Exceptions;
+using Microsoft.AspNet.Identity;
 
 namespace customer_relations_manager.Controllers
 {
@@ -30,7 +31,7 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         public IEnumerable<ProductionGraphFilterOverviewViewModel> Get()
         {
-            return _repo.GetAll().Select(_mapper.Map<ProductionGraphFilterOverviewViewModel>);
+            return _repo.GetAll(User.Identity.GetUserName()).Select(_mapper.Map<ProductionGraphFilterOverviewViewModel>);
         }
 
         [HttpGet]
