@@ -21,11 +21,11 @@ namespace UnitTests.Repositories
 
         private readonly IEnumerable<UserGroup> _seedData = new List<UserGroup>
         {
-            new UserGroup {Name = "Test Group1"},
-            new UserGroup {Name = "Test Group2"},
-            new UserGroup {Name = "Test Group3"},
-            new UserGroup {Name = "Test Group4"},
-            new UserGroup {Name = "Test Group5"}
+            new UserGroup {Id = 3, Name = "Test Group3"},
+            new UserGroup {Id = 2, Name = "Test Group2"},
+            new UserGroup {Id = 5, Name = "Test Group5"},
+            new UserGroup {Id = 1, Name = "Test Group1"},
+            new UserGroup {Id = 4, Name = "Test Group4"},
         };
 
         public GenericRepositoryTest()
@@ -64,11 +64,27 @@ namespace UnitTests.Repositories
         }
 
         [Fact]
+        public void GetAllReturnsPagedWithTotalCount()
+        {
+            var result = _repo.GetPaged(orderBy: ug => ug.OrderBy(u => u.Id), page: 1, pageSize: 1);
+
+            Assert.Equal(_seedData.Count(), result.ItemCount);
+        }
+
+        [Fact]
+        public void GetAllReturnsPagedWithProperPageInfo()
+        {
+            var result = _repo.GetPaged(orderBy: ug => ug.OrderBy(u => u.Id), page: 3, pageSize: 2);
+
+            Assert.Equal(new {PageNumber = 3, PageSize = 2}, new {result.PageNumber, result.PageSize});
+        }
+
+        [Fact]
         public void GetAllReturnsPaged1()
         {
             var result = _repo.GetPaged(orderBy: ug => ug.OrderBy(u => u.Id) ,page: 1, pageSize: 1);
 
-            Assert.Equal(_seedData.Take(1), result.Data);
+            Assert.Equal("Test Group1", result.Data.Single().Name);
         }
 
         [Fact]
@@ -77,7 +93,7 @@ namespace UnitTests.Repositories
             // only 1 element on second page page
             var result = _repo.GetPaged(orderBy: ug => ug.OrderBy(u => u.Id), page: 2, pageSize: 4);
             
-            Assert.Equal(_seedData.Last(), result.Data.Single());
+            Assert.Equal("Test Group5", result.Data.Single().Name);
         }
 
         [Fact]

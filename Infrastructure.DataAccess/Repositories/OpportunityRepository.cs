@@ -6,6 +6,8 @@ using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
+using Infrastructure.DataAccess.Extentions;
 using Microsoft.AspNet.Identity;
 
 namespace Infrastructure.DataAccess.Repositories
@@ -14,13 +16,11 @@ namespace Infrastructure.DataAccess.Repositories
     {
         private readonly IApplicationContext _context;
         private readonly IGenericRepository<Opportunity> _repo;
-        private readonly UserManager<User> _userManager;
 
-        public OpportunityRepository(IApplicationContext context, IGenericRepository<Opportunity> repo, UserManager<User> userManager)
+        public OpportunityRepository(IApplicationContext context, IGenericRepository<Opportunity> repo)
         {
             _context = context;
             _repo = repo;
-            _userManager = userManager;
         }
 
         public PaginationEnvelope<Opportunity> GetAll(Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>> orderBy, int? page = null, int? pageSize = null)
@@ -41,28 +41,21 @@ namespace Infrastructure.DataAccess.Repositories
         public Opportunity Create(Opportunity model, string userName)
         {
             // If the owner os not set, then use the current user
-            model.Owner = model.Owner == null ? _context.Users.SingleOrDefault(u => u.UserName == userName) 
-                : _context.Users.SingleOrDefault(u => u.Id == model.Owner.Id);
-            var stage =_context.Stages.SingleOrDefault(s => s.Id == model.Stage.Id);
-            var category = _context.OpportunityCategories.SingleOrDefault(c => c.Id == model.Category.Id);
-            var department = _context.Departments.SingleOrDefault(d => d.Id == model.Department.Id);
-
-            if (model.Owner == null || stage == null || category == null)  return null;
-
+            model.Owner = model.Owner == null ? _context.Users.SingleOrExcept(u => u.UserName == userName) 
+                : _context.Users.SingleOrExcept(u => u.Id == model.Owner.Id);
+            model.Stage = _context.Stages.SingleOrExcept(s => s.Id == model.Stage.Id);
+            model.Category = _context.OpportunityCategories.SingleOrExcept(c => c.Id == model.Category.Id);
+            model.Department = _context.Departments.SingleOrExcept(d => d.Id == model.Department.Id);
+            
             // If the id is 0 we want to create a new company
             if (model.Company.Id > 0)
             {
-                model.Company = _context.Companies.SingleOrDefault(c => c.Id == model.Company.Id);
-                if (model.Company == null) return null;
+                model.Company = _context.Companies.SingleOrExcept(c => c.Id == model.Company.Id);
             }
 
             if (model.Contact != null)
                 model.Contact = _context.Persons.SingleOrDefault(p => model.Contact.Id == p.Id);
             
-            model.Department = department;
-            model.Category = category;
-            model.Stage = stage;
-
             // To make sure nothing is messing up
             model.StartDate = model.StartDate.Date;
             model.EndDate = model.EndDate.Date;
@@ -100,7 +93,7 @@ namespace Infrastructure.DataAccess.Repositories
                 if (model.Company.Id != o.CompanyId)
                 {
                     o.Company = model.Company.Id > 0 
-                        ? _context.Companies.SingleOrDefault(c => c.Id == model.Company.Id) 
+                        ? _context.Companies.SingleOrExcept(c => c.Id == model.Company.Id) 
                         : _context.Companies.Add(model.Company);
                 }
 
@@ -112,12 +105,12 @@ namespace Infrastructure.DataAccess.Repositories
                     if(person != null && person.CompanyId == model.Company.Id)
                         o.Contact = person;
                 }
-                if (model.Owner.Id != o.OwnerId)
-                    o.Owner = _context.Users.SingleOrDefault(u => u.Id == model.Owner.Id);
-                if (model.Stage.Id != o.StageId)
-                    o.Stage = _context.Stages.SingleOrDefault(s => s.Id == model.Stage.Id);
-                if (model.Category.Id != o.CategoryId)
-                    o.Category = _context.OpportunityCategories.SingleOrDefault(c => c.Id == model.Category.Id);
+                if (model.Owner?.Id != o.OwnerId)
+                    o.Owner = _context.Users.SingleOrExcept(u => u.Id == model.Owner.Id);
+                if (model.Stage?.Id != o.StageId)
+                    o.Stage = _context.Stages.SingleOrExcept(s => s.Id == model.Stage.Id);
+                if (model.Category?.Id != o.CategoryId)
+                    o.Category = _context.OpportunityCategories.SingleOrExcept(c => c.Id == model.Category.Id);
             }, id);
         }
 
