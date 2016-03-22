@@ -121,6 +121,11 @@
         templateUrl: "view/app/login/login.html",
         controller: "Login",
         controllerAs: 'vm'
+      })
+      .state("Logout", {
+        url: "/logout",
+        controller: "Logout",
+        controllerAs: 'vm'
       });
   }
 })();
