@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Opportunity;
@@ -47,7 +48,45 @@ namespace UnitTests.Repositories
                 new ProductionViewSettings()
             });
 
-            _generic.Get().Returns(_context.ProductionViewSettings);
+            _generic.Get().ReturnsForAnyArgs(_context.ProductionViewSettings);
+
+            Assert.Equal(3, _repo.GetAll("test").Count());
+        }
+
+        [Fact]
+        public void GetAllDontGetPrivate()
+        {
+            _context.ProductionViewSettings.AddRange(new List<ProductionViewSettings>
+            {
+                new ProductionViewSettings(),
+                new ProductionViewSettings {Private = true},
+                new ProductionViewSettings()
+            });
+
+            _generic.Get().ReturnsForAnyArgs(i =>
+            {
+                var filter = i.Arg<Expression<Func<ProductionViewSettings, bool>>>();
+                return _context.ProductionViewSettings.Where(filter);
+            });
+
+            Assert.Equal(2, _repo.GetAll("test").Count());
+        }
+
+        [Fact]
+        public void GetAllGetPrivateForSelf()
+        {
+            _context.ProductionViewSettings.AddRange(new List<ProductionViewSettings>
+            {
+                new ProductionViewSettings(),
+                new ProductionViewSettings {OwnerId = "1", Private = true},
+                new ProductionViewSettings()
+            });
+
+            _generic.Get().ReturnsForAnyArgs(i =>
+            {
+                var filter = i.Arg<Expression<Func<ProductionViewSettings, bool>>>();
+                return _context.ProductionViewSettings.Where(filter);
+            });
 
             Assert.Equal(3, _repo.GetAll("test").Count());
         }
