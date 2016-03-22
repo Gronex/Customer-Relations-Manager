@@ -70,6 +70,16 @@ namespace Infrastructure.DataAccess.Repositories
         {
             if(!HasRights(userName, _context.ProductionViewSettings.SingleOrDefault(pvs => pvs.Id == id)?.OwnerId))
                 throw new NotAllowedException();
+
+            var data = _context.ProductionViewSettings.SingleOrDefault(pvs => pvs.Id == id);
+            if (data == null) return;
+
+            // HACK: To avoid conflict with cascade delete, since it does not remove the references
+            data.Departments.Clear();
+            data.Categories.Clear();
+            data.Stages.Clear();
+            data.UserGroups.Clear();
+            data.Users.Clear();
             _repo.DeleteByKey(id);
         }
 

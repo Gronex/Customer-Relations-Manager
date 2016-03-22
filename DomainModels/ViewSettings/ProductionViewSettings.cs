@@ -25,6 +25,5 @@ namespace Core.DomainModels.ViewSettings
         public virtual ICollection<Department> Departments { get; set; }
         public virtual ICollection<UserGroup> UserGroups { get; set; }
         public virtual ICollection<User> Users { get; set; }
-        
     }
 }

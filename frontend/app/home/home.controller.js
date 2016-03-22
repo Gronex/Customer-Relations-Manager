@@ -22,6 +22,7 @@
     vm.getFilter = getFilter;
     vm.save = save;
     vm.resetFilter = resetFilter;
+    vm.delete = remove;
 
     activate();
 
@@ -144,18 +145,23 @@
             cancel: function(){}
           }
         });
-        console.log("save...");
-        console.log(vm.advancedFilter);
       } else {
-        console.log("save");
         dataservice.productionGraphFilters
           .update(vm.savedFilter.id, vm.advancedFilter)
           .then(function(f){
             vm.advancedFilterChanged = false;
             vm.advancedFilter = f;
           });
-        console.log(vm.advancedFilter);
       }
+    }
+
+    function remove(){
+      dataservice.productionGraphFilters
+        .remove(vm.savedFilter.id)
+        .then(function(){
+          _.remove(vm.savedFilters, function(f){return f.id === vm.savedFilter.id;});
+          resetFilter();
+        });
     }
 
     function resetFilter(){
