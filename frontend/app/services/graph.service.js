@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-const monthFormat = "MMM YYYY"
+  const monthFormat = "MMM YYYY";
 
   angular
     .module('CRM')
@@ -125,9 +125,9 @@ const monthFormat = "MMM YYYY"
 
           headers.push({label: 'Month', type: 'date', format: "MMM"});
 
-          var emails = Object.keys(result.goals);
+          var emails = _.union(Object.keys(result.goals), Object.keys(result.production));
           for (var email of emails) {
-            var user = _.head(result.goals[email]).user;
+            var user = _.head(result.goals[email]|| result.production[email]).user;
             headers.push({label: user.firstName + " " + user.lastName, type: 'number'});
           }
           headers.push({label: 'Goal', type: 'number'});
