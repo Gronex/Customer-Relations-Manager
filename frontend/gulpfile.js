@@ -16,30 +16,30 @@ gulp.task("clean", function () {
   return del([fullDest], {force: true});
 });
 
-gulp.task("move:js", ["clean"], function () {
+gulp.task("move:js", [], function () {
   return gulp.src(paths.js, {base: "./"})
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("move:html", ["clean"], function () {
+gulp.task("move:html", [], function () {
   return gulp
     .src(paths.html, {base: "./"})
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("move:index", ["clean"], function () {
+gulp.task("move:index", [], function () {
   return gulp
     .src(paths.index, {base: "./"})
     .pipe(gulp.dest(dest));
 });
 
-gulp.task("move:css", ["clean"], function () {
+gulp.task("move:css", [], function () {
   return gulp
     .src(paths.css, {base: "./"})
     .pipe(gulp.dest(fullDest));
 });
 
-gulp.task("move:libs", ["clean"], function () {
+gulp.task("move:libs", [], function () {
   return gulp
     .src(paths.libs, {base: "./"})
     .pipe(gulp.dest(fullDest));

@@ -81,8 +81,6 @@
     }
 
     function onChange(){
-      $log.info("User changed!!");
-      $log.info(subscribed.length);
       _.map(subscribed, function(fun){ fun(user); });
     }
   }

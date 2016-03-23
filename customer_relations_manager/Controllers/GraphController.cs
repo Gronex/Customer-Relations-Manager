@@ -58,7 +58,7 @@ namespace customer_relations_manager.Controllers
                     var goals = _goalRepo.Get(g => 
                         (g.StartDate <= endDate.Value) && 
                         (!users.Any() || users.Contains(g.User.Email)) &&
-                        (!userGroups.Any() || g.User.Groups.Select(ug => ug.UserGroupId).Except(userGroups).Any()));
+                        (!userGroups.Any() || g.User.Groups.Any(gr => userGroups.Contains(gr.UserGroupId))));
                     return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
                     {
                         From = startDate.Value,

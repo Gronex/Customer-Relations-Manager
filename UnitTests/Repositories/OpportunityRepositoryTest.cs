@@ -38,6 +38,10 @@ namespace UnitTests.Repositories
                     i.Arg<Action<Opportunity>>().Invoke(old);
                     return old;
                 });
+
+            _generic
+                .Insert(Arg.Any<Opportunity>())
+                .ReturnsForAnyArgs(i => _context.Opportunities.Add(i.Arg<Opportunity>()));
         }
 
         [Fact]
@@ -95,6 +99,27 @@ namespace UnitTests.Repositories
             _generic
                 .ReceivedWithAnyArgs()
                 .Insert(Arg.Any<Opportunity>());
+        }
+
+        [Fact]
+        public void CreateTakesGroups()
+        {
+            SeedData();
+            _repo.Create(new Opportunity
+            {
+                Name = "test",
+                Stage = new Stage { Id = 1 },
+                Category = new OpportunityCategory { Id = 1 },
+                Department = new Department { Id = 1 },
+                Company = new Company { Id = 1 },
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
+                ExpectedClose = DateTime.Now,
+            }, "test");
+
+            var groups = _context.Opportunities.Single(o => o.Name == "test").UserGroups.Select(ug => ug.UserGroup.Id);
+
+            Assert.Equal(new [] {1,2}, groups);
         }
 
         [Theory]

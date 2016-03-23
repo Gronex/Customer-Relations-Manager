@@ -74,12 +74,11 @@
                     </label>
                 </div>
             </div>
-            <button class="btn btn-success" ng-click="vm.save()" ng-disabled="!vm.savedFilter.id || !vm.advancedFilterChanged">Save</button>
+            <button class="btn btn-success" ng-click="vm.save()" ng-disabled="!vm.savedFilter.id || !vm.advancedFilterChanged" ng-if="vm.owner">Save</button>
             <button class="btn btn-primary" ng-click="vm.save('new')">Save As..</button>
-            <button class="btn btn-danger pull-right" ng-click="vm.delete()" ng-disabled="!vm.savedFilter.id">Delete filter</button>
+            <button ng-if="vm.owner" class="btn btn-danger pull-right" ng-click="vm.delete()" ng-disabled="!vm.savedFilter.id">Delete filter</button>
         </form>
     </uib-accordion-group>
 </uib-accordion>
-
 <div id="chart_div"></div>
 <div id="table_div"></div>

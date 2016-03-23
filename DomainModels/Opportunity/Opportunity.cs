@@ -83,7 +83,7 @@ namespace Core.DomainModels.Opportunity
                 (!departmentIds.Any() || departmentIds.Contains(o.DepartmentId)) &&
                 (!stageIds.Any() || stageIds.Contains(o.StageId)) &&
                 (!categoriesIds.Any() || categoriesIds.Contains(o.CategoryId)) &&
-                (!userGroupsIds.Any() || userGroupsIds.Except(o.UserGroups.Select(ug => ug.UserGroup.Id)).Any()) &&
+                (!userGroupsIds.Any() || o.UserGroups.Any(ug => userGroupsIds.Contains(ug.UserGroupId))) &&
                 (!userEmails.Any() || userEmails.Contains(o.Owner.Email));
     }
 }

@@ -7,15 +7,16 @@
     .module('CRM')
     .controller('Dashboard', Dashboard);
 
-  Dashboard.$inject = ['$scope', 'graph', '$state', '$stateParams', 'dataservice', '$uibModal'];
+  Dashboard.$inject = ['$scope', 'graph', '$state', '$stateParams', 'dataservice', '$uibModal', 'authorization'];
 
   /* @ngInject */
-  function Dashboard($scope, graph, $state, $stateParams, dataservice, $modal) {
+  function Dashboard($scope, graph, $state, $stateParams, dataservice, $modal, auth) {
     var vm = this;
     vm.filter = {};
     vm.savedFilter = {name: "select filter"};
     vm.savedFilters = [];
     vm.advancedFilter = { private: true};
+    vm.owner = true;
     var filter = {};
 
     vm.getProductionGraph = getProductionGraph;
@@ -66,11 +67,20 @@
     }
 
     function getFilter(){
+      if(!vm.savedFilter.id){
+        vm.advancedFilter = {};
+        vm.advancedFilterChanged = false;
+        vm.owner = true;
+        return true;
+      }
       return dataservice.productionGraphFilters
         .get(vm.savedFilter.id)
         .then(function(f){
           vm.advancedFilter = f;
           vm.advancedFilterChanged = false;
+          var user =  auth.getUser();
+          console.log(user);
+          vm.owner = user.roles.includes("Super") || user.email === f.ownerEmail;
         });
     }
 
@@ -125,7 +135,7 @@
     function save(state){
       if(state === "new"){
         $modal.open({
-          templateUrl: "view/app/dashboard/save-modal.html",
+          templateUrl: "view/app/home/save-modal.html",
           controllerAs: 'vm',
           controller: 'SaveModal',
           resolve: {
@@ -139,6 +149,8 @@
                     vm.savedFilters.push(data);
                     vm.advancedFilter = result.data;
                     vm.savedFilter = data;
+                    var user = auth.user;
+                    vm.owner = user.roles.includes("Super") || user.email === f.ownerEmail;
                   });
               };
             },
