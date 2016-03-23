@@ -79,7 +79,6 @@
           vm.advancedFilter = f;
           vm.advancedFilterChanged = false;
           var user =  auth.getUser();
-          console.log(user);
           vm.owner = user.roles.includes("Super") || user.email === f.ownerEmail;
         });
     }
@@ -150,7 +149,7 @@
                     vm.advancedFilter = result.data;
                     vm.savedFilter = data;
                     var user = auth.user;
-                    vm.owner = user.roles.includes("Super") || user.email === f.ownerEmail;
+                    vm.owner = user.roles.includes("Super") || user.email === result.ownerEmail;
                   });
               };
             },

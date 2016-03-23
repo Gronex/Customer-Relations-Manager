@@ -1,4 +1,5 @@
 (function(){
+  $log.info("User changed!!");
   angular
     .module('CRM')
     .factory('authorization', Authorization);
