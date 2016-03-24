@@ -71,7 +71,7 @@
       }
       else{
         dataservice.users
-          .create($stateParams.id, vm.user)
+          .create(vm.user)
           .then(function () {
             $state.go("Users");
           });

@@ -18,7 +18,9 @@ namespace customer_relations_manager.ViewModels.User
         [Required]
         public string LastName { get; set; }
 
-        public string Name => $"{FirstName} {LastName}";
+        public string Name { get { return $"{FirstName} {LastName}"; } }
+
+    
 
         [Required]
         public UserRole Role { get; set; }

@@ -90,22 +90,21 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public async Task<IHttpActionResult> Post(UserViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             model.Email = model.Email.ToLower();
-
+            var inDbUser = await _userManager.FindByEmailAsync(model.Email);
             // Find existing, or create new
-            var user = await _userManager.FindByEmailAsync(model.Email) 
+            var user = inDbUser
                 ?? new User { UserName = model.Email, Email = model.Email, Active = true};
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
 
             UpdateUserGroups(model, user);
 
-            if (user.Active)
+            if (user.Active && inDbUser == null)
             {
-                var result = await _userManager.CreateAsync(user, "Password1");
-                    //TODO: Dont set default, but let users choose after email link
+                var result = await _userManager.CreateAsync(user);
                 if (!result.Succeeded)
                     return BadRequest(string.Join(", ", result.Errors));
             }
@@ -118,9 +117,18 @@ namespace customer_relations_manager.Controllers
             var roles = CalculateNewRoles(model.Role).Select(r => r.ToString()).ToList();
             roles.ForEach(role => _userManager.AddToRole(user.Id, role));
             _uow.Save();
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            //TODO: Let frontend give route info?
+            var callbackUrl = $"{GetHostUri()}/#/account/activate?userId={user.Id}&code={HttpContext.Current.Server.UrlEncode(code)}";
 
             model.Id = user.Id;
             return Created(user.Id, model);
+        }
+
+        private string GetHostUri()
+        {
+            var port = Request.RequestUri.IsDefaultPort ? string.Empty : ":" + Request.RequestUri.Port;
+            return $"{Request.RequestUri.Host}{port}";
         }
 
         // PUT: api/users/{id}
@@ -175,7 +183,7 @@ namespace customer_relations_manager.Controllers
         {
 
             var newGroupIds = model.Groups.Select(g => g.Id).ToList();
-
+            if(user.Groups == null) user.Groups = new List<UserGroupUser>();
             user.Groups
                 .Where(g => !newGroupIds.Contains(g.UserGroupId))
                 .ToList()

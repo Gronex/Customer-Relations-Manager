@@ -1,5 +1,6 @@
 (function(){
-  $log.info("User changed!!");
+  'use strict';
+
   angular
     .module('CRM')
     .factory('authorization', Authorization);
