@@ -29,8 +29,36 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult Get(
-            string id, 
+        public IHttpActionResult Goal(
+            [FromUri]int[] userGroups,
+            [FromUri]string[] users,
+            [FromUri]DateTime? startDate = null,
+            [FromUri]DateTime? endDate = null)
+        {
+            var year = DateTime.UtcNow.Year;
+            if (!startDate.HasValue) startDate = new DateTime(year, 1, 1);
+            if (!endDate.HasValue) endDate = startDate.Value.AddYears(1);
+
+            if (startDate > endDate)
+            {
+                var temp = startDate;
+                startDate = endDate;
+                endDate = temp;
+            }
+            var goals = _goalRepo.Get(g => 
+                (g.StartDate <= endDate.Value) && 
+                (!users.Any() || users.Contains(g.User.Email)) &&
+                (!userGroups.Any() || g.User.Groups.Any(gr => userGroups.Contains(gr.UserGroupId))));
+            return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
+            {
+                From = startDate.Value,
+                To = endDate.Value,
+                Data = _graphService.GenerateGoalDataTable(goals, startDate.Value.Date),
+            });
+        }
+
+        [HttpGet]
+        public IHttpActionResult Production(
             [FromUri]int[] departments,
             [FromUri]int[] stages,
             [FromUri]int[] userGroups,
@@ -51,35 +79,15 @@ namespace customer_relations_manager.Controllers
                 endDate = temp;
             }
 
-            // Since i cant figure out how to make it do this automaticaly
-            switch (id)
+            var opportunities = _opportunityRepo.Get(
+                Opportunity.InTimeRange(startDate.Value.Date, endDate.Value.Date)
+                .AndAlso(Opportunity.ListFilter(departments, stages, categories, userGroups, users)));
+            return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
             {
-                case "goal":
-                    var goals = _goalRepo.Get(g => 
-                        (g.StartDate <= endDate.Value) && 
-                        (!users.Any() || users.Contains(g.User.Email)) &&
-                        (!userGroups.Any() || g.User.Groups.Any(gr => userGroups.Contains(gr.UserGroupId))));
-                    return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
-                    {
-                        From = startDate.Value,
-                        To = endDate.Value,
-                        Data = _graphService.GenerateGoalDataTable(goals, startDate.Value.Date),
-                    });
-                    //return Ok(_graphService.GenerateGoalDataTable(users, startDate.Value.Date, endDate.Value.Date));
-                case "production":
-                    
-                    var opportunities = _opportunityRepo.Get(
-                        Opportunity.InTimeRange(startDate.Value.Date, endDate.Value.Date)
-                        .AndAlso(Opportunity.ListFilter(departments, stages, categories, userGroups, users)));
-                     return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
-                    {
-                        From = startDate.Value,
-                        To = endDate.Value,
-                        Data = _graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date, weighted)
-                    });
-                default:
-                    return NotFound();
-            }
+                From = startDate.Value,
+                To = endDate.Value,
+                Data = _graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date, weighted)
+            });
         }
     }
 }

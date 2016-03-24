@@ -11,11 +11,15 @@ namespace customer_relations_manager
         public static void Register(RouteCollection routes)
         {
             // Web API configuration and services
-            
+
             // Web API routes
             //config.MapHttpAttributeRoutes();
 
 
+            routes.MapHttpRoute(
+                name: "AccountApi",
+                routeTemplate: "api/{controller}/{action}"
+            );
 
             routes.MapHttpRoute(
                 name: "DefaultApi",

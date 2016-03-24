@@ -22,14 +22,11 @@ namespace customer_relations_manager.MessageServices
         {
             var msg = new SendGridMessage();
             msg.AddTo(message.Destination);
-            msg.From = new MailAddress("mads.slotsbo@gmail.com", "IT-minds CRM");
+            msg.From = new MailAddress("CRM@it-minds.dk", "IT-minds CRM");
             msg.Subject = message.Subject;
             msg.Text = message.Body;
             msg.Html = message.Body;
-
-
-            var test = ConfigurationManager.AppSettings["mailAccount"];
-
+            
             var credentials = new NetworkCredential(
                 ConfigurationManager.AppSettings["mailAccount"],
                 ConfigurationManager.AppSettings["mailPassword"]

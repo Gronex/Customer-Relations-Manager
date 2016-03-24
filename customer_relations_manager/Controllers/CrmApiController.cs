@@ -29,8 +29,9 @@ namespace customer_relations_manager.Controllers
         /// <returns></returns>
         protected string GetHostUri()
         {
+            var scheme = Request.RequestUri.Scheme;
             var port = Request.RequestUri.IsDefaultPort ? string.Empty : ":" + Request.RequestUri.Port;
-            return $"{Request.RequestUri.Host}{port}";
+            return $"{scheme}://{Request.RequestUri.Host}{port}";
         }
     }
 }
