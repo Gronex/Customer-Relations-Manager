@@ -110,25 +110,17 @@ namespace customer_relations_manager.Controllers
             }
             user.Active = true;
             
-            // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-            // Send an email with this link
-            // var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
-
             var roles = CalculateNewRoles(model.Role).Select(r => r.ToString()).ToList();
             roles.ForEach(role => _userManager.AddToRole(user.Id, role));
             _uow.Save();
+
+            if (user.EmailConfirmed) return Created(user.Id, _mapper.Map<UserViewModel>(user));
+
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
             //TODO: Let frontend give route info?
             var callbackUrl = $"{GetHostUri()}/#/account/activate?userId={user.Id}&code={HttpContext.Current.Server.UrlEncode(code)}";
-
-            model.Id = user.Id;
-            return Created(user.Id, model);
-        }
-
-        private string GetHostUri()
-        {
-            var port = Request.RequestUri.IsDefaultPort ? string.Empty : ":" + Request.RequestUri.Port;
-            return $"{Request.RequestUri.Host}{port}";
+            await _userManager.SendEmailAsync(user.Id, "Account activation", callbackUrl);
+            return Created(user.Id, _mapper.Map<UserViewModel>(user));
         }
 
         // PUT: api/users/{id}

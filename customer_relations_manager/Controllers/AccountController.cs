@@ -44,5 +44,7 @@ namespace customer_relations_manager.Controllers
             return BadRequest(string.Join("\n", result.Errors));
         }
 
+
+
     }
 }

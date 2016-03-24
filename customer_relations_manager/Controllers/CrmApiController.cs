@@ -22,5 +22,15 @@ namespace customer_relations_manager.Controllers
             if (pageSize < 1)
                 pageSize = 10;
         }
+
+        /// <summary>
+        /// Gets the hostname of the request, the port is added if it is not the default one
+        /// </summary>
+        /// <returns></returns>
+        protected string GetHostUri()
+        {
+            var port = Request.RequestUri.IsDefaultPort ? string.Empty : ":" + Request.RequestUri.Port;
+            return $"{Request.RequestUri.Host}{port}";
+        }
     }
 }
