@@ -41,9 +41,11 @@ namespace customer_relations_manager.Controllers
         {
             CorrectPageInfo(ref page, ref pageSize);
             var users = _userManager.Users.Where(u => u.Active);
+            var userCount = users.Count();
 
-            users = users.OrderBy(pe => pe.Id)
-                .ThenBy(u => u.LastName);
+            users = users.OrderBy(u => u.FirstName)
+                .ThenBy(u => u.LastName)
+                .ThenBy(pe => pe.Id);
             if (page.HasValue && pageSize.HasValue)
                 users = users
                     .Skip((page.Value - 1)*pageSize.Value)
@@ -61,7 +63,7 @@ namespace customer_relations_manager.Controllers
             return Ok(new PaginationEnvelope<UserOverviewViewModel>
             {
                 Data = userModels,
-                ItemCount = users.Count(u => u.Active),
+                ItemCount = userCount,
                 PageSize = pageSize ?? -1,
                 PageNumber = page ?? -1
             });

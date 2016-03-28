@@ -38,7 +38,9 @@
         var user = auth.getUser();
         vm.activity = {
           responsibleEmail: user.email,
-          responsibleName: user.name
+          responsibleName: user.name,
+          secondaryContactuns: [],
+          secondaryResponsibles: []
         };
       }
       getUsers();
