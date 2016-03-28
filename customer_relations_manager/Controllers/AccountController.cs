@@ -64,7 +64,7 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/account/forgotpassword")]
-        public async Task<IHttpActionResult> ForgotPassword([FromUri]string userName)
+        public async Task<IHttpActionResult> ForgotPassword([FromUri]string userName, [FromUri] string route = "/#/account/resetpassword")
         {
             if (string.IsNullOrWhiteSpace(userName)) return BadRequest();
 
@@ -73,7 +73,7 @@ namespace customer_relations_manager.Controllers
                 return Ok();
 
             var code = await _userManager.GeneratePasswordResetTokenAsync(user.Id);
-            var callbackUrl = $"{GetHostUri()}/#/account/resetpassword?userName={user.UserName}&code={HttpContext.Current.Server.UrlEncode(code)}";
+            var callbackUrl = $"{GetHostUri()}{route}?userName={user.UserName}&code={HttpContext.Current.Server.UrlEncode(code)}";
             await _userManager.SendEmailAsync(user.Id, "Reset Password", callbackUrl);
 
             return Ok();

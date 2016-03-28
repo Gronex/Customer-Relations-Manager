@@ -3,7 +3,7 @@
 
   angular
     .module("CRM")
-    .controller("ActivateAccount", Controller);
+    .controller("ResetPassword", Controller);
 
   Controller.$inject = ['$scope', '$stateParams', 'dataservice', '$state'];
   function Controller($scope, $stateParams, dataservice, $state){
@@ -17,7 +17,7 @@
     function activate(){
       vm.error = false;
       vm.model = {
-        userName: $stateParams.email,
+        userName: $stateParams.userName,
         password: "",
         repeatPassword: ""
       };
@@ -28,12 +28,13 @@
         vm.error = true;
         return;
       }
+
       vm.error = !vm.model.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
         || vm.model.password !== vm.model.repeatPassword;
     }, true);
 
     function send(){
-      dataservice.account.create(vm.model, {id: "confirmEmail", query: {code: $stateParams.code}})
+      dataservice.account.create(vm.model, {id: "resetPassword", query: {code: $stateParams.code}})
         .then(function(result){
           $state.go("Login");
         }, function(err){
