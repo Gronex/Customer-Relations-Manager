@@ -17,6 +17,8 @@
       return authorization.login(vm.userName, vm.password)
         .then(function () {
           $state.go("Home");
+        }, function(){
+          vm.error = true;
         });
     }
 

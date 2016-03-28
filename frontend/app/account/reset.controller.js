@@ -29,7 +29,7 @@
         return;
       }
 
-      vm.error = !vm.model.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
+      vm.error = !vm.model.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
         || vm.model.password !== vm.model.repeatPassword;
     }, true);
 

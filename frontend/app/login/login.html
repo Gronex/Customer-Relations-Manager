@@ -11,3 +11,7 @@
   <button type="submit" class="btn btn-success">Sign in <i class="fa fa-sign-in"></i></button>
   <a type="button" class="btn btn-default pull-right" ui-sref="ForgotPassword({email: vm.userName})">Forgot password</a>
 </form>
+
+<p class="text-danger" ng-if="vm.error">
+    Incorrect password or username
+</p>
