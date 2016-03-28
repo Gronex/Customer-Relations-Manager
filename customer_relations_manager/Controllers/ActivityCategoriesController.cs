@@ -12,6 +12,7 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize]
     public class ActivityCategoriesController : CrmApiController
     {
         private readonly IGenericRepository<ActivityCategory> _repo;
@@ -48,8 +49,7 @@ namespace customer_relations_manager.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Insert(_mapper.Map<ActivityCategory>(model));
-            try { _uow.Save(); }
-            catch (DuplicateException) { return Duplicate(model);}
+            _uow.Save();
 
             return Created(dbModel.Id.ToString(), _mapper.Map<ActivityCategoryViewModel>(dbModel));
         }
@@ -66,8 +66,7 @@ namespace customer_relations_manager.Controllers
                 // ReSharper disable once PossibleInvalidOperationException
                 ac.Value = model.Value.Value;
             }, id);
-            try { _uow.Save(); }
-            catch (DuplicateException) { return Duplicate(model); }
+            _uow.Save();
 
             return Ok(_mapper.Map<ActivityCategoryViewModel>(dbModel));
         }

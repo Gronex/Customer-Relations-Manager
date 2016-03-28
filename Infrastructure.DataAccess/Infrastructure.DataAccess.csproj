@@ -58,6 +58,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\NotAllowedException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Extentions\EntityExtentions.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.Designer.cs">
       <DependentUpon>201602161303314_UniqueYearMonthUser.cs</DependentUpon>
@@ -98,6 +101,22 @@
     <Compile Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.Designer.cs">
       <DependentUpon>201603031004457_ActivityAjustmentsToFollowModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603111256517_CompanyRequiredFields.cs" />
+    <Compile Include="Migrations\201603111256517_CompanyRequiredFields.Designer.cs">
+      <DependentUpon>201603111256517_CompanyRequiredFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603140828502_ActivityUpdate.cs" />
+    <Compile Include="Migrations\201603140828502_ActivityUpdate.Designer.cs">
+      <DependentUpon>201603140828502_ActivityUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603141324421_ActivityTimeRange.cs" />
+    <Compile Include="Migrations\201603141324421_ActivityTimeRange.Designer.cs">
+      <DependentUpon>201603141324421_ActivityTimeRange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603161115430_ProductionViewSettings.cs" />
+    <Compile Include="Migrations\201603161115430_ProductionViewSettings.Designer.cs">
+      <DependentUpon>201603161115430_ProductionViewSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
@@ -116,6 +135,7 @@
     <Compile Include="Repositories\GoalRepository.cs" />
     <Compile Include="Repositories\OpportunityRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
+    <Compile Include="Repositories\ProductionViewSettingsRepository.cs" />
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +195,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603031004457_ActivityAjustmentsToFollowModel.resx">
       <DependentUpon>201603031004457_ActivityAjustmentsToFollowModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603111256517_CompanyRequiredFields.resx">
+      <DependentUpon>201603111256517_CompanyRequiredFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603140828502_ActivityUpdate.resx">
+      <DependentUpon>201603140828502_ActivityUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603141324421_ActivityTimeRange.resx">
+      <DependentUpon>201603141324421_ActivityTimeRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603161115430_ProductionViewSettings.resx">
+      <DependentUpon>201603161115430_ProductionViewSettings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

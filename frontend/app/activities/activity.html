@@ -1,6 +1,8 @@
 <h1 ng-if="vm.editing">Activity: {{vm.activity.name}}</h1>
 <h1 ng-if="!vm.editing">New Activity</h1>
-<form ng-submit="vm.save()">
+
+<crm-modelstate-feedback model-state="vm.modelState"></crm-modelstate-feedback>
+<form name="activityForm" ng-submit="vm.save()">
     <div class="checkbox">
         <label>
             <input type="checkbox" ng-model="vm.activity.done"/> Done
@@ -8,28 +10,48 @@
     </div>
     <div class="form-group">
         <label>Name</label>
-        <input class="form-control" type="text" ng-model="vm.activity.name"/> 
+        <input class="form-control" type="text" ng-model="vm.activity.name" required/>
     </div>
     <div class="form-group">
         <select class="form-control" ng-model="vm.activity.categoryName" required>
             <option ng-repeat="category in vm.categories">{{category.name}}</option>
         </select>
     </div>
-    <div class="form-group">
-        <label>Responsible</label>
-        <input class="form-control" type="text" ng-model="vm.activity.responsibleName" disabled/><br/>
-        <input type="text" ng-model="vm.responsible" placeholder="Select Responsible" uib-typeahead="responsible as responsible.name for responsible in vm.users | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateResponsible($item)"><br/>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Responsible</label>
+            <input class="form-control" type="text" ng-model="vm.activity.responsibleName" disabled required/><br/>
+            <input type="text" ng-model="vm.responsible" placeholder="Select Responsible" uib-typeahead="responsible as responsible.name for responsible in vm.users | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.updateResponsible($item)"><br/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Interests</label>
+            <input type="text" ng-model="vm.interest" placeholder="Select Responsible" uib-typeahead="responsible as responsible.name for responsible in vm.users | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.addInterest($item)"><br/>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="interest in vm.activity.secondaryResponsibles">
+                    {{interest.name}}
+                    <button type="button" ng-click="vm.removeInterest(interest)" class="close"><i class="fa fa-times"></i></button>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="row" >
+    <div class="row">
         <div class="col-sm-6">
-            <crm-company-typeahead on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
+            <div class="row">
+                <crm-company-typeahead class="col-sm-6" on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
+                <div class="col-sm-6">
+                    <label>Primary Contact</label>
+                    <input class="form-control" disabled ng-model="vm.activity.primaryContactName" /><br/>
+                    <input type="text" ng-model="vm.primaryContact" ng-disabled="!vm.activity.companyId" placeholder="Select Primary Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.primaryContactSelected($item)">
+                    <br/>
+                </div>
+            </div>
             <div class="form-group">
                 <label>Contacts</label>
-                <input type="text" ng-model="vm.contact" ng-disabled="!vm.activity.companyId" placeholder="Add Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.contactSelected($item)">
+                <input type="text" ng-model="vm.contact" ng-disabled="!vm.activity.companyId || !vm.activity.primaryContactId" placeholder="Add Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.contactSelected($item)">
                 <br/>
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="contact in vm.activity.contacts">
-                        {{contact.name}} <button type="button" class="close" aria-label="Close" ng-click="vm.removeContact(contact)"><span aria-hidden="true">&times;</span></button>
+                    <li class="list-group-item" ng-repeat="contact in vm.activity.secondaryContacts">
+                        {{contact.name}} <button type="button" class="close" ng-click="vm.removeContact(contact)"><i class="fa fa-times"></i></button>
                     </li>
                 </ul>
             </div>
@@ -37,26 +59,28 @@
         <label>Due</label>
         <div class="well well-sm col-sm-6">
             <div class="row">
-                <div class="col-sm-6" >
-                    <uib-datepicker ng-model="vm.activity.dueDate"></uib-datepicker>
+                <div class="col-sm-6">
+                    <uib-datepicker ng-model="vm.activity.dueDate" required></uib-datepicker>
                 </div>
                 <div class="col-sm-6">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="vm.time"/> Time?
+                            <input type="checkbox" ng-model="vm.time" ng-change="vm.timeChange()" /> Time?
                         </label>
-                        <uib-timepicker ng-if="vm.time" ng-model="vm.activity.dueTime" hour-step="1" minute-step="15" show-meridian="false"></uib-timepicker>
+                        <div ng-if="vm.time">
+                            <uib-timepicker ng-required="vm.time || vm.activity.dueTimeStart" class="pull-left" ng-model="vm.activity.dueTimeStart" hour-step="1" minute-step="15" show-meridian="false"></uib-timepicker>
+                            <uib-timepicker class="pull-right" ng-model="vm.activity.dueTimeEnd" hour-step="1" minute-step="15" show-meridian="false"></uib-timepicker>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
+    <button class="btn btn-primary" ng-disabled="!activityForm.$valid" type="submit">Save <i class="fa fa-floppy-o"></i></button>
     <a ui-sref="Activities" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
     <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
         Remove <i class="fa fa-trash-o"></i>
     </button>
 </form>
-
 <hr/>
-<crm-comment-list backend-access="vm.commentDataAccess" call-args="vm.commentArgs" test-test="false"></crm-comment-list>
+<crm-comment-list ng-if="vm.editing" backend-access="vm.commentDataAccess" call-args="vm.commentArgs" test-test="false"></crm-comment-list>

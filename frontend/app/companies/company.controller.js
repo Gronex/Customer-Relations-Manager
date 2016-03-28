@@ -28,7 +28,7 @@
 
     function getCompany(id) {
       dataservice.companies
-      .getById(id)
+      .get(id)
       .then(function (data) {
         vm.company = data;
         vm.editing = true;
@@ -49,13 +49,13 @@
         .update($stateParams.id, vm.company)
         .then(function () {
           $state.go("Companies");
-        });
+        }, handleRequestError);
       } else {
         dataservice.companies
         .create(vm.company)
         .then(function () {
           $state.go("Companies");
-        });
+        }, handleRequestError);
       }
     }
 
@@ -65,6 +65,13 @@
         .then(function () {
           $state.go("Companies");
         });
+    }
+
+
+    function handleRequestError(err){
+      if(err.status === 400){
+        vm.modelState = err.data;
+      }
     }
   }
 })();

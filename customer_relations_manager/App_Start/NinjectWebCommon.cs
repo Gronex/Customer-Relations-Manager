@@ -93,6 +93,7 @@ namespace customer_relations_manager.App_Start
             kernel.Bind<IGraphService>().To<GraphService>();
             kernel.Bind<IPersonRepository>().To<PersonRepository>();
             kernel.Bind<IActivityCommentRepository>().To<ActivityCommentRepository>();
+            kernel.Bind<IProductionViewSettingsRepository>().To<ProductionViewSettingsRepository>();
         }        
     }
 }

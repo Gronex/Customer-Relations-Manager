@@ -16,12 +16,16 @@
     vm.save = save;
     vm.remove = remove;
     vm.updateResponsible = updateResponsible;
+    vm.addInterest = addInterest;
+    vm.removeInterest = removeInterest;
     vm.updateCompany = updateCompany;
     vm.removeCompany = removeCompany;
     vm.contactSelected = contactSelected;
+    vm.primaryContactSelected = primaryContactSelected;
     vm.removeContact = removeContact;
     vm.commentDataAccess = dataservice.activityComments;
     vm.commentArgs = {activityId: $stateParams.id};
+    vm.timeChange = timeChange;
 
     activate();
 
@@ -34,7 +38,9 @@
         var user = auth.getUser();
         vm.activity = {
           responsibleEmail: user.email,
-          responsibleName: user.name
+          responsibleName: user.name,
+          secondaryContactuns: [],
+          secondaryResponsibles: []
         };
       }
       getUsers();
@@ -46,7 +52,7 @@
         .get(id)
         .then(function(a){
           vm.activity = a;
-          vm.time = a.dueTime !== null;
+          vm.time = a.dueTimeStart !== null;
           getEmployees();
         });
     }
@@ -56,7 +62,7 @@
         dataservice.companyEmployees({companyId: vm.activity.companyId})
           .then(function(data){
             vm.employees = data;
-            vm.employees = filterList(vm.employees, vm.activity.contacts);
+            vm.employees = filterList(vm.employees, vm.activity.secondaryContacts);
           });
       } else {
         vm.employees = [];
@@ -70,13 +76,13 @@
           .update($stateParams.id, vm.activity)
           .then(function(){
             $state.go("Activities");
-          });
+          }, handleRequestError);
       } else {
         dataservice.activities
           .create(vm.activity)
           .then(function(result){
             $state.go("Activity", {id: result.location});
-          });
+          }, handleRequestError);
       }
     }
 
@@ -113,7 +119,7 @@
     function updateCompany(company){
       vm.activity.companyName = company.name;
       vm.activity.companyId = company.id;
-      vm.activity.contacts = [];
+      vm.activity.secondaryContacts = [];
       getEmployees();
     }
 
@@ -121,24 +127,51 @@
       vm.activity.companyName = undefined;
       vm.activity.companyId = undefined;
       getEmployees();
-      vm.activity.contacts = [];
+      vm.activity.secondaryContacts = [];
     }
 
     function contactSelected(contact){
       vm.contact = undefined;
-      vm.activity.contacts.push(contact);
-      vm.employees = filterList(vm.employees, vm.activity.contacts);
+      vm.activity.secondaryContacts.push(contact);
+      vm.employees = filterList(vm.employees, vm.activity.secondaryContacts);
     }
 
     function removeContact(contact){
       vm.employees.push(contact);
-      _.remove(vm.activity.contacts, function(c){return c.id === contact.id;});
+      _.remove(vm.activity.secondaryContacts, function(c){return c.id === contact.id;});
+    }
+
+    function addInterest(responsible){
+      vm.activity.secondaryResponsibles.push(responsible);
+      vm.interest = null;
+    }
+
+    function removeInterest(responsibility) {
+      _.remove(vm.activity.secondaryResponsibles, function(r){return r.email === responsibility.email;});
+    }
+
+    function primaryContactSelected(contact){
+      vm.activity.primaryContactId = contact.id;
+      vm.activity.primaryContactName = contact.name;
+      vm.primaryContact = null;
+    }
+
+    function timeChange(){
+      if(!vm.time){
+        vm.activity.dueTimeStart = null;
+        vm.activity.dueTimeEnd = null;
+      }
     }
 
     function filterList(list, compareList){
       return _.differenceBy(list, compareList, function(i){
         return i.id;
       });
+    }
+    function handleRequestError(err){
+      if(err.status === 400){
+        vm.modelState = err.data;
+      }
     }
   }
 })();

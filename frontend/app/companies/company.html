@@ -1,44 +1,48 @@
 <h1 ng-if="vm.editing">Editing {{vm.company.name}}</h1>
 <h1 ng-if="!vm.editing">Create new Company</h1>
 
+<crm-modelstate-feedback model-state="vm.modelState"></crm-modelstate-feedback>
+
 <form ng-submit="vm.save()">
-  <div class="form-group">
-    <label>Name</label>
-    <input class="form-control" type="text" ng-model="vm.company.name" required>
-  </div>
-  <div class="form-group">
-    <label>Address</label>
-    <input class="form-control" type="text" ng-model="vm.company.address">
-  </div>
-  <div class="row">
-    <div class="form-group col-sm-6">
-      <label>City</label>
-      <input class="form-control" type="text" ng-model="vm.company.city">
+    <div class="form-group">
+        <label>Name</label>
+        <input class="form-control" type="text" ng-model="vm.company.name" required>
     </div>
-    <div class="form-group col-sm-6">
-      <label>Postal code</label>
-      <input class="form-control" type="number" min="0" ng-model="vm.company.postalCode">
+    <div class="form-group">
+        <label>Address</label>
+        <input class="form-control" type="text" ng-model="vm.company.address">
     </div>
-  </div>
-  <div class="form-group">
-    <label>Country</label>
-    <input class="form-control" type="text" ng-model="vm.company.country">
-  </div>
-  <div class="form-group">
-    <label>Website</label>
-    <input class="form-control" type="text" ng-model="vm.company.webSite">
-  </div>
-  <h3>Employees</h3>
-  <div class="list-group">
-    <a ui-sref="Person({id: person.id})" ng-repeat="person in vm.employees" class="list-group-item">
-      <h4 class="list-group-item-heading">{{person.firstName}} {{person.lastName}}</h4>
-      <p class="list-group-item-text">Email: {{person.email}}</p>
-      <p class="list-group-item-text">Phone: {{person.phone}}</p>
-    </a>
-  </div>
-  <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
-  <a ui-sref="Companies" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
-  <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
-    Remove <i class="fa fa-trash"></i>
-  </button>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>City</label>
+            <input class="form-control" type="text" ng-model="vm.company.city" required>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Postal code</label>
+            <input class="form-control" type="number" min="0" ng-model="vm.company.postalCode" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Country</label>
+        <input class="form-control" type="text" ng-model="vm.company.country" required>
+    </div>
+    <div class="form-group">
+        <label>Website</label>
+        <input class="form-control" type="text" ng-model="vm.company.webSite">
+    </div>
+    <span ng-show="vm.editing">
+        <h3>Employees</h3>
+        <div class="list-group">
+            <a ui-sref="Person({id: person.id})" ng-repeat="person in vm.employees" class="list-group-item">
+                <h4 class="list-group-item-heading">{{person.firstName}} {{person.lastName}}</h4>
+                <p class="list-group-item-text">Email: {{person.email}}</p>
+                <p class="list-group-item-text">Phone: {{person.phone}}</p>
+            </a>
+        </div>
+    </span>
+    <button class="btn btn-primary" type="submit">Save <i class="fa fa-floppy-o"></i></button>
+    <a ui-sref="Companies" class="btn btn-primary">Back <i class="fa fa-arrow-left"></i></a>
+    <button ng-if="vm.editing" class="btn btn-danger pull-right" type="button" ng-click="vm.remove()">
+        Remove <i class="fa fa-trash"></i>
+    </button>
 </form>

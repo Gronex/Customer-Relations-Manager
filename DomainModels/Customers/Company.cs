@@ -16,11 +16,14 @@ namespace Core.DomainModels.Customers
         
         public string Address { get; set; }
         
+        [Required]
         public string City { get; set; }
         
+        [Required]
         public string Country { get; set; }
 
         //String in order to support all countries, not sure if any has non number codes
+        [Required]
         public string PostalCode { get; set; }
         
         public string WebSite { get; set; }

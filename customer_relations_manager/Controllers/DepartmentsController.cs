@@ -41,33 +41,20 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(GroupViewModel model)
         {
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
             var dbModel = _repo.Insert(_mapper.Map<Department>(model));
-            try
-            {
-                _uow.Save();
-            }
-            catch (Exception)
-            {
-                return Conflict();
-            }
+            _uow.Save();
             return Created(dbModel.Id.ToString(), _mapper.Map<GroupViewModel>(dbModel));
         }
 
         [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, GroupViewModel model)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(d => d.Name = model.Name, id);
             if(dbModel == null) return NotFound();
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Conflict();
-            }
+            _uow.Save();
             return Ok(_mapper.Map<GroupViewModel>(dbModel));
         }
 

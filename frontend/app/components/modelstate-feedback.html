@@ -1,0 +1,5 @@
+<uib-alert ng-repeat="alarm in vm.alarms" close="vm.closeAlert($index)">
+    <p ng-repeat="err in alarm">
+        {{err}}
+    </p>
+</uib-alert>

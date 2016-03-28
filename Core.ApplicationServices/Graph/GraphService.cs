@@ -47,11 +47,12 @@ namespace Core.ApplicationServices.Graph
 
         
 
-        public IDictionary<string, IEnumerable<UserGraphData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to)
+        public IDictionary<string, IEnumerable<UserGraphData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to, bool weighted)
         {
             return opportunities.SelectMany(o =>
             {
                 var earningPerMonth = SpreadOutEarnings(o);
+                var modifyer = weighted ? (o.Percentage/100.0) : 1;
 
                 return earningPerMonth.Select(epm => new
                 {
@@ -62,14 +63,16 @@ namespace Core.ApplicationServices.Graph
                         o.Owner.Email
                     },
                     Month = epm.Item1,
-                    Amount = epm.Item2
+                    Amount = epm.Item2 * modifyer
                 }).Where(epm => epm.Month >= from.RoundToMonth() && epm.Month <= to.RoundToMonth());
-            }).GroupBy(o => new {o.Month, o.User}).Select(o => new
+            }).GroupBy(o => new {o.Month, o.User})
+            .Select(o => new
             {
                 o.Key.User,
                 o.Key.Month,
                 Sum = o.Sum(os => os.Amount)
-            }).GroupBy(o => o.User.Email).ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new UserGraphData
+            }).GroupBy(o => o.User.Email)
+            .ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new UserGraphData
             {
                 User = new SimpleUser
                 {

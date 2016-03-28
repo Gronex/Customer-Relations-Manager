@@ -88,9 +88,10 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult Persons(int mainId)
+        [Route("api/companies/{id}/persons")]
+        public IHttpActionResult Persons(int id)
         {
-            var company = _repo.GetByKey(mainId);
+            var company = _repo.GetByKey(id);
             if(company == null) return NotFound();
 
             var employees = company.Employees;

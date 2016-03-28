@@ -6,6 +6,7 @@ using AutoMapper;
 using customer_relations_manager.ViewModels;
 using customer_relations_manager.ViewModels.Activity;
 using customer_relations_manager.ViewModels.Company;
+using customer_relations_manager.ViewModels.GraphFilter.ProductionGraph;
 using customer_relations_manager.ViewModels.Opportunity;
 using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.Activities;
@@ -14,6 +15,7 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainModels.ViewSettings;
 
 namespace customer_relations_manager.App_Start
 {
@@ -44,9 +46,9 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Opportunity, OpportunityViewModel>()
                     .ForMember(vm => vm.Groups, c => c.MapFrom(o => o.UserGroups.Select(ug => ug.UserGroup)))
                     .ReverseMap()
-                    .ForMember(vm => vm.StartDate, c => c.MapFrom(o => o.StartDate.Value.Date))
-                    .ForMember(vm => vm.EndDate, c => c.MapFrom(o => o.EndDate.Value.Date))
-                    .ForMember(vm => vm.ExpectedClose, c => c.MapFrom(o => o.ExpectedClose.Value.Date));
+                    .ForMember(vm => vm.StartDate, c => c.MapFrom(o => o.StartDate != null ? o.StartDate.Value.Date : (DateTime?) null))
+                    .ForMember(vm => vm.EndDate, c => c.MapFrom(o => o.EndDate != null ? o.EndDate.Value.Date : (DateTime?) null))
+                    .ForMember(vm => vm.ExpectedClose, c => c.MapFrom(o => o.ExpectedClose != null ? o.ExpectedClose.Value.Date : (DateTime?) null));
 
                 cfg.CreateMap<Opportunity, OpportunityOverviewViewMode>().ReverseMap();
                 cfg.CreateMap<Stage, StageViewModel>().ReverseMap();
@@ -61,21 +63,25 @@ namespace customer_relations_manager.App_Start
                 cfg.CreateMap<Activity, ActivityViewModel>()
                     .AfterMap((a, vm) =>
                     {
-                        vm.CategoryName = a.Category.Name;
-                        vm.ResponsibleEmail = a.Responsible.Email;
-                        vm.ResponsibleName = a.Responsible.Name;
+                        vm.CategoryName = a.Category?.Name;
+                        vm.ResponsibleEmail = a.PrimaryResponsible?.Email;
+                        vm.ResponsibleName = a.PrimaryResponsible?.Name;
                     })
                     .ReverseMap()
                     .AfterMap((vm, a) =>
                     {
                         a.Category = new ActivityCategory { Name = vm.CategoryName };
-                        a.Responsible = new User { Email = vm.ResponsibleEmail };
+                        a.PrimaryResponsible = new User { Email = vm.ResponsibleEmail };
                     });
                 cfg.CreateMap<Activity, ActivityOverviewViewModel>().ReverseMap();
 
 
                 cfg.CreateMap<ActivityComment, CommentViewModel>().ReverseMap();
                 cfg.CreateMap<OpportunityComment, CommentViewModel>().ReverseMap();
+                cfg.CreateMap<Person, PersonOverviewViewModel>().ReverseMap();
+
+                cfg.CreateMap<ProductionGraphFilterOverviewViewModel, ProductionViewSettings>().ReverseMap();
+                cfg.CreateMap<ProductionGraphFilterViewModel, ProductionViewSettings>().ReverseMap();
             });
 
             return config;

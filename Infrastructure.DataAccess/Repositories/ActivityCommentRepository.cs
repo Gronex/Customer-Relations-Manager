@@ -7,6 +7,7 @@ using Core.DomainModels.Activities;
 using Core.DomainModels.Comments;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -52,7 +53,7 @@ namespace Infrastructure.DataAccess.Repositories
                 Sent = DateTime.UtcNow
             };
 
-            if (commentObj.UserId == null || !_context.Activities.Any(a => a.Id == activityId)) return null;
+            if (commentObj.UserId == null || !_context.Activities.Any(a => a.Id == activityId)) throw new NotFoundException();
             return _repo.Insert(commentObj);
         }
 

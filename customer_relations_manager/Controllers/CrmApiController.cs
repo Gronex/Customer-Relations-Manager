@@ -10,13 +10,6 @@ namespace customer_relations_manager.Controllers
 {
     public abstract class CrmApiController : ApiController
     {
-
-        protected IHttpActionResult Duplicate<T>(T model)
-        {
-            var result = new NegotiatedContentResult<T>(HttpStatusCode.Conflict, model, this);
-            return result;
-        }
-
         /// <summary>
         /// Updates the pagination request arguments if they are not at resonable values
         /// </summary>
@@ -28,6 +21,17 @@ namespace customer_relations_manager.Controllers
                 page = 1;
             if (pageSize < 1)
                 pageSize = 10;
+        }
+
+        /// <summary>
+        /// Gets the hostname of the request, the port is added if it is not the default one
+        /// </summary>
+        /// <returns></returns>
+        protected string GetHostUri()
+        {
+            var scheme = Request.RequestUri.Scheme;
+            var port = Request.RequestUri.IsDefaultPort ? string.Empty : ":" + Request.RequestUri.Port;
+            return $"{scheme}://{Request.RequestUri.Host}{port}";
         }
     }
 }

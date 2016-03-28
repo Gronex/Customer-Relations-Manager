@@ -34,8 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=4.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.2.0\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Effort, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
@@ -59,7 +59,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
@@ -109,12 +109,24 @@
   <ItemGroup>
     <Compile Include="Controllers\ActivitesControllerTest.cs" />
     <Compile Include="Controllers\ActivityCategoryControllerTest.cs" />
+    <Compile Include="Controllers\Activities\CommentsControllerTest.cs" />
+    <Compile Include="Controllers\CompaniesControllerTest.cs" />
+    <Compile Include="Controllers\CrmApiControllerTest.cs" />
+    <Compile Include="Controllers\DepartmentsControllerTest.cs" />
     <Compile Include="Controllers\GoalsControllerTest.cs" />
+    <Compile Include="Controllers\OpportunityCategoryController.cs" />
+    <Compile Include="Controllers\OpportunityControllerTest.cs" />
+    <Compile Include="Controllers\PersonsControllerTest.cs" />
+    <Compile Include="Controllers\StagesControllerTest.cs" />
     <Compile Include="Controllers\UsersControllerTest.cs" />
     <Compile Include="Controllers\UsersGroupControllerTest.cs" />
+    <Compile Include="Repositories\ActivityCommentRepositoryTest.cs" />
+    <Compile Include="Repositories\ActivityRepositoryTest.cs" />
     <Compile Include="Repositories\GenericRepositoryTest.cs" />
     <Compile Include="Repositories\GoalRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\OpportunityRepositoryTest.cs" />
+    <Compile Include="Repositories\ProductionViewSettingsRepositoryTest.cs" />
     <Compile Include="Services\GraphService\GraphServiceTest.cs" />
     <Compile Include="Repositories\PersonRepositoryTest.cs" />
     <Compile Include="Services\GraphService\ProductionDataTest.cs" />

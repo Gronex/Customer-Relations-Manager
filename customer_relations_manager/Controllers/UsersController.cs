@@ -18,7 +18,7 @@ using Microsoft.Owin.Security;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Super))]
+    [Authorize]
     public class UsersController : CrmApiController
     {
         // Standard asp.net classes to manage users.
@@ -41,9 +41,11 @@ namespace customer_relations_manager.Controllers
         {
             CorrectPageInfo(ref page, ref pageSize);
             var users = _userManager.Users.Where(u => u.Active);
+            var userCount = users.Count();
 
-            users = users.OrderBy(pe => pe.Id)
-                .ThenBy(u => u.LastName);
+            users = users.OrderBy(u => u.FirstName)
+                .ThenBy(u => u.LastName)
+                .ThenBy(pe => pe.Id);
             if (page.HasValue && pageSize.HasValue)
                 users = users
                     .Skip((page.Value - 1)*pageSize.Value)
@@ -61,7 +63,7 @@ namespace customer_relations_manager.Controllers
             return Ok(new PaginationEnvelope<UserOverviewViewModel>
             {
                 Data = userModels,
-                ItemCount = users.Count(u => u.Active),
+                ItemCount = userCount,
                 PageSize = pageSize ?? -1,
                 PageNumber = page ?? -1
             });
@@ -69,6 +71,7 @@ namespace customer_relations_manager.Controllers
 
         // GET: api/users/{id}
         [HttpGet]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public async Task<IHttpActionResult> Get(string id)
         {
             var user = _userManager.FindById(id);
@@ -86,43 +89,45 @@ namespace customer_relations_manager.Controllers
 
         // POST: api/users
         [HttpPost]
-        public async Task<IHttpActionResult> Post(UserViewModel model)
+        [Authorize(Roles = nameof(UserRole.Super))]
+        public async Task<IHttpActionResult> Post(UserViewModel model, string route = "/#/account/activate")
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             model.Email = model.Email.ToLower();
-
+            var inDbUser = await _userManager.FindByEmailAsync(model.Email);
             // Find existing, or create new
-            var user = await _userManager.FindByEmailAsync(model.Email) 
+            var user = inDbUser
                 ?? new User { UserName = model.Email, Email = model.Email, Active = true};
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
 
             UpdateUserGroups(model, user);
 
-            if (user.Active)
+            if (user.Active && inDbUser == null)
             {
-                var result = await _userManager.CreateAsync(user, "Password1");
-                    //TODO: Dont set default, but let users choose after email link
+                var result = await _userManager.CreateAsync(user);
                 if (!result.Succeeded)
                     return BadRequest(string.Join(", ", result.Errors));
             }
             user.Active = true;
             
-            // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-            // Send an email with this link
-            // var callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
-
             var roles = CalculateNewRoles(model.Role).Select(r => r.ToString()).ToList();
             roles.ForEach(role => _userManager.AddToRole(user.Id, role));
             _uow.Save();
 
-            model.Id = user.Id;
-            return Created(user.Id, model);
+            if (user.EmailConfirmed) return Created(user.Id, _mapper.Map<UserViewModel>(user));
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            var callbackUrl = $"{GetHostUri()}{route}?email={user.Email}&code={HttpContext.Current.Server.UrlEncode(code)}";
+            await _userManager.SendEmailAsync(user.Id, "Account activation", callbackUrl);
+            return Created(user.Id, _mapper.Map<UserViewModel>(user));
         }
 
         // PUT: api/users/{id}
         [HttpPut]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public async Task<IHttpActionResult> Put(string id, UserViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -153,6 +158,7 @@ namespace customer_relations_manager.Controllers
 
         // DELETE: api/users/{id}
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void RemoveUser(string id)
         {
             var user = _userManager.FindById(id);
@@ -171,7 +177,7 @@ namespace customer_relations_manager.Controllers
         {
 
             var newGroupIds = model.Groups.Select(g => g.Id).ToList();
-
+            if(user.Groups == null) user.Groups = new List<UserGroupUser>();
             user.Groups
                 .Where(g => !newGroupIds.Contains(g.UserGroupId))
                 .ToList()

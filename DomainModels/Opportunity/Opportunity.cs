@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Linq.Expressions;
 using Core.DomainModels.Comments;
 using Core.DomainModels.Customers;
@@ -76,5 +77,13 @@ namespace Core.DomainModels.Opportunity
                 from <= o.EndDate && to >= o.EndDate ||
                 from >= o.StartDate && to <= o.EndDate;
         }
+
+        public static Expression<Func<Opportunity, bool>> ListFilter(
+            int[] departmentIds, int[] stageIds, int[] categoriesIds, int[] userGroupsIds, string[] userEmails) => o =>
+                (!departmentIds.Any() || departmentIds.Contains(o.DepartmentId)) &&
+                (!stageIds.Any() || stageIds.Contains(o.StageId)) &&
+                (!categoriesIds.Any() || categoriesIds.Contains(o.CategoryId)) &&
+                (!userGroupsIds.Any() || o.UserGroups.Any(ug => userGroupsIds.Contains(ug.UserGroupId))) &&
+                (!userEmails.Any() || userEmails.Contains(o.Owner.Email));
     }
 }

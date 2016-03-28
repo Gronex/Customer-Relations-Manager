@@ -19,8 +19,6 @@ namespace Core.DomainServices
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="orderBy"></param>
-        /// <param name="page">User with Page size, requires orderby to be set</param>
-        /// <param name="pageSize">used with page, requires orderby to be set</param>
         /// <returns></returns>
         IEnumerable<T> Get(
             Expression<Func<T, bool>> filter = null,
@@ -31,7 +29,7 @@ namespace Core.DomainServices
             int? pageSize = null,
             Expression<Func<T, bool>> filter = null);
 
-            /// <summary>
+        /// <summary>
         /// Returns an entity with the given key, or null in none exist
         /// </summary>
         /// <param name="key"></param>
@@ -68,6 +66,16 @@ namespace Core.DomainServices
         /// </summary>
         /// <param name="updateFunction">A function updating the model, 
         /// taking the database model as the argument</param>
+        /// <param name="throws">If we are to throw an exception if not found</param>
+        /// <param name="key">Key to use for finding the element in the database</param>
+        /// <returns>The updated entity, or null if it was not found</returns>
+        T Update(Action<T> updateFunction, bool throws, params object[] key);
+
+        /// <summary>
+        /// Updates a model in the database, throws an error if not found
+        /// </summary>
+        /// <param name="updateFunction">A function updating the model, 
+        /// taking the database model as the argument</param>
         /// <param name="key">Key to use for finding the element in the database</param>
         /// <returns>The updated entity, or null if it was not found</returns>
         T Update(Action<T> updateFunction, params object[] key);
@@ -78,8 +86,9 @@ namespace Core.DomainServices
         /// <param name="updateFunction">A function updating the model, 
         /// taking the database model as the argument</param>
         /// <param name="selector">selector to for finding the single element in the database</param>
+        /// <param name="throws">If we are to throw an exception if not found</param>
         /// <returns>The updated entity, or null if it was not found</returns>
-        T UpdateBy(Action<T> updateFunction, Expression<Func<T, bool>> selector);
+        T UpdateBy(Action<T> updateFunction, Expression<Func<T, bool>> selector, bool throws = true);
 
         int Count(Expression<Func<T, bool>> filter = null);
     }

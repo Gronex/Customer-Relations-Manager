@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Core.DomainServices;
+using Infrastructure.DataAccess.Exceptions;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -67,22 +68,31 @@ namespace Infrastructure.DataAccess.Repositories
             Remove(entity);
         }
 
+        public T Update(Action<T> updateFunction, bool throws = true, params object[] key)
+        {
+            var dbEntity = _dbSet.Find(key);
+            return Update(updateFunction, dbEntity, throws);
+        }
+
         public T Update(Action<T> updateFunction, params object[] key)
         {
             var dbEntity = _dbSet.Find(key);
             return Update(updateFunction, dbEntity);
-
         }
 
-        public T UpdateBy(Action<T> updateFunction, Expression<Func<T, bool>> selector)
+        public T UpdateBy(Action<T> updateFunction, Expression<Func<T, bool>> selector, bool throws = true)
         {
             var dbEntity = _dbSet.SingleOrDefault(selector);
-            return Update(updateFunction, dbEntity);
+            return Update(updateFunction, dbEntity, throws);
         }
 
-        private T Update(Action<T> updateFunction, T entity)
+        private T Update(Action<T> updateFunction, T entity, bool throws = true)
         {
-            if (entity == null) return null;
+            if (entity == null)
+            {
+                if(throws) throw new NotFoundException();
+                return null;
+            }
             updateFunction(entity);
 
             _context.SetState(entity, EntityState.Modified);

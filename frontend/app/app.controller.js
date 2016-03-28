@@ -5,19 +5,20 @@
     .module('CRM')
     .controller('App', App);
 
-  App.$inject = ['authorization'];
-  function App(authorization){
+  App.$inject = ['authorization', 'navbar'];
+  function App(authorization, navbar){
     var vm = this;
 
-    vm.user;
+    vm.user = undefined;
     vm.logout = logout;
 
     activate();
 
     function activate() {
-      if(authorization.configToken()){
-        vm.user = authorization.getUser();
-      }
+      authorization.subscribe(function(){
+        vm.navbar = navbar.generate();
+      });
+      authorization.login();
     }
 
     function logout() {

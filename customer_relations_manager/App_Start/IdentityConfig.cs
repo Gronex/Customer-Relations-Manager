@@ -1,6 +1,7 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using customer_relations_manager.MessageServices;
 using Core.DomainModels.Users;
 using Infrastructure.DataAccess;
 using Microsoft.AspNet.Identity;
@@ -46,6 +47,7 @@ namespace customer_relations_manager
             manager.UserLockoutEnabledByDefault = true;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+            manager.EmailService = new EmailService();
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
@@ -66,7 +68,10 @@ namespace customer_relations_manager
             if (dataProtectionProvider != null)
             {
                 manager.UserTokenProvider =
-                    new DataProtectorTokenProvider<User>(dataProtectionProvider.Create("ASP.NET Identity"));
+                    new DataProtectorTokenProvider<User>(dataProtectionProvider.Create("ASP.NET Identity"))
+                    {
+                        TokenLifespan = TimeSpan.FromHours(3)
+                    };
             }
             return manager;
         }

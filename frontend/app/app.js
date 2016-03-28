@@ -21,9 +21,15 @@
     // Now set up the states
     $stateProvider
       .state('Home', {
-        url: "/?{fromMonth:int}&{fromYear:int}&{toMonth:int}&{toYear:int}",
+        url: "/",
         templateUrl: "view/app/home/home.html",
         controller: "Home",
+        controllerAs: "vm"
+      })
+      .state('Home.Dashboard', {
+        url: "dashboard/?{fromDate:\\d{4}-\\d{2}-\\d{2}}&{toDate:\\d{4}-\\d{2}-\\d{2}}",
+        templateUrl: "view/app/home/dashboard.html",
+        controller: "Dashboard",
         controllerAs: "vm"
       })
       .state('Users', {
@@ -121,6 +127,29 @@
         templateUrl: "view/app/login/login.html",
         controller: "Login",
         controllerAs: 'vm'
+      })
+      .state("Logout", {
+        url: "/logout",
+        controller: "Logout",
+        controllerAs: 'vm'
+      })
+      .state("Activate", {
+        url: "/account/activate?{email}&{code}",
+        controller: "ActivateAccount",
+        controllerAs: "vm",
+        templateUrl: "view/app/account/activate.html"
+      })
+      .state("ForgotPassword", {
+        url: "/account/forgotPassword?{email}",
+        controller: "ForgotPassword",
+        controllerAs: "vm",
+        templateUrl: "view/app/account/forgot.html"
+      })
+      .state("ResetPassword", {
+        url: "/account/resetpassword?{userName}&{code}",
+        controller: "ResetPassword",
+        controllerAs: "vm",
+        templateUrl: "view/app/account/activate.html"
       });
   }
 })();

@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  const monthFormat = "MMM YYYY";
+
   angular
     .module('CRM')
     .service('graph', graph );
@@ -19,12 +21,12 @@
     };
 
     function drawChart(data, options, divId) {
-
       google.charts.setOnLoadCallback(function () {
         if(!divId) divId = 'chart_div';
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.ComboChart(document.getElementById(divId));
-        chart.draw(data, options);
+        var table = new google.visualization.DataTable(data);
+        chart.draw(table, options);
       });
     }
 
@@ -33,7 +35,8 @@
         if(!divId) divId = 'table_div';
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.Table(document.getElementById(divId));
-        chart.draw(data, options);
+        var table = new google.visualization.DataTable(data);
+        chart.draw(table, options);
       });
     }
 
@@ -57,25 +60,25 @@
       }
     }
 
-    function handleProductionData(data, keys, startDate, endDate){
+    function handleProductionData(data, keys, filter){
       var result = [];
       data = convertToDate(data,keys);
 
-      forRange(startDate, endDate, function(date){
+      forRange(filter.from, filter.to, function(date){
         var row = [];
-        row.push(date.format('ll'));
+        row.push({v: date.toDate(), f: date.format(monthFormat)});
         for(var key of keys){
           var valueHolder = _.find(data[key], function(p){return p.period.isSame(date);});
           if(valueHolder)
-            row.push(valueHolder.value);
+            row.push({v: valueHolder.value});
           else row.push(undefined);
         }
-        result.push(row);
+        result.push({c: row});
       });
       return result;
     }
 
-    function handleGoalData(data, keys, startDate, endDate){
+    function handleGoalData(data, keys, filter){
       data = convertToDate(data,keys);
       var res = [];
       var sums = {};
@@ -84,7 +87,7 @@
         sums[key] = 0;
       }
 
-      forRange(startDate, endDate, function(date){
+      forRange(filter.from, filter.to, function(date){
         var sum = 0;
         for(var key of keys){
           var d = _.find(data[key], function(g){return g.period.isSame(date);});
@@ -93,53 +96,64 @@
           if(sums[key])
             sum += sums[key];
         }
-        res.push([date.format(), sum]);
+        res.push([{v: date.toDate(), f: date.format(monthFormat)},  {v: sum } ]);
       });
       return res;
     }
 
     function productionGraph(config) {
       var headers = [];
+      var filter = {};
       var production = dataservice.graph
-            .get({id: "production", query: config});
+            .get({id: "production", query: config})
+            .then(function(result){
+              filter = {
+                from: moment(result.from),
+                to: moment(result.to)
+              };
+              return result.data;
+            });
 
       var goals = dataservice.graph
-            .get({id: "goal", query: config});
+            .get({id: "goal", query: config})
+            .then(function(result){return result.data;});
 
       return $q.all({production: production, goals: goals})
         .then(function (result) {
+          var data = [];
+          var headers = [];
 
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Month');
+          headers.push({label: 'Month', type: 'date', format: "MMM"});
 
-          var emails = Object.keys(result.goals);
+          var emails = _.union(Object.keys(result.goals), Object.keys(result.production));
           for (var email of emails) {
-            var user = _.head(result.goals[email]).user;
-            data.addColumn('number', user.firstName + " " + user.lastName);
+            var user = _.head(result.goals[email]|| result.production[email]).user;
+            headers.push({label: user.firstName + " " + user.lastName, type: 'number'});
           }
-          data.addColumn('number', 'Goal');
+          headers.push({label: 'Goal', type: 'number'});
 
-          var prodData = handleProductionData(result.production, emails, config.startDate, config.endDate);
-          var goalData = handleGoalData(result.goals, emails, config.startDate, config.endDate);
+          data = handleProductionData(result.production, emails, filter);
+          var goalData = handleGoalData(result.goals, emails, filter);
 
-          for(var i in prodData){
-            prodData[i].push(goalData[i][1]);
+          for(var i in data){
+            data[i].c.push(goalData[i][1]);
           }
-          data.addRows(prodData);
           var goalSeries = {};
-          goalSeries[emails.length ] = {type: 'line'};
+          goalSeries[emails.length] = {type: 'line'};
 
           return {
-            data: data,
+            data: {
+              cols: headers,
+              rows: data
+            },
             graphOptions: {
               title: 'Production',
               isStacked: true,
               legend: {position: 'top', maxLines: 3},
-              hAxis: {title: "Time"},
+              hAxis: {title: "Time", format: "MMM yyyy"},
               vAxis: {title: "DKK"},
-              seriesType: "area",
-              series: goalSeries,
-              crosshair: { trigger: 'both' }
+              seriesType: "steppedArea",
+              series: goalSeries
             },
             tableOptions: {
               width: '100%',

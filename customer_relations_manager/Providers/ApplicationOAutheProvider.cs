@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using customer_relations_manager.App_Start;
 using Core.DomainModels.Users;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
@@ -42,8 +43,7 @@ namespace customer_relations_manager.Providers
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
             
-
-            AuthenticationProperties properties = CreateProperties(user.UserName, user.Name);
+            AuthenticationProperties properties = CreateProperties(user.UserName, user.Name, userManager.GetRoles(user.Id));
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -86,13 +86,13 @@ namespace customer_relations_manager.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName, string name)
+        public static AuthenticationProperties CreateProperties(string userName, string name, IEnumerable<string> roles)
         {
-
             IDictionary<string, string> data = new Dictionary<string, string>
             {
                 { "userName", userName },
-                { "name", name }
+                { "name", name },
+                { "roles", string.Join(",", roles) }
             };
 
             return new AuthenticationProperties(data);

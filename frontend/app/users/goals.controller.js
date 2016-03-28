@@ -37,7 +37,7 @@
       vm.goal.errMsg = undefined;
       dataservice.goals.create(vm.goal, {userId: userId}).
         then(function (data) {
-          vm.goals.push(data);
+          vm.goals.push(data.data);
           vm.goals = _.orderBy(vm.goals, ['year', 'month']);
         }, function (err) {
           if(err.status === 409)
@@ -48,7 +48,7 @@
 
     function removeGoal(goal) {
       dataservice.goals
-        .remove(goal.id, {userId: userId})
+        .remove({id: goal.id, userId: userId})
         .then(function () {
           vm.goals = vm.goals.filter(function (g) { return g.id != goal.id;});
         });

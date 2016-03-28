@@ -1,0 +1,40 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a ng-if="navbar" class="navbar-brand" ui-sref="{{navbar.link}}">{{navbar.label}}</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li ng-repeat="item in navbar.left" ng-switch="item.type">
+                    <a ng-switch-when="dropdown" href class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        {{item.label}} <span class="caret"></span>
+                    </a>
+                    <ul ng-switch-when="dropdown" class="dropdown-menu">
+                        <li ng-repeat="elem in item.contents"><a ui-sref="{{elem.link}}">{{elem.label}}</a></li>
+                    </ul>
+                    <a ng-switch-default ui-sref="{{item.link}}">{{item.label}}</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ng-repeat="item in navbar.right" ng-switch="item.type">
+                    <a ng-switch-when="dropdown" href class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        {{item.label}} <span class="caret"></span>
+                    </a>
+                    <ul ng-switch-when="dropdown" class="dropdown-menu">
+                        <li ng-repeat="elem in item.contents"><a ui-sref="{{elem.link}}">{{elem.label}}</a></li>
+                    </ul>
+                    <a ng-switch-default ui-sref="{{item.link}}">{{item.label}}</a>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

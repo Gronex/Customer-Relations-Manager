@@ -40,8 +40,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=4.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.2.0\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -90,7 +90,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
@@ -98,7 +98,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.Web.Common.3.2.0.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+      <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ninject.Web.WebApi, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
@@ -111,6 +111,18 @@
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid, Version=6.3.4.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi, Version=1.3.1.0, Culture=neutral, PublicKeyToken=2ae73662c35d80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.3.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGridMail, Version=6.3.4.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGridMail.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
@@ -487,69 +499,6 @@
     <Content Include="view\bower_components\lodash\vendor\underscore\test\utility.js" />
     <Content Include="view\bower_components\lodash\vendor\underscore\underscore-min.js" />
     <Content Include="view\bower_components\lodash\vendor\underscore\underscore.js" />
-    <Content Include="view\bower_components\materialize\bin\materialize.css" />
-    <Content Include="view\bower_components\materialize\bin\materialize.js" />
-    <Content Include="view\bower_components\materialize\dist\css\materialize.css" />
-    <Content Include="view\bower_components\materialize\dist\css\materialize.min.css" />
-    <Content Include="view\bower_components\materialize\dist\font\material-design-icons\Material-Design-Icons.svg" />
-    <Content Include="view\bower_components\materialize\dist\js\materialize.js" />
-    <Content Include="view\bower_components\materialize\dist\js\materialize.min.js" />
-    <Content Include="view\bower_components\materialize\extras\noUiSlider\nouislider.css" />
-    <Content Include="view\bower_components\materialize\extras\noUiSlider\nouislider.js" />
-    <Content Include="view\bower_components\materialize\extras\noUiSlider\nouislider.min.js" />
-    <Content Include="view\bower_components\materialize\font\material-design-icons\Material-Design-Icons.svg" />
-    <Content Include="view\bower_components\materialize\js\animation.js" />
-    <Content Include="view\bower_components\materialize\js\buttons.js" />
-    <Content Include="view\bower_components\materialize\js\cards.js" />
-    <Content Include="view\bower_components\materialize\js\carousel.js" />
-    <Content Include="view\bower_components\materialize\js\character_counter.js" />
-    <Content Include="view\bower_components\materialize\js\chips.js" />
-    <Content Include="view\bower_components\materialize\js\collapsible.js" />
-    <Content Include="view\bower_components\materialize\js\date_picker\picker.date.js" />
-    <Content Include="view\bower_components\materialize\js\date_picker\picker.js" />
-    <Content Include="view\bower_components\materialize\js\dropdown.js" />
-    <Content Include="view\bower_components\materialize\js\forms.js" />
-    <Content Include="view\bower_components\materialize\js\global.js" />
-    <Content Include="view\bower_components\materialize\js\hammer.min.js" />
-    <Content Include="view\bower_components\materialize\js\initial.js" />
-    <Content Include="view\bower_components\materialize\js\jquery.easing.1.3.js" />
-    <Content Include="view\bower_components\materialize\js\jquery.hammer.js" />
-    <Content Include="view\bower_components\materialize\js\jquery.timeago.min.js" />
-    <Content Include="view\bower_components\materialize\js\leanModal.js" />
-    <Content Include="view\bower_components\materialize\js\materialbox.js" />
-    <Content Include="view\bower_components\materialize\js\parallax.js" />
-    <Content Include="view\bower_components\materialize\js\pushpin.js" />
-    <Content Include="view\bower_components\materialize\js\scrollFire.js" />
-    <Content Include="view\bower_components\materialize\js\scrollspy.js" />
-    <Content Include="view\bower_components\materialize\js\sideNav.js" />
-    <Content Include="view\bower_components\materialize\js\slider.js" />
-    <Content Include="view\bower_components\materialize\js\tabs.js" />
-    <Content Include="view\bower_components\materialize\js\toasts.js" />
-    <Content Include="view\bower_components\materialize\js\tooltip.js" />
-    <Content Include="view\bower_components\materialize\js\transitions.js" />
-    <Content Include="view\bower_components\materialize\js\velocity.min.js" />
-    <Content Include="view\bower_components\materialize\js\waves.js" />
-    <Content Include="view\bower_components\materialize\package.js" />
-    <Content Include="view\bower_components\materialize\templates\masonry-template\background1.jpg" />
-    <Content Include="view\bower_components\materialize\templates\masonry-template\background2.jpg" />
-    <Content Include="view\bower_components\materialize\templates\masonry-template\background3.jpg" />
-    <Content Include="view\bower_components\materialize\templates\masonry-template\css\style.css" />
-    <Content Include="view\bower_components\materialize\templates\masonry-template\js\init.js" />
-    <Content Include="view\bower_components\materialize\templates\masonry-template\js\masonry.pkgd.min.js" />
-    <Content Include="view\bower_components\materialize\templates\parallax-template\background1.jpg" />
-    <Content Include="view\bower_components\materialize\templates\parallax-template\background2.jpg" />
-    <Content Include="view\bower_components\materialize\templates\parallax-template\background3.jpg" />
-    <Content Include="view\bower_components\materialize\templates\parallax-template\css\style.css" />
-    <Content Include="view\bower_components\materialize\templates\parallax-template\js\init.js" />
-    <Content Include="view\bower_components\materialize\templates\starter-template\css\style.css" />
-    <Content Include="view\bower_components\materialize\templates\starter-template\js\init.js" />
-    <Content Include="view\bower_components\materialize\tests\spec\cards\cardsSpec.js" />
-    <Content Include="view\bower_components\materialize\tests\spec\collapsible\collapsibleSpec.js" />
-    <Content Include="view\bower_components\materialize\tests\spec\helper.js" />
-    <Content Include="view\bower_components\materialize\tests\spec\select\selectSpec.js" />
-    <Content Include="view\bower_components\materialize\tests\spec\tabs\tabsSpec.js" />
-    <Content Include="view\bower_components\materialize\tests\spec\toast\toastSpec.js" />
-    <Content Include="view\bower_components\materialize\tests\spec\tooltip\tooltipSpec.js" />
     <Content Include="view\content\css\style.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -562,6 +511,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Activities\CommentsController.cs" />
     <Compile Include="Controllers\ActivityCategoriesController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
@@ -571,13 +521,23 @@
     <Compile Include="Controllers\OpportunitiesController.cs" />
     <Compile Include="Controllers\OpportunityCategoriesController.cs" />
     <Compile Include="Controllers\PersonsController.cs" />
+    <Compile Include="Controllers\ProductionGraphFiltersController.cs" />
     <Compile Include="Controllers\StagesController.cs" />
     <Compile Include="Controllers\Users\GoalsController.cs" />
     <Compile Include="Controllers\UserGroupsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ActivitiesController.cs" />
+    <Compile Include="Filters\DuplicateExceptionFilterAttribute.cs" />
+    <Compile Include="Filters\NotAllowedExceptionFilterAttribute.cs" />
+    <Compile Include="Filters\NotFoundExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="MessageServices\EmailService.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Providers\ApplicationOAutheProvider.cs" />
     <Compile Include="ViewModels\Activity\ActivityCategoryViewModel.cs" />
@@ -586,15 +546,19 @@
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\Company\CompanyOverviewViewModel.cs" />
     <Compile Include="ViewModels\Company\CompanyViewModel.cs" />
+    <Compile Include="ViewModels\Company\PersonOverviewViewModel.cs" />
     <Compile Include="ViewModels\Company\PersonViewModel.cs" />
     <Compile Include="ViewModels\CommentViewModel.cs" />
     <Compile Include="ViewModels\GoalViewModel.cs" />
+    <Compile Include="ViewModels\GraphFilter\ProductionGraph\ProductionGraphFilterOverviewViewModel.cs" />
+    <Compile Include="ViewModels\GraphFilter\ProductionGraph\ProductionGraphFilterViewModel.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityOverviewViewMode.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityViewModel.cs" />
     <Compile Include="ViewModels\Opportunity\StageViewModel.cs" />
     <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\User\UserCredentialsViewModel.cs" />
     <Compile Include="ViewModels\User\UserOverviewViewModel.cs" />
     <Compile Include="ViewModels\User\UserViewModel.cs" />
   </ItemGroup>
@@ -739,93 +703,10 @@
     <Content Include="view\bower_components\lodash\README.md" />
     <Content Include="view\bower_components\lodash\vendor\backbone\LICENSE" />
     <Content Include="view\bower_components\lodash\vendor\underscore\LICENSE" />
-    <Content Include="view\bower_components\materialize\bower.json" />
-    <Content Include="view\bower_components\materialize\CHANGELOG.md" />
-    <Content Include="view\bower_components\materialize\CONTRIBUTING.md" />
-    <Content Include="view\bower_components\materialize\dist\font\material-design-icons\Material-Design-Icons.eot" />
-    <Content Include="view\bower_components\materialize\dist\font\material-design-icons\Material-Design-Icons.ttf" />
-    <Content Include="view\bower_components\materialize\dist\font\material-design-icons\Material-Design-Icons.woff" />
-    <Content Include="view\bower_components\materialize\dist\font\material-design-icons\Material-Design-Icons.woff2" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Bold.eot" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Bold.ttf" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Bold.woff" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Bold.woff2" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Light.eot" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Light.ttf" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Light.woff" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Light.woff2" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Medium.eot" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Medium.ttf" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Medium.woff" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Medium.woff2" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Regular.eot" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Regular.ttf" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Regular.woff" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Regular.woff2" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Thin.eot" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Thin.ttf" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Thin.woff" />
-    <Content Include="view\bower_components\materialize\dist\font\roboto\Roboto-Thin.woff2" />
-    <Content Include="view\bower_components\materialize\font\material-design-icons\Material-Design-Icons.eot" />
-    <Content Include="view\bower_components\materialize\font\material-design-icons\Material-Design-Icons.ttf" />
-    <Content Include="view\bower_components\materialize\font\material-design-icons\Material-Design-Icons.woff" />
-    <Content Include="view\bower_components\materialize\font\material-design-icons\Material-Design-Icons.woff2" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Bold.eot" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Bold.ttf" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Bold.woff" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Bold.woff2" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Light.eot" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Light.ttf" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Light.woff" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Light.woff2" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Medium.eot" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Medium.ttf" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Medium.woff" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Medium.woff2" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Regular.eot" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Regular.ttf" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Regular.woff" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Regular.woff2" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Thin.eot" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Thin.ttf" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Thin.woff" />
-    <Content Include="view\bower_components\materialize\font\roboto\Roboto-Thin.woff2" />
-    <Content Include="view\bower_components\materialize\LICENSE" />
-    <Content Include="view\bower_components\materialize\sass\components\date_picker\_default.date.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\date_picker\_default.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\date_picker\_default.time.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_buttons.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_cards.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_carousel.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_chips.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_collapsible.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_color.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_dropdown.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_form.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_global.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_grid.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_icons-material-design.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_materialbox.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_mixins.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_modal.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_navbar.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_normalize.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_prefixer.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_preloader.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_roboto.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_sideNav.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_slider.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_table_of_contents.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_tabs.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_toast.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_tooltip.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_typography.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_variables.scss" />
-    <Content Include="view\bower_components\materialize\sass\components\_waves.scss" />
-    <Content Include="view\bower_components\materialize\sass\materialize.scss" />
-    <Content Include="view\bower_components\materialize\templates\masonry-template\LICENSE" />
-    <Content Include="view\bower_components\materialize\templates\parallax-template\LICENSE" />
-    <Content Include="view\bower_components\materialize\templates\starter-template\LICENSE" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -835,7 +716,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="view\bower_components\materialize\test\html\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core.ApplicationServices\Core.ApplicationServices.csproj">

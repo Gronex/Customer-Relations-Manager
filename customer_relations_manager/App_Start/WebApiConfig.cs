@@ -8,36 +8,13 @@ namespace customer_relations_manager
 {
     public static class WebApiConfig
     {
-        public static void Register(RouteCollection routes)
+        public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            
-            // Web API routes
-            //config.MapHttpAttributeRoutes();
+            config.MapHttpAttributeRoutes();
 
-
-
-            routes.MapHttpRoute(
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            routes.MapHttpRoute(
-                name: "UserApi",
-                routeTemplate: "api/users/{userId}/{controller}/{id}",
-                defaults: new {id = RouteParameter.Optional }
-            );
-
-            routes.MapHttpRoute(
-                name: "ActivityCommentApi",
-                routeTemplate: "api/activities/{activityId}/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            routes.MapHttpRoute(
-                name: "OneLevelNested",
-                routeTemplate: "api/{controller}/{mainId}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }

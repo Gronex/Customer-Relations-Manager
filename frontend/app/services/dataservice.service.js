@@ -9,8 +9,7 @@
     var pathRegex = /\{(.*?)\}/g;
 
     return {
-      login: login,
-
+      account: createResource("/api/account"),
       users: createResource("/api/users"),
       userGroups: createResource("/api/usergroups"),
       goals: createResource("/api/users/{userId}/goals"),
@@ -24,24 +23,9 @@
       graph: createResource("api/graph"),
       activityCategories: createResource("api/activityCategories"),
       activities: createResource("api/activities"),
-      activityComments: createResource("/api/activities/{activityId}/comments")
+      activityComments: createResource("/api/activities/{activityId}/comments"),
+      productionGraphFilters: createResource("/api/productiongraphfilters")
     };
-
-    function login(userName, password) {
-      return $http({
-        method: 'POST',
-        url: "api/token",
-        data: $.param({
-          "grant_type": "password",
-          "username": userName,
-          "password": password
-        }),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).then(function (response) {
-        authorization.configToken(response.data["access_token"]);
-        return authorization.configUser(response.data);
-      });
-    }
 
     function createResource(url) {
       return {

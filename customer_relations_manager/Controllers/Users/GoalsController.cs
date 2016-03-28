@@ -13,6 +13,7 @@ using Infrastructure.DataAccess.Exceptions;
 namespace customer_relations_manager.Controllers.Users
 {
     [Authorize(Roles = nameof(UserRole.Super))]
+    [Route("api/users/{userId}/goals")]
     public class GoalsController : CrmApiController
     {
         private readonly IGoalRepository _repo;
@@ -39,6 +40,7 @@ namespace customer_relations_manager.Controllers.Users
 
         [HttpGet]
         [ResponseType(typeof(GoalViewModel))]
+        [Route("api/users/{userId}/goals/{id}")]
         public IHttpActionResult Get(string userId, int id)
         {
             var data = _repo.GetById(userId, id);
@@ -60,18 +62,12 @@ namespace customer_relations_manager.Controllers.Users
             if(dbData == null)
                 return NotFound();
 
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
             return Created(dbData.Id.ToString(), _mapper.Map<GoalViewModel>(dbData));
         }
 
         [HttpPut]
+        [Route("api/users/{userId}/goals/{id}")]
         public IHttpActionResult Put(string userId, int id, GoalViewModel model)
         {
             if (!ModelState.IsValid)
@@ -81,18 +77,12 @@ namespace customer_relations_manager.Controllers.Users
             var dbData = _repo.Update(userId, id, data);
             if (dbData == null)
                 return NotFound();
-            try
-            {
-                _uow.Save();
-            }
-            catch (DuplicateException)
-            {
-                return Duplicate(model);
-            }
+            _uow.Save();
             return Ok(_mapper.Map<GoalViewModel>(dbData));
         }
         
         [HttpDelete]
+        [Route("api/users/{userId}/goals/{id}")]
         public void Delete(string userId, int id)
         {
             _repo.Delete(userId, id);

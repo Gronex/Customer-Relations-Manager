@@ -15,10 +15,8 @@ namespace customer_relations_manager.ViewModels.User
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         public string FirstName { get; set; }
 
-        [Required]
         public string LastName { get; set; }
 
         // ReSharper disable once ConvertPropertyToExpressionBody

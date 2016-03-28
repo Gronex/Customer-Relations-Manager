@@ -11,6 +11,7 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
+using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -36,6 +37,7 @@ namespace UnitTests.Stubs
         public DbSet<Stage> Stages { get; set; } = new TestDbSet<Stage>();
         public DbSet<OpportunityComment> OpportunityComments { get; set; } = new TestDbSet<OpportunityComment>();
         public DbSet<ActivityComment> ActivityComments { get; set; } = new TestDbSet<ActivityComment>();
+        public DbSet<ProductionViewSettings> ProductionViewSettings { get; set; } = new TestDbSet<ProductionViewSettings>();
         public IDbSet<User> Users { get; set; } = new TestDbSet<User>();
         public IDbSet<IdentityRole> Roles { get; set; } = new TestDbSet<IdentityRole>();
         public DbSet<T> Set<T>() where T : class
