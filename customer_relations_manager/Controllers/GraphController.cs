@@ -29,6 +29,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
+        [Route("api/graph/goal")]
         public IHttpActionResult Goal(
             [FromUri]int[] userGroups,
             [FromUri]string[] users,
@@ -58,6 +59,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
+        [Route("api/graph/production")]
         public IHttpActionResult Production(
             [FromUri]int[] departments,
             [FromUri]int[] stages,

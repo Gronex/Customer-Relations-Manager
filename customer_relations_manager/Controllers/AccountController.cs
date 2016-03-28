@@ -24,18 +24,18 @@ namespace customer_relations_manager.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/account/conformemail")]
+        [Route("api/account/confirmemail")]
         public async Task<IHttpActionResult> ConfirmEmail([FromBody] UserCredentialsViewModel model, [FromUri] string code)
         {
             if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
             if (string.IsNullOrWhiteSpace(code))
-                return BadRequest();
+                return BadRequest("Bad data");
 
             var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null) return BadRequest();
+            if (user == null) return BadRequest("Bad data");
 
             if (user.EmailConfirmed && user.PasswordHash != null)
-                return BadRequest();
+                return BadRequest("Bad data");
 
 
             IdentityResult emailResult;

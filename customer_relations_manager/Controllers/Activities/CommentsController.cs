@@ -14,6 +14,7 @@ using Core.DomainServices.Repositories;
 namespace customer_relations_manager.Controllers.Activities
 {
     [Authorize]
+    [Route("api/activities/{activityId}/comments")]
     public class CommentsController : CrmApiController
     {
         private readonly IActivityCommentRepository _repo;

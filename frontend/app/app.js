@@ -132,6 +132,12 @@
         url: "/logout",
         controller: "Logout",
         controllerAs: 'vm'
+      })
+      .state("Activate", {
+        url: "/account/activate?{email}&{code}",
+        controller: "ActivateAccount",
+        controllerAs: "vm",
+        templateUrl: "view/app/account/activate.html"
       });
   }
 })();

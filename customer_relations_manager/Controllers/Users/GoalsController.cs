@@ -13,6 +13,7 @@ using Infrastructure.DataAccess.Exceptions;
 namespace customer_relations_manager.Controllers.Users
 {
     [Authorize(Roles = nameof(UserRole.Super))]
+    [Route("api/users/{userId}/goals")]
     public class GoalsController : CrmApiController
     {
         private readonly IGoalRepository _repo;
@@ -39,6 +40,7 @@ namespace customer_relations_manager.Controllers.Users
 
         [HttpGet]
         [ResponseType(typeof(GoalViewModel))]
+        [Route("api/users/{userId}/goals/{id}")]
         public IHttpActionResult Get(string userId, int id)
         {
             var data = _repo.GetById(userId, id);
@@ -65,6 +67,7 @@ namespace customer_relations_manager.Controllers.Users
         }
 
         [HttpPut]
+        [Route("api/users/{userId}/goals/{id}")]
         public IHttpActionResult Put(string userId, int id, GoalViewModel model)
         {
             if (!ModelState.IsValid)
@@ -79,6 +82,7 @@ namespace customer_relations_manager.Controllers.Users
         }
         
         [HttpDelete]
+        [Route("api/users/{userId}/goals/{id}")]
         public void Delete(string userId, int id)
         {
             _repo.Delete(userId, id);
