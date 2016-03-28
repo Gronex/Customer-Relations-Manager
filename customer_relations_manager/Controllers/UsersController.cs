@@ -88,7 +88,7 @@ namespace customer_relations_manager.Controllers
         // POST: api/users
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Super))]
-        public async Task<IHttpActionResult> Post(UserViewModel model)
+        public async Task<IHttpActionResult> Post(UserViewModel model, string route = "/#/account/activate")
         {
             if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
@@ -117,8 +117,8 @@ namespace customer_relations_manager.Controllers
             if (user.EmailConfirmed) return Created(user.Id, _mapper.Map<UserViewModel>(user));
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            //TODO: Let frontend give route info?
-            var callbackUrl = $"{GetHostUri()}/#/account/activate?userId={user.Id}&code={HttpContext.Current.Server.UrlEncode(code)}";
+
+            var callbackUrl = $"{GetHostUri()}{route}?email={user.Email}&code={HttpContext.Current.Server.UrlEncode(code)}";
             await _userManager.SendEmailAsync(user.Id, "Account activation", callbackUrl);
             return Created(user.Id, _mapper.Map<UserViewModel>(user));
         }

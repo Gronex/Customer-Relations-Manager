@@ -31,7 +31,7 @@
     function send(){
       dataservice.account.create(vm.model, {id: "confirmEmail", query: {code: $stateParams.code}})
         .then(function(result){
-          $state.go("home");
+          $state.go("Home");
         }, function(err){
           vm.errors = err.data.message.split("\n");
         });
