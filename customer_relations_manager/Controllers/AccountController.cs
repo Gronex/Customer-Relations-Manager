@@ -24,18 +24,18 @@ namespace customer_relations_manager.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/account/conformemail")]
+        [Route("api/account/confirmemail")]
         public async Task<IHttpActionResult> ConfirmEmail([FromBody] UserCredentialsViewModel model, [FromUri] string code)
         {
             if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
             if (string.IsNullOrWhiteSpace(code))
-                return BadRequest();
+                return BadRequest("Bad data");
 
             var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null) return BadRequest();
+            if (user == null) return BadRequest("Bad data");
 
             if (user.EmailConfirmed && user.PasswordHash != null)
-                return BadRequest();
+                return BadRequest("Bad data");
 
 
             IdentityResult emailResult;
@@ -64,7 +64,7 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/account/forgotpassword")]
-        public async Task<IHttpActionResult> ForgotPassword([FromUri]string userName)
+        public async Task<IHttpActionResult> ForgotPassword([FromUri]string userName, [FromUri] string route = "/#/account/resetpassword")
         {
             if (string.IsNullOrWhiteSpace(userName)) return BadRequest();
 
@@ -73,7 +73,7 @@ namespace customer_relations_manager.Controllers
                 return Ok();
 
             var code = await _userManager.GeneratePasswordResetTokenAsync(user.Id);
-            var callbackUrl = $"{GetHostUri()}/#/account/resetpassword?userName={user.UserName}&code={HttpContext.Current.Server.UrlEncode(code)}";
+            var callbackUrl = $"{GetHostUri()}{route}?userName={user.UserName}&code={HttpContext.Current.Server.UrlEncode(code)}";
             await _userManager.SendEmailAsync(user.Id, "Reset Password", callbackUrl);
 
             return Ok();

@@ -9,6 +9,7 @@
     var pathRegex = /\{(.*?)\}/g;
 
     return {
+      account: createResource("/api/account"),
       users: createResource("/api/users"),
       userGroups: createResource("/api/usergroups"),
       goals: createResource("/api/users/{userId}/goals"),

@@ -48,7 +48,7 @@
 
     function removeGoal(goal) {
       dataservice.goals
-        .remove(goal.id, {userId: userId})
+        .remove({id: goal.id, userId: userId})
         .then(function () {
           vm.goals = vm.goals.filter(function (g) { return g.id != goal.id;});
         });

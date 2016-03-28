@@ -1,0 +1,31 @@
+<div ng-show="vm.errors">
+    <uib-alert ng-repeat="error in vm.errors" type="danger" close="vm.errors.splice($index, 1)">{{error}}</uib-alert>
+</div>
+<form name="activateForm" ng-submit="vm.send()">
+    <div class="">
+        <label>Email</label>
+        <input disabled class="form-control" ng-model="vm.model.userName" required/>
+    </div>
+    <div class="">
+        <label>Password</label>
+        <input type="password" class="form-control" ng-model="vm.model.password" required/>
+    </div>
+    <div ng-class="{'has-error': vm.error}">
+        <label class="control-label">Repeat password</label>
+        <input type="password" class="form-control" ng-model="vm.model.repeatPassword" required/>
+    </div>
+    <div ng-if="vm.error" class="text-danger">
+    <p>
+        Your password need to follow the following requirements:
+        <ul>
+            <li>Min 8 characters</li>
+            <li>At least one numerical character</li>
+            <li>At least one lower case character</li>
+            <li>At least one upper case character</li>
+        </ul>
+        and 'Password' and 'Repeat password' must be the same
+    </p>
+    </div>
+    <br/>
+    <button class="btn btn-success" ng-disabled="vm.error || !activateForm.$valid" type="submit">Activate</button>
+</form>

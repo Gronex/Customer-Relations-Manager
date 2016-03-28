@@ -19,9 +19,10 @@ namespace customer_relations_manager
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            FilterConfig.RegisterGlobalHttpFilters(GlobalConfiguration.Configuration.Filters); 
-            WebApiConfig.Register(RouteTable.Routes);
+            FilterConfig.RegisterGlobalHttpFilters(GlobalConfiguration.Configuration.Filters);
+            //WebApiConfig.Register(RouteTable.Routes);
             SerializationSettings(GlobalConfiguration.Configuration);
+            GlobalConfiguration.Configure(WebApiConfig.Register);
         }
 
         private static void SerializationSettings(HttpConfiguration config)

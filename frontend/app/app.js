@@ -132,6 +132,24 @@
         url: "/logout",
         controller: "Logout",
         controllerAs: 'vm'
+      })
+      .state("Activate", {
+        url: "/account/activate?{email}&{code}",
+        controller: "ActivateAccount",
+        controllerAs: "vm",
+        templateUrl: "view/app/account/activate.html"
+      })
+      .state("ForgotPassword", {
+        url: "/account/forgotPassword?{email}",
+        controller: "ForgotPassword",
+        controllerAs: "vm",
+        templateUrl: "view/app/account/forgot.html"
+      })
+      .state("ResetPassword", {
+        url: "/account/resetpassword?{userName}&{code}",
+        controller: "ResetPassword",
+        controllerAs: "vm",
+        templateUrl: "view/app/account/activate.html"
       });
   }
 })();
