@@ -1,0 +1,37 @@
+<form ng-submit="vm.save()">
+    <div class="modal-header">
+        <h2>New Company</h2>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" ng-model="vm.company.name" required>
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input class="form-control" type="text" ng-model="vm.company.address">
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label>City</label>
+                <input class="form-control" type="text" ng-model="vm.company.city" required>
+            </div>
+            <div class="form-group col-sm-6">
+                <label>Postal code</label>
+                <input class="form-control" type="number" min="0" ng-model="vm.company.postalCode" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Country</label>
+            <input class="form-control" type="text" ng-model="vm.company.country" required>
+        </div>
+        <div class="form-group">
+            <label>Website</label>
+            <input class="form-control" type="text" ng-model="vm.company.webSite">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success pull-right">Save</button>
+        <button type="button" ng-click="vm.cancel()" class="btn btn-default pull-right">Cancel</button>
+    </div>
+</form>
