@@ -51,7 +51,7 @@
         controllerAs: 'vm'
       })
       .state("Activity", {
-        url: "/activities/{id}",
+        url: "/activities/{id}?{contact}",
         templateUrl: "view/app/activities/activity.html",
         controller: "Activity",
         controllerAs: 'vm'
