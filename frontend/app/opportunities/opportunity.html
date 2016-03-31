@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="row">
-        <crm-company-typeahead class="col-sm-6" on-select="vm.updateCompany" is-required="true" company-name="vm.opportunity.company.name"></crm-company-typeahead>
+        <crm-company-typeahead can-create="true" class="col-sm-6" on-select="vm.updateCompany" is-required="true" company-name="vm.opportunity.company.name"></crm-company-typeahead>
         <div class="col-sm-6 form-group">
             <label>Contact</label>
             <input disabled ng-if="vm.opportunity.contact.name" class="form-control" type="text" ng-model="vm.opportunity.contact.name"/><br>

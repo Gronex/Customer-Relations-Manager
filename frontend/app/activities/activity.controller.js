@@ -42,9 +42,29 @@
           secondaryContactuns: [],
           secondaryResponsibles: []
         };
+        getPerson($stateParams.contact);
       }
       getUsers();
       getCategories();
+    }
+
+    function getPerson(id){
+      if(id === undefined) return {};
+      return dataservice.people
+        .get(id)
+        .then(function(result){
+          vm.activity.primaryContactId = result.id;
+          vm.activity.primaryContactName = result.name;
+          return result;
+        })
+        .then(function(result){
+          dataservice.companies
+            .get(result.companyId)
+            .then(function(company){
+              vm.activity.companyId = result.companyId;
+              vm.activity.companyName = company.name;
+            });
+        });
     }
 
     function getActivity(id){

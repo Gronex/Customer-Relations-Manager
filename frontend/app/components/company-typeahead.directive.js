@@ -14,7 +14,8 @@
         isRequired: "=",
         companyName: "=",
         onSelect: "=",
-        onRemove: "="
+        onRemove: "=",
+        canCreate: "@"
       },
       controller: Controller,
       controllerAs: 'vm',
@@ -30,7 +31,6 @@
   function Controller(dataservice) {
     var vm = this;
 
-    vm.soelectedCompany = {};
     vm.companies = [];
 
     vm.companySelected = companySelected;

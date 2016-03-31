@@ -8,6 +8,11 @@
         </div>
     </div>
     <br/>
-    <input type="text" ng-model="vm.company" placeholder="Select company" uib-typeahead="company as company.name for company in vm.companies | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.companySelected($item)">
-
+    <div class="input-group" ng-if="vm.canCreate">
+        <input type="text" ng-model="vm.company" placeholder="Select company" uib-typeahead="company as company.name for company in vm.companies | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.companySelected($item)">
+        <div class="input-group-btn">
+            <button type="button" class="btn btn-success" crm-company-modal on-save="vm.companySelected"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <input ng-if="!vm.canCreate" type="text" ng-model="vm.company" placeholder="Select company" uib-typeahead="company as company.name for company in vm.companies | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.companySelected($item)">
 </div>
