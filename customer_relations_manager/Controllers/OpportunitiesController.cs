@@ -30,7 +30,12 @@ namespace customer_relations_manager.Controllers
         public PaginationEnvelope<OpportunityOverviewViewMode> GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
-            var data = _repo.GetAll(orderBy ?? new[] {"name"}, page, pageSize);
+
+            orderBy = (orderBy ?? new[] { "name" })
+                .Select(o => o.Replace("ownerName", "owner.firstName")
+                .Replace("companyName", "company.name")).ToArray();
+
+            var data = _repo.GetAll(orderBy, page, pageSize);
             return data.MapData(_mapper.Map<OpportunityOverviewViewMode>);
         }
 

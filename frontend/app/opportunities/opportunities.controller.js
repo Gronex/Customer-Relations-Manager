@@ -90,7 +90,6 @@
     function sort(selector){
       var test = angular.copy(vm.pagination);
       test.orderBy = selector;
-      console.log(vm.pagination)
       dataservice.opportunities
         .get({query: test})
         .then(setupData);
