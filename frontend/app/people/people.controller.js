@@ -17,8 +17,32 @@
       page: 1
     };
     vm.itemCount = 0;
+    vm.headers = [
+      {
+        label: "First name",
+        selector: "firstName"
+      },
+      {
+        label: "Last name",
+        selector: "lastName"
+      },
+      {
+        label: "Email",
+        selector: "email"
+      },
+      {
+        label: "Phone number",
+        selector: "phoneNumber"
+      },
+      {
+        icon: "fa fa-pencil-square-o",
+        type: "btn-link",
+        link: "Person"
+      }
+    ];
 
     vm.getPeople = getPeople;
+    vm.sort = sort;
 
     activate();
 
@@ -29,10 +53,20 @@
     function getPeople() {
       dataservice.people
         .get({query: vm.pagination})
-        .then(function (data) {
-          vm.itemCount = data.itemCount;
-          vm.people = data.data;
-        });
+        .then(setupData);
+    }
+
+    function setupData(data) {
+      vm.itemCount = data.itemCount;
+      vm.people = data.data;
+    }
+
+    function sort(selector){
+      var cpy = angular.copy(vm.pagination);
+      cpy.orderBy = selector;
+      dataservice.people
+        .get({query: cpy})
+        .then(setupData);
     }
   }
 })();

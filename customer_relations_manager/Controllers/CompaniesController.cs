@@ -29,11 +29,13 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int? page = null, int? pageSize = null, string orderBy = "name")
+        public PaginationEnvelope<CompanyOverviewViewModel> GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
             
-            var data = _repo.GetPaged(cs => cs.OrderBy(c => c.Name).ThenBy(c => c.Id), page, pageSize);
+            var data = _repo.GetPaged(orderBy == null || orderBy.Length < 1 
+                ? new[] { "name" } 
+                : orderBy, page, pageSize);
             return data.MapData(_mapper.Map<CompanyOverviewViewModel>);
         }
 

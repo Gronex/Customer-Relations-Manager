@@ -31,9 +31,15 @@ namespace customer_relations_manager.Controllers
         public PaginationEnvelope<ActivityOverviewViewModel> GetActivities([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
-            
+            var defaultOrder = new[] {"DueDate,DueTimeStart,DueTimeEnd"};
+            orderBy = (orderBy ?? defaultOrder)
+                .Select(o => o.ToLower()
+                    .Replace("primarycontactname", "PrimaryContact.firstName")
+                    .Replace("primaryresponsiblename", "PrimaryResponsible.firstName")
+                    .Replace("companyname", "company.name")).ToArray();
+
             return _repo
-                .GetAll(orderBy ?? new [] { "DueDate,DueTimeStart,DueTimeEnd" }, page, pageSize)
+                .GetAll(orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }
 

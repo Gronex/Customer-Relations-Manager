@@ -31,11 +31,13 @@ namespace customer_relations_manager.Controllers
         {
             CorrectPageInfo(ref page, ref pageSize);
 
-            orderBy = (orderBy ?? new[] { "name" })
-                .Select(o => o.Replace("ownerName", "owner.firstName")
-                .Replace("companyName", "company.name")).ToArray();
+            var defaultOrder = new[] {"name"};
+            orderBy = (orderBy ?? defaultOrder)
+                .Select(o => o.ToLower()
+                    .Replace("ownername", "owner.firstName")
+                    .Replace("companyname", "company.name")).ToArray();
 
-            var data = _repo.GetAll(orderBy, page, pageSize);
+            var data = _repo.GetAll(orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize);
             return data.MapData(_mapper.Map<OpportunityOverviewViewMode>);
         }
 

@@ -2,22 +2,5 @@
 <a type="button" class="btn btn-default pull-right" ui-sref="Person({id: 'new'})">New Person</a>
 <br/>
 <br/>
-<table class="table">
-  <tr>
-    <th>First name</th>
-    <th>Last name</th>
-    <th>Email</th>
-    <th>Phone number</th>
-    <th></th>
-  </tr>
-  <tr ng-repeat="person in vm.people">
-    <td>{{person.firstName}}</td>
-    <td>{{person.lastName}}</td>
-    <td>{{person.email}}</td>
-    <td><a href="tel:{{person.phoneNumber}}">{{person.phoneNumber}}</a></td>
-    <td>
-      <a role="button" class="btn btn-primary" ui-sref="Person({id: person.id})"><i class="fa fa-edit"></i></a>
-    </td>
-  </tr>
-</table>
+<crm-table headers="vm.headers" data="vm.people" on-sort="vm.sort"></crm-table>
 <uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getPeople()"></uib-pagination>

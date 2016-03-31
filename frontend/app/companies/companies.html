@@ -2,30 +2,5 @@
 <a type="button" class="btn btn-default pull-right" ui-sref="Company({id: 'new'})">New Company</a>
 <br/>
 <br/>
-<table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Phone number</th>
-    <th>Address</th>
-    <th>City</th>
-    <th>Postal Code</th>
-    <th>Country</th>
-    <th>Website</th>
-    <th></th>
-  </tr>
-  <tr ng-repeat="company in vm.companies">
-    <td>{{company.name}}</td>
-    <td>{{company.phoneNumber}}</td>
-    <td>{{company.address}}</td>
-    <td>{{company.city}}</td>
-    <td ng-if="company.postalCode > 0">{{company.postalCode}}</td>
-    <td ng-if="company.postalCode <= 0"></td>
-    <td>{{company.country}}</td>
-    <td><a href="{{company.webSite}}">{{company.webSite}}</a></td>
-    <td>
-      <a ui-sref="Company({id: company.id})" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
-    </td>
-  </tr>
-</table>
-
+<crm-table headers="vm.headers" data="vm.companies" on-sort="vm.sort"></crm-table>
 <uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getCompanies()"></uib-pagination>

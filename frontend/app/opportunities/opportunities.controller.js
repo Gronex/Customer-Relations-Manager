@@ -88,12 +88,11 @@
     }
 
     function sort(selector){
-      var test = angular.copy(vm.pagination);
-      test.orderBy = selector;
+      var cpy = angular.copy(vm.pagination);
+      cpy.orderBy = selector;
       dataservice.opportunities
-        .get({query: test})
+        .get({query: cpy})
         .then(setupData);
     }
-
   }
 })();

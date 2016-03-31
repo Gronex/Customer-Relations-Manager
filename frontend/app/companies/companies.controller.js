@@ -16,8 +16,44 @@
       page: 1
     };
     vm.itemCount = 0;
+    vm.headers = [
+      {
+        label: "Name",
+        selector: "name"
+      },
+      {
+        label: "PhoneNumber",
+        selector: "phoneNumber"
+      },
+      {
+        label: "Address",
+        selector: "address"
+      },
+      {
+        label: "City",
+        selector: "city"
+      },
+      {
+        label: "Postal Code",
+        selector: "postalCode"
+      },
+      {
+        label: "Country",
+        selector: "country"
+      },
+      {
+        label: "Website",
+        selector: "website"
+      },
+      {
+        icon: "fa fa-pencil-square-o",
+        type: "btn-link",
+        link: "Company"
+      }
+    ];
 
     vm.getCompanies = getCompanies;
+    vm.sort = sort;
 
     activate();
 
@@ -28,10 +64,20 @@
     function getCompanies() {
       dataservice.companies
         .get({query: vm.pagination})
-        .then(function (data) {
-          vm.itemCount = data.itemCount;
-          vm.companies = data.data;
-        });
+        .then(setupData);
+    }
+
+    function setupData(data) {
+      vm.itemCount = data.itemCount;
+      vm.companies = data.data;
+    }
+
+    function sort(selector){
+      var cpy = angular.copy(vm.pagination);
+      cpy.orderBy = selector;
+      dataservice.companies
+        .get({query: cpy})
+        .then(setupData);
     }
   }
 })();
