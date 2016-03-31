@@ -17,6 +17,50 @@
     };
     vm.itemCount = 0;
 
+    vm.headers = [
+      {
+        label: "Name",
+        selector: "name"
+      },
+      {
+        label: "Stage",
+        selector: "stage.name"
+      },
+      {
+        label: "Likelihood",
+        selector: "percentage"
+      },
+      {
+        label: "Company",
+        selector: "companyName"
+      },
+      {
+        label: "Owner",
+        selector: "ownerName"
+      },
+      {
+        label: "Start",
+        selector: "startDate"
+      },
+      {
+        label: "End",
+        selector: "endDate"
+      },
+      {
+        label: "Close",
+        selector: "expectedClose"
+      },
+      {
+        label: "Amount",
+        selector: "amount"
+      },
+      {
+        icon: "fa fa-pencil-square-o",
+        type: "btn-link",
+        link: "Opportunity"
+      }
+    ];
+
     vm.getOpportunities = getOpportunities;
 
     activate();

@@ -1,0 +1,13 @@
+<table class="table">
+  <tr>
+      <th ng-repeat="header in $ctrl.headers">{{header.label}}</th>
+  </tr>
+  <tr ng-repeat="data in $ctrl.data">
+      <td ng-repeat="header in $ctrl.headers" ng-switch="header.type">
+          <span ng-switch-default>{{data | get : header.selector}}</span>
+          <a ui-sref="{{header.link}}({id: data.id})" class="btn btn-primary"  ng-switch-when="btn-link">
+              <i ng-class="header.icon"></i>
+          </a>
+      </td>
+  </tr>
+</table>
