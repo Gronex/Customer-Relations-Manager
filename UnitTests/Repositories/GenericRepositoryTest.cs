@@ -39,6 +39,30 @@ namespace UnitTests.Repositories
         }
 
         [Fact]
+        public void OrderByString()
+        {
+            _context.UserGroups.Add(new UserGroup()
+            {
+                Id = 6,
+                Name = "1ab"
+            });
+            var data = _repo.GetOrderedByStrings(orderBy: new List<string> {"name"});
+            Assert.Equal("1ab", data.First().Name);
+        }
+
+        [Fact]
+        public void OrderBySelector()
+        {
+            _context.UserGroups.Add(new UserGroup()
+            {
+                Id = 6,
+                Name = "1ab"
+            });
+            var data = _repo.Get(orderBy: ug => ug.OrderBy(u => u.Name));
+            Assert.Equal("1ab", data.First().Name);
+        }
+
+        [Fact]
         public void GetSuccess()
         {
             var data = new UserGroup {Name = "Test data"};

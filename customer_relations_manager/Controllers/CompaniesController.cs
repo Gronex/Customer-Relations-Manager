@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
@@ -8,6 +10,7 @@ using customer_relations_manager.ViewModels.Company;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using System.Data.Entity;
 
 namespace customer_relations_manager.Controllers
 {
@@ -26,12 +29,11 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int? page = null, int? pageSize = null)
+        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int? page = null, int? pageSize = null, string orderBy = "name")
         {
             CorrectPageInfo(ref page, ref pageSize);
-            var data = _repo.GetPaged(c => c
-                .OrderBy(co => co.Name)
-                .ThenBy(co => co.Id), page, pageSize);
+            
+            var data = _repo.GetPaged(cs => cs.OrderBy(c => c.Name).ThenBy(c => c.Id), page, pageSize);
             return data.MapData(_mapper.Map<CompanyOverviewViewModel>);
         }
 

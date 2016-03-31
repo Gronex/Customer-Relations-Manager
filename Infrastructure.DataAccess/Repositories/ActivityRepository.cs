@@ -23,7 +23,7 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public PaginationEnvelope<Activity> GetAll(Func<IQueryable<Activity>, IOrderedQueryable<Activity>> orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<Activity> GetAll(IEnumerable<string> orderBy, int? page = null, int? pageSize = null)
         {
             return _repo.GetPaged(orderBy, page, pageSize);
         }

@@ -44,9 +44,9 @@ namespace UnitTests.Controllers
                 new ActivityCategory {Id = 3, Name = "3"},
                 new ActivityCategory {Id = 4, Name = "4"}
             };
-            _repo.Get().ReturnsForAnyArgs(x => data);
+            _repo.GetOrderedByStrings().ReturnsForAnyArgs(x => data);
 
-            var result = _controller.GetAll();
+            var result = _controller.GetAll(new string[0]);
             Assert.Equal(4, result.Count());
         }
 

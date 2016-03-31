@@ -28,14 +28,12 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Activities
-        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(int? page = null, int? pageSize = null)
+        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
-            return _repo.GetAll(a => a
-                .OrderBy(ac => ac.DueDate)
-                .ThenBy(ac => ac.DueTimeStart)
-                .ThenBy(ac => ac.DueTimeEnd)
-                .ThenBy(ac => ac.Id), page, pageSize)
+            
+            return _repo
+                .GetAll(orderBy ?? new [] { "DueDate,DueTimeStart,DueTimeEnd" }, page, pageSize)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }
 

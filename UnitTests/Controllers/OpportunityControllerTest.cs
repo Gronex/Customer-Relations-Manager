@@ -47,9 +47,9 @@ namespace UnitTests.Controllers
                 new Opportunity {Id = 4, StartDate = new DateTime(2016, 1, 1), Name = "4"},
             };
 
-            _repo.GetAll(Arg.Any<Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>>>()).Returns(x => new PaginationEnvelope<Opportunity> {Data = data});
+            _repo.GetAll(Arg.Any<IEnumerable<string>>()).Returns(x => new PaginationEnvelope<Opportunity> {Data = data});
 
-            var result = _controller.GetAll();
+            var result = _controller.GetAll(new string[0]);
             Assert.Equal(4, result.Data.Count());
         }
 

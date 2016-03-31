@@ -23,8 +23,16 @@ namespace Core.DomainServices
         IEnumerable<T> Get(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null);
+        IEnumerable<T> GetOrderedByStrings(
+            Expression<Func<T, bool>> filter = null,
+            IEnumerable<string> orderBy = null);
 
         PaginationEnvelope<T> GetPaged(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
+            int? page = null,
+            int? pageSize = null,
+            Expression<Func<T, bool>> filter = null);
+
+        PaginationEnvelope<T> GetPaged(IEnumerable<string> orderBy,
             int? page = null,
             int? pageSize = null,
             Expression<Func<T, bool>> filter = null);

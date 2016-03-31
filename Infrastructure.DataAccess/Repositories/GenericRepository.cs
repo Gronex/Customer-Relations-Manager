@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Core.DomainServices;
 using Infrastructure.DataAccess.Exceptions;
+using System.Linq.Dynamic;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -25,10 +26,32 @@ namespace Infrastructure.DataAccess.Repositories
             return FilterLogic(filter, orderBy, null, null);
         }
 
-        public PaginationEnvelope<T> GetPaged(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, int? page = null, int? pageSize = null, Expression<Func<T, bool>> filter = null)
+        public IEnumerable<T> GetOrderedByStrings(Expression<Func<T, bool>> filter = null, IEnumerable<string> orderBy = null)
+        {
+            return FilterLogic(filter, orderBy, null, null);
+        }
+
+        public PaginationEnvelope<T> GetPaged(
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, 
+            int? page = null, 
+            int? pageSize = null, 
+            Expression<Func<T, bool>> filter = null)
         {
             var data = FilterLogic(filter, orderBy, page, pageSize);
             
+            return new PaginationEnvelope<T>
+            {
+                PageSize = pageSize ?? -1,
+                PageNumber = page ?? -1,
+                ItemCount = Count(filter),
+                Data = data
+            };
+        }
+
+        public PaginationEnvelope<T> GetPaged(IEnumerable<string> orderBy, int? page = null, int? pageSize = null, Expression<Func<T, bool>> filter = null)
+        {
+            var data = FilterLogic(filter, orderBy, page, pageSize);
+
             return new PaginationEnvelope<T>
             {
                 PageSize = pageSize ?? -1,
@@ -117,6 +140,30 @@ namespace Infrastructure.DataAccess.Repositories
             if (page.HasValue && pageSize.HasValue)
                 query = query
                     .Skip((page.Value - 1)*pageSize.Value)
+                    .Take(pageSize.Value);
+
+            return query;
+        }
+
+        private IQueryable<T> FilterLogic(
+            Expression<Func<T, bool>> filter,
+            IEnumerable<string> orderBy,
+            int? page,
+            int? pageSize)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if(orderBy == null) orderBy = new List<string>();
+            var orderByString = string.Join(",", orderBy).Replace("_", " ");
+            orderByString = string.IsNullOrEmpty(orderByString) ? "Id" : $"{orderByString},Id";
+                query = query.OrderBy(orderByString);
+
+            if (page.HasValue && pageSize.HasValue)
+                query = query
+                    .Skip((page.Value - 1) * pageSize.Value)
                     .Take(pageSize.Value);
 
             return query;

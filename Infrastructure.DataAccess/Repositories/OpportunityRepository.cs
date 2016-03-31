@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
@@ -23,7 +24,7 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public PaginationEnvelope<Opportunity> GetAll(Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>> orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<Opportunity> GetAll(IEnumerable<string> orderBy, int? page = null, int? pageSize = null)
         {
             return _repo.GetPaged(orderBy, page, pageSize);
         }

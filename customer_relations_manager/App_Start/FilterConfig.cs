@@ -20,6 +20,7 @@ namespace customer_relations_manager.App_Start
             filters.Add(new NotFoundExceptionFilterAttribute());
             filters.Add(new DuplicateExceptionFilterAttribute());
             filters.Add(new NotAllowedExceptionFilterAttribute());
+            filters.Add(new ParseExceptionFilterAttribute());
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -37,15 +38,18 @@ namespace customer_relations_manager.Controllers
 
         // GET: api/users
         [HttpGet]
-        public IHttpActionResult GetAll(int? page = null, int? pageSize = null)
+        public IHttpActionResult GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
             var users = _userManager.Users.Where(u => u.Active);
             var userCount = users.Count();
 
-            users = users.OrderBy(u => u.FirstName)
-                .ThenBy(u => u.LastName)
-                .ThenBy(pe => pe.Id);
+            if (orderBy == null) orderBy = new [] {"FirstName", "LastName"};
+            var orderByString = string.Join(",", orderBy).Replace("_", " ");
+            orderByString = string.IsNullOrEmpty(orderByString) ? "Id" : $"{orderByString},Id";
+
+            users = users.OrderBy(orderByString);
+            
             if (page.HasValue && pageSize.HasValue)
                 users = users
                     .Skip((page.Value - 1)*pageSize.Value)

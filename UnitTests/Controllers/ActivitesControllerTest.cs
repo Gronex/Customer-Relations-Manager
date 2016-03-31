@@ -46,9 +46,9 @@ namespace UnitTests.Controllers
                 new Activity {Id = 3, Name = "3"},
                 new Activity {Id = 4, Name = "4"}
             };
-            _repo.GetAll(Arg.Any<Func<IQueryable<Activity>, IOrderedQueryable<Activity>>>()).ReturnsForAnyArgs(a => new PaginationEnvelope<Activity> {Data = data});
+            _repo.GetAll(Arg.Any<IEnumerable<string>>()).ReturnsForAnyArgs(a => new PaginationEnvelope<Activity> {Data = data});
 
-            var result = _controller.GetActivities();
+            var result = _controller.GetActivities(new string[0]);
             Assert.Equal(4, result.Data.Count());
         }
 

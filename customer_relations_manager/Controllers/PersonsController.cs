@@ -28,13 +28,12 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Persons
-        public PaginationEnvelope<PersonViewModel> GetAll(int? page = null, int? pageSize = null)
+        public PaginationEnvelope<PersonViewModel> GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
+            
             return _repo
-                .GetAll(p => p
-                    .OrderBy(pe => pe.LastName)
-                    .ThenBy(pe => pe.Id), page, pageSize)
+                .GetAll(orderBy ?? new[] { "LastName" }, page, pageSize)
                 .MapData(_mapper.Map<PersonViewModel>);
         }
 

@@ -59,10 +59,10 @@ namespace UnitTests.Repositories
         [Fact]
         public void GetAllGetsPaged()
         {
-            _repo.GetAll(os => os.OrderBy(o => o.Name));
+            _repo.GetAll(new List<string> { "name"} );
             _generic
                 .ReceivedWithAnyArgs()
-                .GetPaged(Arg.Any<Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>>>());
+                .GetPaged(Arg.Any<IEnumerable<string>>());
         }
 
         [Fact]

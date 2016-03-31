@@ -27,11 +27,9 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ActivityCategoryViewModel> GetAll()
+        public IEnumerable<ActivityCategoryViewModel> GetAll([FromUri] string[] orderBy)
         {
-            return _repo.Get(orderBy: ac => ac
-                    .OrderBy(a => a.Name)
-                    .ThenBy(a => a.Id))
+            return _repo.GetOrderedByStrings(orderBy: orderBy ?? new [] {"name"})
                 .Select(_mapper.Map<ActivityCategoryViewModel>);
         }
 
