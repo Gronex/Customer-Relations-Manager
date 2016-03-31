@@ -1,6 +1,13 @@
 <table class="table">
   <tr>
-      <th ng-repeat="header in $ctrl.headers">{{header.label}}</th>
+      <th ng-repeat="header in $ctrl.headers">
+          <span class="clickable" ng-click="$ctrl.sortBy(header.selector)" ng-show="header.label">
+              {{header.label}}
+                  <i ng-show="$ctrl.selector !== header.selector" class="fa fa-sort"></i>
+                  <i ng-show="$ctrl.selector === header.selector && $ctrl.asc" class="fa fa-sort-asc"></i>
+                  <i ng-show="$ctrl.selector === header.selector && !$ctrl.asc" class="fa fa-sort-desc"></i>
+          </span>
+      </th>
   </tr>
   <tr ng-repeat="data in $ctrl.data">
       <td ng-repeat="header in $ctrl.headers" ng-switch="header.type">

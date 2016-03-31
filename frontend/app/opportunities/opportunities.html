@@ -2,7 +2,7 @@
 <a type="button" class="btn btn-default pull-right" ui-sref="Opportunity({id: 'new'})")>New Opportunity</a>
 <br/>
 <br/>
-<crm-table headers="vm.headers" data="vm.opportunities"></crm-table>
+<crm-table on-sort="vm.sort" headers="vm.headers" data="vm.opportunities"></crm-table>
 <uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getOpportunities()"></uib-pagination>
 
 
