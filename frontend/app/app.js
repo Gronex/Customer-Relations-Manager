@@ -44,17 +44,56 @@
         controller: "User",
         controllerAs: 'vm'
       })
-      .state('Activities', {
+
+      .state("Activities", {
         url: "/activities",
+        abstract: true,
+        template: "<ui-view></ui-view>"
+      })
+      .state('Activities.list', {
+        url: "",
         templateUrl: "view/app/activities/activities.html",
         controller: 'Activities',
         controllerAs: 'vm'
       })
-      .state("Activity", {
-        url: "/activities/{id}?{contact:int}&{company:int}",
+      .state("Activities.new", {
+        url: "/activities/new?{contact:int}&{company:int}",
         templateUrl: "view/app/activities/activity.html",
         controller: "Activity",
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          person: function(dataservice, $stateParams){
+            if($stateParams.contact)
+              return dataservice.people.get($stateParams.contact);
+            else
+              return {};
+          },
+          company: function(dataservice, $stateParams){
+            if($stateParams.company)
+              return dataservice.companies.get($stateParams.company);
+            else if($stateParams.contact)
+              return dataservice.people.get($stateParams.contact)
+              .then(function(result){
+                return dataservice.companies.get(result.companyId);
+              });
+            else
+              return {};
+          },
+          activity: function(){return {};}
+        }
+      })
+      .state("Activities.edit", {
+        url: "/activities/{id:int}",
+        templateUrl: "view/app/activities/activity.html",
+        controller: "Activity",
+        controllerAs: 'vm',
+        resolve: {
+          person: function(){ return {}; },
+          company: function(){ return {}; },
+          activity: function(dataservice, $stateParams){
+            return dataservice.activities.get($stateParams.id);
+          }
+        }
       })
       .state("UserGroups", {
         url: "/groups",

@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('Activity', Activity);
 
-  Activity.$inject = ['dataservice', '$stateParams', '$state', 'authorization'];
-  function Activity(dataservice, $stateParams, $state, auth){
+  Activity.$inject = ['person', 'company', 'activity', 'dataservice', '$stateParams', '$state', 'authorization'];
+  function Activity(person, company, activity, dataservice, $stateParams, $state, auth){
     var vm = this;
 
     vm.categories = [];
@@ -30,51 +30,27 @@
     activate();
 
     function activate(){
-      if($stateParams.id !== "new")
+      if($state.is("Activities.edit"))
       {
         vm.editing = true;
-        getActivity($stateParams.id);
+        vm.activity = activity;
+        vm.time = activity.dueTimeStart !== null;
+        getEmployees();
       } else{
         var user = auth.getUser();
         vm.activity = {
           responsibleEmail: user.email,
           responsibleName: user.name,
           secondaryContactuns: [],
-          secondaryResponsibles: []
+          secondaryResponsibles: [],
+          primaryContactId: person.id,
+          primaryContactName: person.name,
+          companyId: company.id,
+          companyName: company.name
         };
-        getPerson($stateParams.contact);
       }
       getUsers();
       getCategories();
-    }
-
-    function getPerson(id){
-      if(id === undefined) return {};
-      return dataservice.people
-        .get(id)
-        .then(function(result){
-          vm.activity.primaryContactId = result.id;
-          vm.activity.primaryContactName = result.name;
-          return result;
-        })
-        .then(function(result){
-          dataservice.companies
-            .get(result.companyId)
-            .then(function(company){
-              vm.activity.companyId = result.companyId;
-              vm.activity.companyName = company.name;
-            });
-        });
-    }
-
-    function getActivity(id){
-      return dataservice.activities
-        .get(id)
-        .then(function(a){
-          vm.activity = a;
-          vm.time = a.dueTimeStart !== null;
-          getEmployees();
-        });
     }
 
     function getEmployees(){
@@ -95,13 +71,13 @@
         dataservice.activities
           .update($stateParams.id, vm.activity)
           .then(function(){
-            $state.go("Activities");
+            $state.go("Activities.list");
           }, handleRequestError);
       } else {
         dataservice.activities
           .create(vm.activity)
           .then(function(result){
-            $state.go("Activity", {id: result.location});
+            $state.go("Activity.edit", {id: result.location});
           }, handleRequestError);
       }
     }
@@ -132,7 +108,7 @@
       return dataservice.activities
         .remove($stateParams.id)
         .then(function(){
-          $state.go("Activities");
+          $state.go("Activities.list");
         });
     }
 

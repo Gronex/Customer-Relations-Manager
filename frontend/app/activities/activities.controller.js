@@ -48,7 +48,7 @@
       {
         icon: "fa fa-pencil-square-o",
         type: "btn-link",
-        link: "Person"
+        link: "Activities.edit"
       }
     ];
 

@@ -34,7 +34,7 @@
             label: "People"
           },
           {
-            link: "Activities",
+            link: "Activities.list",
             label: "Activities"
           }
         ]);
