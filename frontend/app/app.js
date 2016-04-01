@@ -51,10 +51,21 @@
         template: "<ui-view></ui-view>"
       })
       .state('Activities.list', {
-        url: "",
+        url: "?{own}&{pageSize:int}&{page:int}&{orderBy}",
         templateUrl: "view/app/activities/activities.html",
         controller: 'Activities',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          activities: function(dataservice, $stateParams){
+            var query = {
+              own: true,
+              pageSize: 10,
+              page: 1
+            };
+            _.merge(query, $stateParams);
+            return dataservice.activities.get({query: query});
+          }
+        }
       })
       .state("Activities.new", {
         url: "/activities/new?{contact:int}&{company:int}",

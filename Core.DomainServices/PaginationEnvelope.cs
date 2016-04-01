@@ -13,15 +13,17 @@ namespace Core.DomainServices
         public int PageNumber { get; set; }
         public int ItemCount { get; set; }
         public IEnumerable<T> Data { get; set; }
+        public dynamic FilterParams { get; set; }
         
-        public PaginationEnvelope<T2> MapData<T2>(Func<T, T2> mapper)
+        public PaginationEnvelope<T2> MapData<T2>(Func<T, T2> mapper, dynamic filterParams = null)
         {
             return new PaginationEnvelope<T2>
             {
                 ItemCount = ItemCount,
                 PageNumber = PageNumber,
                 PageSize = PageSize,
-                Data = Data.Select(mapper)
+                Data = Data.Select(mapper),
+                FilterParams = filterParams
             };
         }
     }

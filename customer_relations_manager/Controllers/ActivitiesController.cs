@@ -28,8 +28,9 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Activities
-        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities([FromUri]string[] orderBy, int? page = null, int? pageSize = null, bool own = true)
         {
+            // TODO: brug object til at modtage argumenterne, og send det til repositoriet
             CorrectPageInfo(ref page, ref pageSize);
             var defaultOrder = new[] {"DueDate,DueTimeStart,DueTimeEnd"};
             orderBy = (orderBy ?? defaultOrder)

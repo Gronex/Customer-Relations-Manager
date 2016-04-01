@@ -2,5 +2,5 @@
 <a type="button" class="btn btn-default pull-right" ui-sref="Activities.new">New Activity</a>
 </h1>
 <br/>
-<crm-table headers="vm.headers" data="vm.activities" on-sort="vm.sort"></crm-table>
-<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getActivities()"></uib-pagination>
+<crm-table headers="vm.headers" data="vm.activities" on-sort="vm.getActivities" sort-param="::vm.query.orderBy"></crm-table>
+<uib-pagination items-per-page="vm.query.pageSize" total-items="vm.itemCount" ng-model="vm.query.page" ng-change="vm.getActivities()"></uib-pagination>
