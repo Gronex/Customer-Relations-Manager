@@ -32,7 +32,8 @@
       },
       {
         label: "Email",
-        selector: "email"
+        selector: "email",
+        type: "email"
       },
       {
         label: "Phone number",

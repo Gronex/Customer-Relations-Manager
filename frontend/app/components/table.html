@@ -20,6 +20,9 @@
           <a href="{{data | get:header.selector | url}}" ng-switch-when="ext-link">
               {{data | get : header.selector}}
           </a>
+          <a href="mailto:{{data | get:header.selector}}" ng-switch-when="email">
+              {{data | get : header.selector}}
+          </a>
           <span ng-switch-default ng-switch="header.format">
               <span ng-switch-when="date">{{data | get:header.selector | moment}}</span>
               <span ng-switch-when="time">{{data | get:header.selector | moment:'HH:mm'}}</span>
