@@ -44,11 +44,11 @@ namespace UnitTests.Controllers
                 new Company {Id = 3, Name = "3"},
                 new Company {Id = 4, Name = "4"}
             };
-            _repo.GetPaged(Arg.Any<Func<IQueryable<Company>, IOrderedQueryable<Company>>>()).ReturnsForAnyArgs(x => new PaginationEnvelope<Company> {
+            _repo.GetPaged(Arg.Any<string[]>()).ReturnsForAnyArgs(x => new PaginationEnvelope<Company> {
                 Data = data
             });
 
-            var result = _controller.GetAll();
+            var result = _controller.GetAll(new string[0]);
             Assert.Equal(4, result.Data.Count());
         }
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -33,7 +34,7 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Person GetById(int id)
         {
-            return _repo.GetByKey(id);
+            return _repo.GetByKeyThrows(id);
         }
 
         public Person Create(Person model)
@@ -61,9 +62,8 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Person AddToCompany(int id, int companyId)
         {
-            var person = _repo.GetByKey(id);
-            if (person == null) return null;
-            if (!_context.Companies.Any(c => c.Id == companyId)) return null;
+            var person = _repo.GetByKeyThrows(id);
+            if (!_context.Companies.Any(c => c.Id == companyId)) throw new NotFoundException("Company");
             if (person.StartDate.HasValue) return null;
             
             person.CompanyId = companyId;
@@ -77,7 +77,6 @@ namespace Infrastructure.DataAccess.Repositories
         {
             var person = _repo.GetByKey(id);
             if (person == null) return;
-
             Unassign(person);
             
             _context.SetState(person, EntityState.Modified);

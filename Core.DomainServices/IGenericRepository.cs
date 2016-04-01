@@ -38,11 +38,17 @@ namespace Core.DomainServices
             Expression<Func<T, bool>> filter = null);
 
         /// <summary>
-        /// Returns an entity with the given key, or null in none exist
+        /// Returns an entity with the given key, or null if none exist
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         T GetByKey(params object[] key);
+        /// <summary>
+        /// Returns an entity with the given key, or throws if none exist
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        T GetByKeyThrows(params object[] key);
 
         /// <summary>
         /// Creates a new element
