@@ -19,7 +19,9 @@
     vm.headers = [
       {
         label: "Name",
-        selector: "name"
+        selector: "name",
+        type: "link",
+        link: "Companies.view"
       },
       {
         label: "PhoneNumber",
