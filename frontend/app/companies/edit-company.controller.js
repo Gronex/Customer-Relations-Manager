@@ -3,16 +3,14 @@
 
   angular
     .module('CRM')
-    .controller('Company', Company);
+    .controller('EditCompany', Company);
 
-  Company.$inject = ['dataservice', '$stateParams', '$state'];
+  Company.$inject = ['company', 'employees', 'dataservice', '$stateParams', '$state'];
 
   /* @ngInject */
-  function Company(dataservice, $stateParams, $state) {
+  function Company(company, employees, dataservice, $stateParams, $state) {
     var vm = this;
     vm.editing = false;
-    vm.company = {};
-    vm.employees = [];
 
     vm.save = save;
     vm.remove = remove;
@@ -20,27 +18,11 @@
     activate();
 
     function activate() {
-      if($stateParams.id !== 'new'){
-        getCompany($stateParams.id);
-        getEmployees($stateParams.id);
-      }
-    }
-
-    function getCompany(id) {
-      dataservice.companies
-      .get(id)
-      .then(function (data) {
-        vm.company = data;
+      if($state.is('Companies.edit')){
         vm.editing = true;
-      });
-    }
-
-    function getEmployees(id){
-      dataservice
-        .companyEmployees({companyId: id})
-        .then(function(data){
-          vm.employees = data;
-        });
+      }
+      vm.company = company;
+      vm.employees = employees;
     }
 
     function save() {
@@ -48,13 +30,13 @@
         dataservice.companies
         .update($stateParams.id, vm.company)
         .then(function () {
-          $state.go("Companies");
+          $state.go("Companies.list");
         }, handleRequestError);
       } else {
         dataservice.companies
         .create(vm.company)
         .then(function () {
-          $state.go("Companies");
+          $state.go("Companies.list");
         }, handleRequestError);
       }
     }
@@ -63,7 +45,7 @@
       dataservice.companies
         .remove($stateParams.id)
         .then(function () {
-          $state.go("Companies");
+          $state.go("Companies.list");
         });
     }
 

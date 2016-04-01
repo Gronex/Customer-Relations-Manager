@@ -16,6 +16,8 @@ namespace customer_relations_manager.Filters
             if (actionExecutedContext.Exception is NotFoundException)
             {
                 actionExecutedContext.Response = new HttpResponseMessage(HttpStatusCode.NotFound);
+                if(!string.IsNullOrWhiteSpace(actionExecutedContext.Exception.Message))
+                actionExecutedContext.Response.Content = new StringContent(actionExecutedContext.Exception.Message);
             }
         }
     }

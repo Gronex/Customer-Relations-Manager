@@ -12,7 +12,9 @@ using customer_relations_manager.ViewModels.Company;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -44,11 +46,11 @@ namespace UnitTests.Controllers
                 new Company {Id = 3, Name = "3"},
                 new Company {Id = 4, Name = "4"}
             };
-            _repo.GetPaged(Arg.Any<Func<IQueryable<Company>, IOrderedQueryable<Company>>>()).ReturnsForAnyArgs(x => new PaginationEnvelope<Company> {
+            _repo.GetPaged(Arg.Any<string[]>()).ReturnsForAnyArgs(x => new PaginationEnvelope<Company> {
                 Data = data
             });
 
-            var result = _controller.GetAll();
+            var result = _controller.GetAll(new string[0]);
             Assert.Equal(4, result.Data.Count());
         }
 
@@ -56,7 +58,7 @@ namespace UnitTests.Controllers
         public void GetIsCorrectData()
         {
             var data = new Company { Id = 1, Name = "1" };
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
+            _repo.GetByKeyThrows(Arg.Any<int>()).Returns(x => data);
             var result = _controller.Get(1) as OkNegotiatedContentResult<CompanyViewModel>;
             // Only testing one, since there is no reason the 
             // system should have chosen the same string. 
@@ -67,10 +69,8 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => null);
-
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            _repo.GetByKeyThrows().ThrowsForAnyArgs(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]
@@ -125,10 +125,13 @@ namespace UnitTests.Controllers
         }
 
         [Fact]
-        public void UpdateReturnsNotFoundOnBadId()
+        public void UpdateDontSaveOnBadId()
         {
             var dataViewModel = new CompanyViewModel { Name = "1" };
-            Assert.IsType<NotFoundResult>(_controller.Put(1, dataViewModel));
+            _repo.Update(Arg.Any<Action<Company>>()).ThrowsForAnyArgs(new NotFoundException());
+            try { _controller.Put(1, dataViewModel); }
+            catch { /* Ignore */ }
+            _uow.DidNotReceiveWithAnyArgs().Save();
 
         }
 
@@ -170,15 +173,41 @@ namespace UnitTests.Controllers
                     new Person {FirstName = "2"}
                 }
             };
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
-            var result = _controller.Persons(1) as OkNegotiatedContentResult<IEnumerable<PersonViewModel>>;
-            Assert.Equal(2, result?.Content.Count());
+            _repo.GetByKeyThrows(Arg.Any<int>()).Returns(x => data);
+            var result = _controller.Persons(1);
+            Assert.Equal(2, result.Count());
         }
 
         [Fact]
-        public void PersonReturnsNotFoundOnBadCompanyId()
+        public void PersonsThrowsOnBadId()
         {
-            Assert.IsType<NotFoundResult>(_controller.Persons(2));
+            _repo.GetByKeyThrows(Arg.Any<int>()).ThrowsForAnyArgs(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Persons(2));
+        }
+
+        [Fact]
+        public void ActivitiesGetsActivities()
+        {
+            var data = new Company
+            {
+                Id = 1,
+                Name = "1",
+                Activities = new List<Activity>
+                {
+                    new Activity {Name = "1"},
+                    new Activity {Name = "2"}
+                }
+            };
+            _repo.GetByKeyThrows(Arg.Any<int>()).Returns(x => data);
+            var result = _controller.Activities(1);
+            Assert.Equal(2, result.Count());
+        }
+
+        [Fact]
+        public void ActivitiesThrowsOnBadId()
+        {
+            _repo.GetByKeyThrows(Arg.Any<int>()).ThrowsForAnyArgs(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Activities(2));
         }
     }
 }

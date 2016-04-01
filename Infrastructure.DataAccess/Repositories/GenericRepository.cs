@@ -66,6 +66,13 @@ namespace Infrastructure.DataAccess.Repositories
             return _dbSet.Find(key);
         }
 
+        public T GetByKeyThrows(params object[] key)
+        {
+            var result = _dbSet.Find(key);
+            if(result == null) throw new NotFoundException();
+            return result;
+        }
+
         public T Create()
         {
             var entity = _dbSet.Create<T>();

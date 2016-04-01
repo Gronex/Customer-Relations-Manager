@@ -11,10 +11,25 @@
   </tr>
   <tr ng-repeat="data in $ctrl.data">
       <td ng-repeat="header in $ctrl.headers" ng-switch="header.type">
-          <span ng-switch-default>{{data | get : header.selector}}</span>
           <a ui-sref="{{header.link}}({id: data.id})" class="btn btn-primary"  ng-switch-when="btn-link">
               <i ng-class="header.icon"></i>
           </a>
+          <a ui-sref="{{header.link}}({id: data.id})" ng-switch-when="link">
+              {{data | get : header.selector}}
+          </a>
+          <a href="{{data | get:header.selector | url}}" ng-switch-when="ext-link">
+              {{data | get : header.selector}}
+          </a>
+          <a href="mailto:{{data | get:header.selector}}" ng-switch-when="email">
+              {{data | get : header.selector}}
+          </a>
+          <span ng-switch-default ng-switch="header.format">
+              <span ng-switch-when="date">{{data | get:header.selector | moment}}</span>
+              <span ng-switch-when="time">{{data | get:header.selector | moment:'HH:mm'}}</span>
+              <span ng-switch-default>
+                  {{$ctrl.format(data, header.selector, header.format)}}
+              </span>
+          </span>
       </td>
   </tr>
 </table>

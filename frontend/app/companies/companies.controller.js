@@ -19,7 +19,9 @@
     vm.headers = [
       {
         label: "Name",
-        selector: "name"
+        selector: "name",
+        type: "link",
+        link: "Companies.view"
       },
       {
         label: "PhoneNumber",
@@ -43,12 +45,13 @@
       },
       {
         label: "Website",
-        selector: "website"
+        selector: "webSite",
+        type: "ext-link"
       },
       {
         icon: "fa fa-pencil-square-o",
         type: "btn-link",
-        link: "Company"
+        link: "Companies.edit"
       }
     ];
 

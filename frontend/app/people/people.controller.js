@@ -20,15 +20,20 @@
     vm.headers = [
       {
         label: "First name",
-        selector: "firstName"
+        selector: "firstName",
+        type: "link",
+        link: "People.view"
       },
       {
         label: "Last name",
-        selector: "lastName"
+        selector: "lastName",
+        type: "link",
+        link: "People.view"
       },
       {
         label: "Email",
-        selector: "email"
+        selector: "email",
+        type: "email"
       },
       {
         label: "Phone number",
@@ -37,7 +42,7 @@
       {
         icon: "fa fa-pencil-square-o",
         type: "btn-link",
-        link: "Person"
+        link: "People.edit"
       }
     ];
 
