@@ -11,10 +11,12 @@ using Core.DomainModels.Customers;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using System.Data.Entity;
+using customer_relations_manager.ViewModels.Activity;
 
 namespace customer_relations_manager.Controllers
 {
     [Authorize]
+    [RoutePrefix("api/companies")]
     public class CompaniesController : CrmApiController
     {
         private readonly IGenericRepository<Company> _repo;
@@ -43,9 +45,7 @@ namespace customer_relations_manager.Controllers
         [ResponseType(typeof(CompanyViewModel))]
         public IHttpActionResult Get(int id)
         {
-            var data = _repo.GetByKey(id);
-            if(data == null) return NotFound();
-
+            var data = _repo.GetByKeyThrows(id);
             return Ok(_mapper.Map<CompanyViewModel>(data));
         }
 
@@ -78,7 +78,6 @@ namespace customer_relations_manager.Controllers
                 company.WebSite = updated.WebSite;
             }, id);
             
-            if(dbModel == null) return NotFound();
             _uow.Save();
 
             return Ok(_mapper.Map<CompanyViewModel>(dbModel));
@@ -92,14 +91,22 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        [Route("api/companies/{id}/persons")]
-        public IHttpActionResult Persons(int id)
+        [Route("{id}/persons")]
+        public IEnumerable<PersonViewModel> Persons(int id)
         {
-            var company = _repo.GetByKey(id);
-            if(company == null) return NotFound();
+            var company = _repo.GetByKeyThrows(id);
 
             var employees = company.Employees;
-            return Ok(employees.Select(_mapper.Map<PersonViewModel>));
+            return employees.Select(_mapper.Map<PersonViewModel>);
         }
+
+        [HttpGet]
+        [Route("{id}/activities")]
+        public IEnumerable<ActivityOverviewViewModel> Activities(int id)
+        {
+            var activities = _repo.GetByKeyThrows(id).Activities;
+            return activities.Select(_mapper.Map<ActivityOverviewViewModel>);
+        }
+
     }
 }
