@@ -32,15 +32,18 @@
       },
       {
         label: "Due",
-        selector: "dueDate"
+        selector: "dueDate",
+        format: "date"
       },
       {
         label: "From",
-        selector: "dueTimeStart"
+        selector: "dueTimeStart",
+        format: "time"
       },
       {
         label: "To",
-        selector: "dueTimeEnd"
+        selector: "dueTimeEnd",
+        format: "time"
       },
       {
         icon: "fa fa-pencil-square-o",

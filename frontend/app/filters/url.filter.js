@@ -5,6 +5,7 @@
 
   function UrlFilter(){
     return function(link){
+      if(!link) return "";
       if(link.match(/:\/\//)) return link;
       link = "http://" + link;
 

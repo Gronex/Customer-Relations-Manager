@@ -14,7 +14,12 @@
         var $ctrl = this;
 
         $ctrl.sortBy = sortBy;
-
+        $ctrl.format = function(row, key, format){
+          var data = _.get(row, key);
+          if(typeof(format) === "function")
+            return format(data);
+          return data;
+        };
         function sortBy(selector){
           if($ctrl.selector === selector)
             $ctrl.asc = !$ctrl.asc;

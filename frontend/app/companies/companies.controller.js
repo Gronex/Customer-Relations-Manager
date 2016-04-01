@@ -45,7 +45,8 @@
       },
       {
         label: "Website",
-        selector: "website"
+        selector: "webSite",
+        type: "ext-link"
       },
       {
         icon: "fa fa-pencil-square-o",

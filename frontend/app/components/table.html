@@ -17,7 +17,16 @@
           <a ui-sref="{{header.link}}({id: data.id})" ng-switch-when="link">
               {{data | get : header.selector}}
           </a>
-          <span ng-switch-default>{{data | get : header.selector}}</span>
+          <a href="{{data | get:header.selector | url}}" ng-switch-when="ext-link">
+              {{data | get : header.selector}}
+          </a>
+          <span ng-switch-default ng-switch="header.format">
+              <span ng-switch-when="date">{{data | get:header.selector | moment}}</span>
+              <span ng-switch-when="time">{{data | get:header.selector | moment:'HH:mm'}}</span>
+              <span ng-switch-default>
+                  {{$ctrl.format(data, header.selector, header.format)}}
+              </span>
+          </span>
       </td>
   </tr>
 </table>

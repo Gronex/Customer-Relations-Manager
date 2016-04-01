@@ -5,7 +5,8 @@
 
   function MomentFilter(){
     return function(date, format){
-      if(typeof(date) === "string") date = moment(date);
+      if(!date) return "";
+      if(typeof(date) === "string") date = moment.utc(date);
       if(!format) format = "ll";
       return date.format(format);
     };
