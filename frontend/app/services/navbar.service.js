@@ -26,11 +26,11 @@
             label: "Opportunities"
           },
           {
-            link: "Companies",
+            link: "Companies.list",
             label: "Companies"
           },
           {
-            link: "People",
+            link: "People.list",
             label: "People"
           },
           {

@@ -22,7 +22,7 @@
   </div>
   <crm-company-typeahead company-name="vm.person.companyName" on-remove="vm.removeFromAll" on-select="vm.updateCompany"></crm-company-typeahead>
   <button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i></button>
-  <a role="button" class="btn btn-primary" ui-sref="People">Back <i class="fa fa-arrow-left"></i></a>
+  <a role="button" class="btn btn-primary" ui-sref="People.list">Back <i class="fa fa-arrow-left"></i></a>
   <a class="btn btn-default pull-right" ng-show="vm.editing && vm.person.companyId" ui-sref="Activity({id: 'new', contact: vm.person.id})">New Activity</a>
 </form>
 

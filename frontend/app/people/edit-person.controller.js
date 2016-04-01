@@ -3,16 +3,13 @@
 
   angular
     .module('CRM')
-    .controller('Person', Person);
+    .controller('EditPerson', Person);
 
-  Person.$inject = ['dataservice', '$stateParams', '$state'];
+  Person.$inject = ['person','dataservice', '$stateParams', '$state'];
 
   /* @ngInject */
-  function Person(dataservice, $stateParams, $state) {
+  function Person(person, dataservice, $stateParams, $state) {
     var vm = this;
-
-    vm.person = {};
-
     vm.updateCompany = updateCompany;
     vm.save = save;
     vm.removeFromAll = removeFromAll;
@@ -20,18 +17,8 @@
     activate();
 
     function activate() {
-      if($stateParams.id !== "new") vm.editing = true;
-      if(vm.editing){
-        getPerson();
-      }
-    }
-
-    function getPerson() {
-      dataservice.people
-        .get($stateParams.id)
-        .then(function (data) {
-          vm.person = data;
-        });
+      if($state.is("People.edit")) vm.editing = true;
+      vm.person = person;
     }
 
     function save() {
@@ -39,14 +26,14 @@
         dataservice.people
         .update($stateParams.id, vm.person)
         .then(function () {
-          $state.go("People");
+          $state.go("People.list");
         });
       }
       else {
         dataservice.people
         .create(vm.person)
         .then(function (data) {
-          $state.go("Person", {id: data.location});
+          $state.go("Person.view", {id: data.location});
         });
       }
     }

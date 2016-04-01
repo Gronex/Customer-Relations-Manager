@@ -51,7 +51,7 @@
         controllerAs: 'vm'
       })
       .state("Activity", {
-        url: "/activities/{id}?{contact}",
+        url: "/activities/{id}?{contact:int}&{company:int}",
         templateUrl: "view/app/activities/activity.html",
         controller: "Activity",
         controllerAs: 'vm'
@@ -86,30 +86,107 @@
         controller: "OpportunityCategories",
         controllerAs: 'vm'
       })
-      .state("Companies", {
-        url: "/companies",
-        templateUrl: "view/app/companies/companies.html",
-        controller: "Companies",
-        controllerAs: 'vm'
-      })
+
       .state("People", {
         url: "/people",
+        abstract: true,
+        template: "<ui-view></ui-view>"
+      })
+      .state("People.list", {
+        url: "",
         templateUrl: "view/app/people/people.html",
         controller: "People",
         controllerAs: 'vm'
       })
-      .state("Person", {
-        url: "/people/{id}",
-        templateUrl: "view/app/people/person.html",
-        controller: "Person",
+      .state("People.new", {
+        url: "/new",
+        templateUrl: "view/app/people/edit-person.html",
+        controller: "EditPerson",
+        controllerAs: 'vm',
+        resolve: {
+          person: function(){return {};}
+        }
+      })
+      .state("People.edit", {
+        url: "/{id:int}/edit",
+        templateUrl: "view/app/people/edit-person.html",
+        resolve: {
+          person: function(dataservice, $stateParams){
+            var res = dataservice.people.get($stateParams.id);
+            return res;
+          }
+        },
+        controller: "EditPerson",
         controllerAs: 'vm'
       })
-      .state("Company", {
-        url: "/companies/{id}",
-        templateUrl: "view/app/companies/company.html",
-        controller: "Company",
+      .state("People.view", {
+        url: "/{id:int}/view",
+        templateUrl: "view/app/people/view-person.html",
+        resolve: {
+          person: function(dataservice, $stateParams){
+            return dataservice.people.get($stateParams.id);
+          },
+          activities: function(dataservice, $stateParams){
+            return dataservice.personActivities({personId: $stateParams.id});
+          }
+        },
+        controller: "ViewPerson",
+        controllerAs: "vm"
+      })
+
+      .state("Companies", {
+        url: "/companies",
+        abstract: true,
+        template: "<ui-view></ui-view>"
+      })
+      .state("Companies.list", {
+        url: "",
+        templateUrl: "view/app/companies/companies.html",
+        controller: "Companies",
         controllerAs: 'vm'
       })
+      .state("Companies.new", {
+        url: "/companies/new",
+        templateUrl: "view/app/companies/edit-company.html",
+        controller: "EditCompany",
+        controllerAs: 'vm',
+        resolve: {
+          company: function(){ return {}; },
+          employees: function(){ return []; }
+        }
+      })
+      .state("Companies.view", {
+        url: "/{id:int}/view",
+        templateUrl: "view/app/companies/view-company.html",
+        controller: "ViewCompany",
+        controllerAs: 'vm',
+        resolve: {
+          company: function(dataservice, $stateParams){
+            return dataservice.companies.get($stateParams.id);
+          },
+          employees: function(dataservice, $stateParams){
+            return dataservice.companyEmployees({companyId: $stateParams.id});
+          },
+          activities: function(dataservice, $stateParams){
+            return dataservice.companyActivities({companyId: $stateParams.id});
+          }
+        }
+      })
+      .state("Companies.edit", {
+        url: "/{id:int}/edit",
+        templateUrl: "view/app/companies/edit-company.html",
+        controller: "EditCompany",
+        controllerAs: 'vm',
+        resolve: {
+          company: function(dataservice, $stateParams){
+            return dataservice.companies.get($stateParams.id);
+          },
+          employees: function(dataservice, $stateParams){
+            return dataservice.companyEmployees({companyId: $stateParams.id});
+          }
+        }
+      })
+
       .state("Opportunities", {
         url: "/opportunities",
         templateUrl: "view/app/opportunities/opportunities.html",
