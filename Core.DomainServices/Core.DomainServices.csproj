@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filters\PagedSearchFilter.cs" />
     <Compile Include="IApplicationContext.cs" />
     <Compile Include="IGenericRepository.cs" />
     <Compile Include="PaginationEnvelope.cs" />
