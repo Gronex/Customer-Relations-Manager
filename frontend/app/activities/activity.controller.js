@@ -77,7 +77,7 @@
         dataservice.activities
           .create(vm.activity)
           .then(function(result){
-            $state.go("Activity.edit", {id: result.location});
+            $state.go("Activities.edit", {id: result.location});
           }, handleRequestError);
       }
     }

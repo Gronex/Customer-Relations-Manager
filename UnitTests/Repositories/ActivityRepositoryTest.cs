@@ -39,7 +39,7 @@ namespace UnitTests.Repositories
                 Id = 4,
                 Name = "4",
                 Done = true,
-                PrimaryResponsible = new User { Email = "test" },
+                PrimaryResponsible = new User { Email = "test", UserName = "test"},
                 Category = new ActivityCategory { Name = "test"},
                 SecondaryResponsibles = new List<User>(),
                 SecondaryContacts = new List<Person>()
@@ -48,10 +48,10 @@ namespace UnitTests.Repositories
             //Add some data
             _context.Activities.AddRange(new List<Activity>
             {
-                new Activity {Id = 0, Name = "0"},
-                new Activity {Id = 1, Name = "1"},
-                new Activity {Id = 2, Name = "2"},
-                new Activity {Id = 3, Name = "3"},
+                new Activity {Id = 0, Name = "0", PrimaryResponsible = new User()},
+                new Activity {Id = 1, Name = "1", PrimaryResponsible = new User()},
+                new Activity {Id = 2, Name = "2", PrimaryResponsible = new User()},
+                new Activity {Id = 3, Name = "3", PrimaryResponsible = new User()},
             });
 
             _context.Users.Add(new User { Id = "0", Email = "test"});
@@ -74,12 +74,51 @@ namespace UnitTests.Repositories
         [Fact]
         public void GetAllReturnsFullList()
         {
-            _generic.Get(filter: Arg.Any<Expression<Func<Activity, bool>>>())
-                .Returns(a => _context.Activities);
-
-            var result = _repo.GetAll();
-
+            _context.Activities.Add(_data);
+            var result = _repo.GetAll(10, null, null);
             Assert.Equal(_context.Activities, result);
+        }
+
+        [Fact]
+        public void GetAllWithUserNameReturnsOnlyForUser()
+        {
+            _context.Activities.Add(_data);
+            var result = _repo.GetAll(10, "test", null).Single();
+            Assert.Equal(_data, result);
+        }
+
+        [Fact]
+        public void GetAllWithFindFindsSimilar()
+        {
+            var list = new List<Activity>
+            {
+                new Activity { Name = "IT minds" },
+                new Activity { Name = "IT-minds" },
+                new Activity { Name = "itminds" },
+                new Activity { Name = "it_minds"},
+                new Activity { Name = "it"},
+            };
+
+            _context.Activities.AddRange(list);
+            var result = _repo.GetAll(10, null, "IT minds").Select(x => x.Name);
+            Assert.Equal(new List<string> { "IT minds", "IT-minds", "itminds", "it_minds" }, result);
+        }
+
+        [Fact]
+        public void GetAllWithFindFindsSimilarAndPartial()
+        {
+            var list = new List<Activity>
+            {
+                new Activity { Name = "IT minds" },
+                new Activity { Name = "IT-minds" },
+                new Activity { Name = "itminds" },
+                new Activity { Name = "it_minds"},
+                new Activity { Name = "it"},
+            };
+
+            _context.Activities.AddRange(list);
+            var result = _repo.GetAll(10, null, "IT").Select(x => x.Name);
+            Assert.Equal(new List<string> { "IT minds", "IT-minds", "itminds", "it_minds", "it" }, result);
         }
 
         [Theory]

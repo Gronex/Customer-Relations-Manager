@@ -14,7 +14,7 @@ namespace Core.DomainServices.Repositories
             IEnumerable<string> orderBy, 
             int? page = null, 
             int? pageSize = null);
-        IEnumerable<Activity> GetAll();
+        IEnumerable<Activity> GetAll(int amount, string userName, string find);
         Activity GetById(int id);
         Activity Update(int id, Activity activity);
         Activity Create(Activity activity);

@@ -25,14 +25,21 @@ namespace Infrastructure.DataAccess.Repositories
 
         public PaginationEnvelope<Activity> GetAll(string userName, IEnumerable<string> orderBy, int? page = null, int? pageSize = null)
         {
+            _context.Activities.Similar(a => a.Name, "itminds");
+
             return string.IsNullOrWhiteSpace(userName) 
                 ? _repo.GetPaged(orderBy, page, pageSize) 
                 : _repo.GetPaged(orderBy, page, pageSize, a => a.PrimaryResponsible.UserName == userName);
         }
 
-        public IEnumerable<Activity> GetAll()
+        public IEnumerable<Activity> GetAll(int amount = 3, string userName = null, string find = null)
         {
-            return _repo.Get();
+            var activities = _context.Activities.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(userName))
+                activities = activities.Where(a => a.PrimaryResponsible.UserName == userName);
+            if (!string.IsNullOrWhiteSpace(find))
+                activities = activities.Similar(a => a.Name, find);
+            return activities;
         }
 
         public Activity GetById(int id)
