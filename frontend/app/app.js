@@ -51,7 +51,7 @@
         template: "<ui-view></ui-view>"
       })
       .state('Activities.list', {
-        url: "?{own:bool}&{pageSize:int}&{page:int}&{orderBy}",
+        url: "?{own:bool}&{pageSize:int}&{page:int}&{orderBy}&{find}",
         templateUrl: "view/app/activities/activities.html",
         controller: 'Activities',
         controllerAs: 'vm',

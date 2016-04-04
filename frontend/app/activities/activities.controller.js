@@ -59,7 +59,6 @@
 
     function getActivities(sortParam){
       _.merge(vm.query, {orderBy: sortParam});
-      console.log(vm.query.own);
       $state.go("Activities.list", vm.query);
     }
 
