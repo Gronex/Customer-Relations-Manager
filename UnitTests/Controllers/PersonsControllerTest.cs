@@ -44,9 +44,9 @@ namespace UnitTests.Controllers
                 new Person {Id = 3, FirstName = "3"},
                 new Person {Id = 4, FirstName = "4"}
             };
-            _repo.GetAll(Arg.Any<IEnumerable<string>>()).ReturnsForAnyArgs(a => new PaginationEnvelope<Person> { Data = data });
+            _repo.GetAll(null).ReturnsForAnyArgs(a => new PaginationEnvelope<Person> { Data = data });
 
-            var result = _controller.GetAll(new string[0]);
+            var result = _controller.GetAll(null);
             Assert.Equal(4, result.Data.Count());
         }
 

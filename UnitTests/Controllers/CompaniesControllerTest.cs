@@ -50,7 +50,7 @@ namespace UnitTests.Controllers
                 Data = data
             });
 
-            var result = _controller.GetAll(new string[0]);
+            var result = _controller.GetAll(null);
             Assert.Equal(4, result.Data.Count());
         }
 

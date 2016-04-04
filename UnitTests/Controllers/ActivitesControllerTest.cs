@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
-using AutoMapper;
 using customer_relations_manager.App_Start;
 using customer_relations_manager.Controllers;
 using customer_relations_manager.ViewModels;
@@ -25,16 +24,15 @@ namespace UnitTests.Controllers
         private readonly ActivitiesController _controller;
         private readonly IActivityRepository _repo;
         private readonly IUnitOfWork _uow;
-        private readonly IMapper _mapper;
 
         public ActivitesControllerTest()
         {
-            _mapper = AutomapperConfig.ConfigMappings().CreateMapper();
+            var mapper = AutomapperConfig.ConfigMappings().CreateMapper();
 
             _repo = Substitute.For<IActivityRepository>();
 
             _uow = Substitute.For<IUnitOfWork>();
-            _controller = new ActivitiesController(_uow, _repo, _mapper);
+            _controller = new ActivitiesController(_uow, _repo, mapper);
         }
 
         [Fact]

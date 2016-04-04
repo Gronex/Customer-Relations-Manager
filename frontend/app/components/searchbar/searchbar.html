@@ -1,0 +1,9 @@
+<form ng-submit="vm.search()" >
+    <div class="form-group">
+        <input class="form-control" ng-model="vm.term" type="text" placeholder="Search" />
+    </div>
+</form>
+
+<pre>
+    {{vm.results | json}}
+</pre>

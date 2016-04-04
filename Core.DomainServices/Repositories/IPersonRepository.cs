@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Customers;
+using Core.DomainServices.Filters;
 
 namespace Core.DomainServices.Repositories
 {
@@ -14,7 +15,7 @@ namespace Core.DomainServices.Repositories
         /// </summary>
         /// <returns></returns>
         IEnumerable<Person> GetAll();
-        PaginationEnvelope<Person> GetAll(IEnumerable<string> orderBy, int? page = null, int? pageSize = null);
+        PaginationEnvelope<Person> GetAll(PagedSearchFilter filter);
         /// <summary>
         /// Gets a single person
         /// </summary>

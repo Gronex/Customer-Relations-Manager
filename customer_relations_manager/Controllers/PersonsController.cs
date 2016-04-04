@@ -9,6 +9,7 @@ using customer_relations_manager.ViewModels.Activity;
 using customer_relations_manager.ViewModels.Company;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
@@ -29,12 +30,12 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Persons
-        public PaginationEnvelope<PersonViewModel> GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<PersonViewModel> GetAll([FromUri]PagedSearchFilter filter)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            
+            filter = CorrectFilter(filter);
+            filter.OrderBy = filter.OrderBy.Any() ? filter.OrderBy : new[] {"LastName"};
             return _repo
-                .GetAll(orderBy ?? new[] { "LastName" }, page, pageSize)
+                .GetAll(filter)
                 .MapData(_mapper.Map<PersonViewModel>);
         }
 

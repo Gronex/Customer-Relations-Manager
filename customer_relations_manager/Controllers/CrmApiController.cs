@@ -42,6 +42,8 @@ namespace customer_relations_manager.Controllers
                 filter.Page = 1;
             if (filter.PageSize < 1)
                 filter.PageSize = 10;
+            if(filter.OrderBy == null)
+                filter.OrderBy = new List<string>();
 
             return filter;
         }

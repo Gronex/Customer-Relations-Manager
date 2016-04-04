@@ -37,7 +37,7 @@ namespace customer_relations_manager.Controllers
             filter = CorrectFilter(filter);
             //CorrectPageInfo(ref filter.Page, ref pageSize);
             var defaultOrder = new[] { "DueDate,DueTimeStart,DueTimeEnd" };
-            filter.OrderBy = (filter.OrderBy ?? defaultOrder)
+            filter.OrderBy = (filter.OrderBy.Any() ? filter.OrderBy : defaultOrder)
                 .Select(o => o.ToLower()
                     .Replace("primarycontactname", "PrimaryContact.firstName")
                     .Replace("primaryresponsiblename", "PrimaryResponsible.firstName")

@@ -36,6 +36,15 @@
           {
             link: "Activities.list",
             label: "Activities"
+          },
+          {
+            type: "search",
+            searchList: [
+              {
+                label: "People",
+                searchFun: function(){ return [{name: "1"}];}
+              }
+            ]
           }
         ]);
       }
