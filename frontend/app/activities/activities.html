@@ -1,6 +1,11 @@
 <h1>Activities
-<a type="button" class="btn btn-default pull-right" ui-sref="Activities.new">New Activity</a>
+    <a type="button" class="btn btn-default pull-right" ui-sref="Activities.new">New Activity</a>
 </h1>
+<div class="form-group checkbox">
+    <label for="">
+        <input ng-change="vm.getActivities()" ng-model="vm.query.own" type="checkbox" /> Own
+    </label>
+</div>
 <br/>
 <crm-table headers="vm.headers" data="vm.activities" on-sort="vm.getActivities" sort-param="::vm.query.orderBy"></crm-table>
 <uib-pagination items-per-page="vm.query.pageSize" total-items="vm.itemCount" ng-model="vm.query.page" ng-change="vm.getActivities()"></uib-pagination>

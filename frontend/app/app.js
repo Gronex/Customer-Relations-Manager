@@ -51,7 +51,7 @@
         template: "<ui-view></ui-view>"
       })
       .state('Activities.list', {
-        url: "?{own}&{pageSize:int}&{page:int}&{orderBy}",
+        url: "?{own:bool}&{pageSize:int}&{page:int}&{orderBy}",
         templateUrl: "view/app/activities/activities.html",
         controller: 'Activities',
         controllerAs: 'vm',
@@ -63,7 +63,12 @@
               page: 1
             };
             _.merge(query, $stateParams);
-            return dataservice.activities.get({query: query});
+            return dataservice.activities
+              .get({query: query})
+              .then(function(result){
+                result.query = query;
+                return result;
+              });
           }
         }
       })

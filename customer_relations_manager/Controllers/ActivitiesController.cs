@@ -10,6 +10,7 @@ using Core.DomainModels.Activities;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Microsoft.AspNet.Identity;
 
 namespace customer_relations_manager.Controllers
 {
@@ -40,7 +41,7 @@ namespace customer_relations_manager.Controllers
                     .Replace("companyname", "company.name")).ToArray();
 
             return _repo
-                .GetAll(orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize)
+                .GetAll(own ? User.Identity.Name : null, orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }
 

@@ -23,9 +23,11 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public PaginationEnvelope<Activity> GetAll(IEnumerable<string> orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<Activity> GetAll(string userName, IEnumerable<string> orderBy, int? page = null, int? pageSize = null)
         {
-            return _repo.GetPaged(orderBy, page, pageSize);
+            return string.IsNullOrWhiteSpace(userName) 
+                ? _repo.GetPaged(orderBy, page, pageSize) 
+                : _repo.GetPaged(orderBy, page, pageSize, a => a.PrimaryResponsible.UserName == userName);
         }
 
         public IEnumerable<Activity> GetAll()

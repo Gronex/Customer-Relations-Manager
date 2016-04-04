@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('Activities', Activities);
 
-  Activities.$inject = ['activities', 'dataservice', '$state', '$stateParams'];
-  function Activities(activities, dataservice, $state, $stateParams){
+  Activities.$inject = ['activities', 'dataservice', '$state'];
+  function Activities(activities, dataservice, $state){
     var vm = this;
     vm.query = {};
     vm.itemCount = 0;
@@ -59,7 +59,7 @@
 
     function getActivities(sortParam){
       _.merge(vm.query, {orderBy: sortParam});
-      console.log(vm.query);
+      console.log(vm.query.own);
       $state.go("Activities.list", vm.query);
     }
 
@@ -68,7 +68,8 @@
       _.merge(vm.query, {
         pageSize: data.pageSize,
         page: data.pageNumber,
-        orderBy: $stateParams.orderBy
+        orderBy: data.query.orderBy,
+        own: data.query.own
       });
 
       vm.activities = _.map(data.data, function(a){
