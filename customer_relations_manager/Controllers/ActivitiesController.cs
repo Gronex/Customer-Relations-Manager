@@ -29,7 +29,12 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Activities
-        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities([FromUri]string[] orderBy, int? page = null, int? pageSize = null, bool own = true)
+        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(
+            [FromUri]string[] orderBy, 
+            int? page = null, 
+            int? pageSize = null, 
+            bool own = true, 
+            string find = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
             var defaultOrder = new[] {"DueDate,DueTimeStart,DueTimeEnd"};
@@ -40,15 +45,8 @@ namespace customer_relations_manager.Controllers
                     .Replace("companyname", "company.name")).ToArray();
 
             return _repo
-                .GetAll(own ? User.Identity.Name : null, orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize)
+                .GetAll(own ? User.Identity.Name : null, orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize, find)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
-        }
-
-        public IEnumerable<ActivityOverviewViewModel> GetActivitiesWithSearch(string find, int amount = 10, bool own = true)
-        {
-            return
-                _repo.GetAll(amount, own ? User.Identity.Name : null, find)
-                    .Select(_mapper.Map<ActivityOverviewViewModel>);
         }
 
         // GET: api/Activities/5

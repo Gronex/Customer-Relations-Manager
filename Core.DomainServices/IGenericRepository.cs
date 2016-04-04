@@ -30,12 +30,16 @@ namespace Core.DomainServices
         PaginationEnvelope<T> GetPaged(Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
             int? page = null,
             int? pageSize = null,
-            Expression<Func<T, bool>> filter = null);
+            Expression<Func<T, bool>> filter = null,
+            Expression<Func<T, string>> findSelector = null,
+            string find = null);
 
         PaginationEnvelope<T> GetPaged(IEnumerable<string> orderBy,
             int? page = null,
             int? pageSize = null,
-            Expression<Func<T, bool>> filter = null);
+            Expression<Func<T, bool>> filter = null,
+            Expression<Func<T, string>> findSelector = null,
+            string find = null);
 
         /// <summary>
         /// Returns an entity with the given key, or null if none exist
@@ -104,6 +108,9 @@ namespace Core.DomainServices
         /// <returns>The updated entity, or null if it was not found</returns>
         T UpdateBy(Action<T> updateFunction, Expression<Func<T, bool>> selector, bool throws = true);
 
-        int Count(Expression<Func<T, bool>> filter = null);
+        int Count(
+            Expression<Func<T, bool>> filter = null,
+            Expression<Func<T, string>> findSelector = null,
+            string findTerm = null);
     }
 }

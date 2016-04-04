@@ -55,6 +55,7 @@
 
     function activate(){
       setupData(activities);
+      $("#find").focus();
     }
 
     function getActivities(sortParam){
@@ -68,7 +69,8 @@
         pageSize: data.pageSize,
         page: data.pageNumber,
         orderBy: data.query.orderBy,
-        own: data.query.own
+        own: data.query.own,
+        find: data.query.find
       });
 
       vm.activities = _.map(data.data, function(a){

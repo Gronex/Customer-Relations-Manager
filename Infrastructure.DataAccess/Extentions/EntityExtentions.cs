@@ -22,10 +22,11 @@ namespace Infrastructure.DataAccess.Extentions
         public static IQueryable<T> Similar<T>(this IQueryable<T> list, Expression<Func<T, string>> selector, string term)
         {
             var stripedTerm = term.ToLower().RemoveSeperators();
+            
             return list
                 .GroupBy(selector)
                 .Where(x => x.Key.ToLower().Replace(" ", "").Replace("-", "").Replace("_", "").Contains(stripedTerm))
-                .Select(x => x.FirstOrDefault());
+                .SelectMany(x => x.Select(y => y));
         }
 
         private static string RemoveSeperators(this string input)

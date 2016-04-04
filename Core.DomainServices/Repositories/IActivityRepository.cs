@@ -13,7 +13,8 @@ namespace Core.DomainServices.Repositories
             string userName,
             IEnumerable<string> orderBy, 
             int? page = null, 
-            int? pageSize = null);
+            int? pageSize = null,
+            string find = null);
         IEnumerable<Activity> GetAll(int amount, string userName, string find);
         Activity GetById(int id);
         Activity Update(int id, Activity activity);
