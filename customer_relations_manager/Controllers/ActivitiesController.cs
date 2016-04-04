@@ -10,6 +10,7 @@ using Core.DomainModels.Activities;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Microsoft.AspNet.Identity;
 
 namespace customer_relations_manager.Controllers
 {
@@ -28,7 +29,12 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Activities
-        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(
+            [FromUri]string[] orderBy, 
+            int? page = null, 
+            int? pageSize = null, 
+            bool own = true, 
+            string find = null)
         {
             CorrectPageInfo(ref page, ref pageSize);
             var defaultOrder = new[] {"DueDate,DueTimeStart,DueTimeEnd"};
@@ -39,7 +45,7 @@ namespace customer_relations_manager.Controllers
                     .Replace("companyname", "company.name")).ToArray();
 
             return _repo
-                .GetAll(orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize)
+                .GetAll(own ? User.Identity.Name : null, orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize, find)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }
 

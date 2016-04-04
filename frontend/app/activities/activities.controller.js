@@ -5,13 +5,10 @@
     .module('CRM')
     .controller('Activities', Activities);
 
-  Activities.$inject = ['dataservice'];
-  function Activities(dataservice){
+  Activities.$inject = ['activities', 'dataservice', '$state'];
+  function Activities(activities, dataservice, $state){
     var vm = this;
-    vm.pagination = {
-      page: 1,
-      pageSize: 10
-    };
+    vm.query = {};
     vm.itemCount = 0;
     vm.headers = [
       {
@@ -53,30 +50,29 @@
     ];
 
     vm.getActivities = getActivities;
-    vm.sort = sort;
 
     activate();
 
     function activate(){
-      getActivities();
+      setupData(activities);
+      $("#find").focus();
     }
 
-    function getActivities(){
-      return dataservice.activities
-        .get({query: vm.pagination})
-        .then(setupData);
-    }
-
-    function sort(selector){
-      var cpy = angular.copy(vm.pagination);
-      cpy.orderBy = selector;
-      dataservice.activities
-        .get({query: cpy})
-        .then(setupData);
+    function getActivities(sortParam){
+      _.merge(vm.query, {orderBy: sortParam});
+      $state.go("Activities.list", vm.query);
     }
 
     function setupData(data){
       vm.itemCount = data.itemCount;
+      _.merge(vm.query, {
+        pageSize: data.pageSize,
+        page: data.pageNumber,
+        orderBy: data.query.orderBy,
+        own: data.query.own,
+        find: data.query.find
+      });
+
       vm.activities = _.map(data.data, function(a){
         a.dueDate = moment.utc(a.dueDate);
         a.dueDate.local();

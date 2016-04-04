@@ -8,27 +8,40 @@
       bindings: {
         headers: "=",
         data: "=",
-        onSort: "="
+        onSort: "=",
+        sortParam: "="
       },
       controller: function(){
         var $ctrl = this;
 
+        activate();
+
         $ctrl.sortBy = sortBy;
-        $ctrl.format = function(row, key, format){
+        $ctrl.format = format;
+
+        function activate(){
+          if(!$ctrl.sortParam) return;
+          $ctrl.ascending = !$ctrl.sortParam.match(/_desc$/);
+          $ctrl.sortParam = $ctrl.sortParam.replace(/_desc$/, "");
+        }
+
+        function format(row, key, format){
           var data = _.get(row, key);
           if(typeof(format) === "function")
             return format(data);
           return data;
         };
-        function sortBy(selector){
-          if($ctrl.selector === selector)
-            $ctrl.asc = !$ctrl.asc;
+
+        function sortBy(sortParam, first){
+          if($ctrl.sortParam === sortParam)
+            $ctrl.ascending = !$ctrl.ascending;
           else
-            $ctrl.asc = true;
-          $ctrl.selector = selector;
+            $ctrl.ascending = true;
+
+          $ctrl.sortParam = sortParam;
 
           if(typeof($ctrl.onSort) === "function")
-            $ctrl.onSort($ctrl.asc ? $ctrl.selector : $ctrl.selector + "_desc");
+            $ctrl.onSort($ctrl.ascending ? $ctrl.sortParam : $ctrl.sortParam + "_desc");
         }
       }
     });

@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using Core.DomainServices;
 using Infrastructure.DataAccess.Exceptions;
 using System.Linq.Dynamic;
+using Infrastructure.DataAccess.Extentions;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -21,7 +22,8 @@ namespace Infrastructure.DataAccess.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
+        public IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, 
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
             return FilterLogic(filter, orderBy, null, null);
         }
@@ -35,28 +37,36 @@ namespace Infrastructure.DataAccess.Repositories
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, 
             int? page = null, 
             int? pageSize = null, 
-            Expression<Func<T, bool>> filter = null)
+            Expression<Func<T, bool>> filter = null,
+            Expression<Func<T, string>> findSelector = null,
+            string findTerm = null)
         {
-            var data = FilterLogic(filter, orderBy, page, pageSize);
+            var data = FilterLogic(filter, orderBy, page, pageSize, findSelector, findTerm);
             
             return new PaginationEnvelope<T>
             {
                 PageSize = pageSize ?? -1,
                 PageNumber = page ?? -1,
-                ItemCount = Count(filter),
+                ItemCount = Count(filter, findSelector, findTerm),
                 Data = data
             };
         }
 
-        public PaginationEnvelope<T> GetPaged(IEnumerable<string> orderBy, int? page = null, int? pageSize = null, Expression<Func<T, bool>> filter = null)
+        public PaginationEnvelope<T> GetPaged(
+            IEnumerable<string> orderBy, 
+            int? page = null, 
+            int? pageSize = null, 
+            Expression<Func<T, bool>> filter = null,
+            Expression<Func<T, string>> findSelector = null,
+            string findTerm = null)
         {
-            var data = FilterLogic(filter, orderBy, page, pageSize);
+            var data = FilterLogic(filter, orderBy, page, pageSize, findSelector, findTerm);
 
             return new PaginationEnvelope<T>
             {
                 PageSize = pageSize ?? -1,
                 PageNumber = page ?? -1,
-                ItemCount = Count(filter),
+                ItemCount = Count(filter, findSelector, findTerm),
                 Data = data
             };
         }
@@ -134,12 +144,17 @@ namespace Infrastructure.DataAccess.Repositories
             Expression<Func<T, bool>> filter, 
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
             int? page, 
-            int? pageSize)
+            int? pageSize,
+            Expression<Func<T, string>> findSelector = null,
+            string findTerm = null)
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
                 query = query.Where(filter);
+
+            if (findSelector != null && !string.IsNullOrWhiteSpace(findTerm))
+                query = query.Similar(findSelector, findTerm);
 
             if (orderBy != null)
                 query = orderBy(query);
@@ -156,12 +171,17 @@ namespace Infrastructure.DataAccess.Repositories
             Expression<Func<T, bool>> filter,
             IEnumerable<string> orderBy,
             int? page,
-            int? pageSize)
+            int? pageSize,
+            Expression<Func<T, string>> findSelector = null,
+            string findTerm = null)
         {
             IQueryable<T> query = _dbSet;
-
+            
             if (filter != null)
                 query = query.Where(filter);
+
+            if (findSelector != null && !string.IsNullOrWhiteSpace(findTerm))
+                query = query.Similar(findSelector, findTerm);
 
             if(orderBy == null) orderBy = new List<string>();
             var orderByString = string.Join(",", orderBy).Replace("_", " ");
@@ -183,9 +203,18 @@ namespace Infrastructure.DataAccess.Repositories
             _dbSet.Remove(entity);
         }
         
-        public int Count(Expression<Func<T, bool>> filter = null)
+        public int Count(
+            Expression<Func<T, bool>> filter = null,
+            Expression<Func<T, string>> findSelector = null,
+            string findTerm = null)
         {
-            return filter == null ? _dbSet.Count() : _dbSet.Count(filter);
+            IQueryable<T> query = _dbSet;
+            if (filter != null)
+                query = query.Where(filter);
+            if (findSelector != null && !string.IsNullOrWhiteSpace(findTerm))
+                query = query.Similar(findSelector, findTerm);
+
+            return query.Count();
         }
     }
 }

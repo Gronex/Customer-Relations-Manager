@@ -10,8 +10,8 @@ namespace Core.ApplicationServices.ExtentionMethods
     public static class ExpressionExtentions
     {
         public static Expression<Func<T, bool>> AndAlso<T>(
-        this Expression<Func<T, bool>> expr1,
-        Expression<Func<T, bool>> expr2)
+            this Expression<Func<T, bool>> expr1,
+            Expression<Func<T, bool>> expr2)
         {
             var parameter = Expression.Parameter(typeof(T));
 
@@ -39,9 +39,7 @@ namespace Core.ApplicationServices.ExtentionMethods
 
             public override Expression Visit(Expression node)
             {
-                if (node == _oldValue)
-                    return _newValue;
-                return base.Visit(node);
+                return node == _oldValue ? _newValue : base.Visit(node);
             }
         }
     }

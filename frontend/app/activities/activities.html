@@ -1,6 +1,18 @@
 <h1>Activities
-<a type="button" class="btn btn-default pull-right" ui-sref="Activities.new">New Activity</a>
+    <a type="button" class="btn btn-default pull-right" ui-sref="Activities.new">New Activity</a>
 </h1>
+<form ng-submit="vm.getActivities()" class="form-inline">
+    <div class="form-group">
+        <label for="">Name: </label>
+        <input class="form-control" id="find" type="text" ng-model="vm.query.find" />
+    </div>
+    <button class="btn btn-default">Search</button>
+    <div class="form-group checkbox pull-right">
+        <label>
+            <input ng-change="vm.getActivities()" ng-model="vm.query.own" type="checkbox" /> Own
+        </label>
+    </div>
+</form>
 <br/>
-<crm-table headers="vm.headers" data="vm.activities" on-sort="vm.sort"></crm-table>
-<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getActivities()"></uib-pagination>
+<crm-table headers="vm.headers" data="vm.activities" on-sort="vm.getActivities" sort-param="::vm.query.orderBy"></crm-table>
+<uib-pagination items-per-page="vm.query.pageSize" total-items="vm.itemCount" ng-model="vm.query.page" ng-change="vm.getActivities()"></uib-pagination>

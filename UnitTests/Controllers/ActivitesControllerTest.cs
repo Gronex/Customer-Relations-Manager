@@ -11,6 +11,7 @@ using customer_relations_manager.ViewModels;
 using customer_relations_manager.ViewModels.Activity;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Opportunity;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using NSubstitute;
@@ -46,7 +47,7 @@ namespace UnitTests.Controllers
                 new Activity {Id = 3, Name = "3"},
                 new Activity {Id = 4, Name = "4"}
             };
-            _repo.GetAll(Arg.Any<IEnumerable<string>>()).ReturnsForAnyArgs(a => new PaginationEnvelope<Activity> {Data = data});
+            _repo.GetAll(null, Arg.Any<IEnumerable<string>>()).ReturnsForAnyArgs(a => new PaginationEnvelope<Activity> {Data = data});
 
             var result = _controller.GetActivities(new string[0]);
             Assert.Equal(4, result.Data.Count());
