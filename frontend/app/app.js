@@ -14,6 +14,7 @@
   ]).config(RouteConfig);
 
   function RouteConfig($stateProvider, $urlRouterProvider) {
+    const dateFormatString = 'YYYY-MM-DD';
     //
     // For any unmatched url, redirect to /
     $urlRouterProvider.otherwise("/");
@@ -21,15 +22,40 @@
     // Now set up the states
     $stateProvider
       .state('Home', {
-        url: "/",
+        url: "",
         templateUrl: "view/app/home/home.html",
         controller: "Home",
         controllerAs: "vm"
       })
-      .state('Home.Dashboard', {
-        url: "dashboard/?{fromDate:\\d{4}-\\d{2}-\\d{2}}&{toDate:\\d{4}-\\d{2}-\\d{2}}",
+      .state('Dashboard', {
+        url: "/dashboard?{fromDate:\\d{4}-\\d{2}-\\d{2}}&{toDate:\\d{4}-\\d{2}-\\d{2}}",
+        abstract: true,
         templateUrl: "view/app/home/dashboard.html",
         controller: "Dashboard",
+        controllerAs: "vm",
+        resolve: {
+          filter: function($stateParams){
+            var filter = _.merge({
+              fromDate: moment.utc().startOf('year').format(dateFormatString),
+              toDate: moment.utc().add(1, 'year').startOf('year').format(dateFormatString)
+            },$stateParams);
+            return {
+              fromDate: moment.utc(filter.fromDate).toDate(),
+              toDate: moment.utc(filter.toDate).toDate()
+            };
+          }
+        }
+      })
+      .state("Dashboard.production", {
+        url: "/production",
+        templateUrl: "view/app/home/dashboard/production.html",
+        controllerAs: "vm",
+        controller: "ProductionGraph"
+      })
+      .state("Dashboard.activities", {
+        url: "/activities",
+        templateUrl: "view/app/home/dashboard/activity.html",
+        Controller: "ActivityGraph",
         controllerAs: "vm"
       })
       .state('Users', {

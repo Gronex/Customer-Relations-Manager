@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Core.ApplicationServices.ExtentionMethods;
 using Core.ApplicationServices.Graph.DataHolders;
 using Core.ApplicationServices.ServiceInterfaces;
+using Core.DomainModels.Activities;
 using Core.DomainModels.Graph;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
@@ -19,7 +20,7 @@ namespace Core.ApplicationServices.Graph
     public class GraphService : IGraphService
     {
 
-        public IDictionary<string, IEnumerable<UserGraphData>> GenerateGoalDataTable(IEnumerable<ProductionGoal> goals, DateTime startDate)
+        public IDictionary<string, IEnumerable<DateUserGraphData>> GenerateGoalDataTable(IEnumerable<ProductionGoal> goals, DateTime startDate)
         {
             return goals.GroupBy(g => g.User)
                 .SelectMany(
@@ -32,7 +33,7 @@ namespace Core.ApplicationServices.Graph
                             return g;
                         }))
                 .GroupBy(g => g.User)
-                .ToDictionary(g => g.Key.Email, group => group.Select(g => new UserGraphData
+                .ToDictionary(g => g.Key.Email, group => group.Select(g => new DateUserGraphData
                 {
                     Value = g.Goal,
                     Period = DateTime.SpecifyKind(g.StartDate.Date, DateTimeKind.Utc),
@@ -45,9 +46,20 @@ namespace Core.ApplicationServices.Graph
                 }).OrderBy(g => g.Period).AsEnumerable());
         }
 
-        
+        public IEnumerable<GraphData> GenerateActivityGraph(IEnumerable<Activity> activities)
+        {
+            return activities
+                .GroupBy(a => a.Category)
+                .Select(grp => new GraphData
+                {
+                    Value = grp.Count(),
+                    Label = grp.Key.Name,
+                    Order = grp.Key.Value
+                });
+        }
 
-        public IDictionary<string, IEnumerable<UserGraphData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to, bool weighted)
+
+        public IDictionary<string, IEnumerable<DateUserGraphData>> GenerateProductionDataTable(IEnumerable<Opportunity> opportunities, DateTime from, DateTime to, bool weighted)
         {
             return opportunities.SelectMany(o =>
             {
@@ -72,7 +84,7 @@ namespace Core.ApplicationServices.Graph
                 o.Key.Month,
                 Sum = o.Sum(os => os.Amount)
             }).GroupBy(o => o.User.Email)
-            .ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new UserGraphData
+            .ToDictionary(o => o.Key, os => os.OrderBy(o => o.Month).Select(o => new DateUserGraphData
             {
                 User = new SimpleUser
                 {

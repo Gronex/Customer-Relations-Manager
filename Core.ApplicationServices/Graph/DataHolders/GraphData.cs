@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.ApplicationServices.Graph.DataHolders
 {
-    public class UserGraphData
+    public class GraphData
     {
-        public SimpleUser User { get; set; }
         public double Value { get; set; }
-        public DateTime Period { get; set; }
+        public string Label { get; set; }
+        public int Order { get; set; }
     }
 }

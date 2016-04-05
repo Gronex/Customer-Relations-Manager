@@ -13,6 +13,7 @@
         <input class="form-control" type="text" ng-model="vm.activity.name" required/>
     </div>
     <div class="form-group">
+        <label for="">Category</label>
         <select class="form-control" ng-model="vm.activity.categoryName" required>
             <option ng-repeat="category in vm.categories">{{category.name}}</option>
         </select>
