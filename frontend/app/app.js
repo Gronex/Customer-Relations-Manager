@@ -244,16 +244,43 @@
 
       .state("Opportunities", {
         url: "/opportunities",
+        abstract: true,
+        template: "<ui-view></ui-view>"
+      })
+      .state("Opportunities.list", {
+        url: "?{page:int}&{pageSize:int}&{orderBy}",
         templateUrl: "view/app/opportunities/opportunities.html",
         controller: "Opportunities",
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          opportunities: function(dataservice, $stateParams){
+            var query = {
+              pageSize: 10,
+              page: 1
+            };
+            _.merge(query, $stateParams);
+            return dataservice.opportunities
+              .get({query: query})
+              .then(function(result){
+                result.query = query;
+                return result;
+              });
+          }
+        }
       })
-      .state("Opportunity", {
-        url: "/opportunities/{id}",
+      .state("Opportunities.new", {
+        url: "/opportunities/new",
         templateUrl: "view/app/opportunities/opportunity.html",
         controller: "Opportunity",
         controllerAs: 'vm'
       })
+      .state("Opportunities.edit", {
+        url: "/opportunities/{id:int}",
+        templateUrl: "view/app/opportunities/opportunity.html",
+        controller: "Opportunity",
+        controllerAs: 'vm'
+      })
+
       .state("Login", {
         url: "/login",
         templateUrl: "view/app/login/login.html",

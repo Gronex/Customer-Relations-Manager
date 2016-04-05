@@ -25,7 +25,7 @@
     activate();
 
     function activate() {
-      if($stateParams.id !== "new"){
+      if($state.is("Opportunities.edit")){
         getOpportunity()
         .then(function () {
           vm.editing = true;
@@ -56,13 +56,13 @@
         return dataservice.opportunities
         .update($stateParams.id, vm.opportunity)
         .then(function () {
-          $state.go("Opportunities");
+          $state.go("Opportunities.list");
         }, handleRequestError);
       } else {
         return dataservice.opportunities
         .create(vm.opportunity)
         .then(function () {
-          $state.go("Opportunities");
+          $state.go("Opportunities.list");
         }, handleRequestError);
       }
     }
@@ -71,7 +71,7 @@
       return dataservice.opportunities
         .remove($stateParams.id)
         .then(function () {
-          $state.go("Opportunities");
+          $state.go("Opportunities.list");
         });
     }
 

@@ -22,7 +22,7 @@
       if(hasRole(user, "Standard")){
         navbar.left = navbar.left.concat([
           {
-            link: "Opportunities",
+            link: "Opportunities.list",
             label: "Opportunities"
           },
           {
@@ -58,7 +58,7 @@
                 label: "Opportunities",
                 key: "opportunities",
                 selector: "name",
-                link: "Opportunity",
+                link: "Opportunities.edit",
                 searchFun: function(term, items){ return dataservice.opportunities.get({query: {find: term, pageSize: items}});}
               }
             ]

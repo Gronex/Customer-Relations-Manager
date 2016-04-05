@@ -18,7 +18,7 @@ namespace customer_relations_manager.Controllers
         /// <param name="pageSize"></param>
         protected void CorrectPageInfo(ref int? page, ref int? pageSize)
         {
-            if (page < 1)
+            if (page < 1 || page == null)
                 page = 1;
             if (pageSize < 1)
                 pageSize = 10;

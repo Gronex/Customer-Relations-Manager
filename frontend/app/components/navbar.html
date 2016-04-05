@@ -20,9 +20,9 @@
                         {{item.label}} <span class="caret"></span>
                     </a>
                     <ul ng-switch-when="dropdown" class="dropdown-menu">
-                        <li ng-repeat="elem in item.contents"><a ui-sref="{{elem.link}}">{{elem.label}}</a></li>
+                        <li ng-repeat="elem in item.contents"><a ui-sref="{{elem.link}}" ui-sref-opts="{reload: true}">{{elem.label}}</a></li>
                     </ul>
-                    <a ng-switch-default ui-sref="{{item.link}}">{{item.label}}</a>
+                    <a ng-switch-default ui-sref="{{item.link}}" ui-sref-opts="{reload: true}">{{item.label}}</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -32,9 +32,9 @@
                         {{item.label}} <span class="caret"></span>
                     </a>
                     <ul ng-switch-when="dropdown" class="dropdown-menu">
-                        <li ng-repeat="elem in item.contents"><a ui-sref="{{elem.link}}">{{elem.label}}</a></li>
+                        <li ng-repeat="elem in item.contents"><a ui-sref="{{elem.link}}" ui-sref-opts="{reload: true}">{{elem.label}}</a></li>
                     </ul>
-                    <a ng-switch-default ui-sref="{{item.link}}">{{item.label}}</a>
+                    <a ng-switch-default ui-sref="{{item.link}}" ui-sref-opts="{reload: true}">{{item.label}}</a>
                 </li>
             </ul>
         </div><!-- /.navbar-collapse -->
