@@ -38,7 +38,7 @@ namespace customer_relations_manager.Controllers
         protected PagedSearchFilter CorrectFilter(PagedSearchFilter filter)
         {
             filter = filter ?? new PagedSearchFilter();
-            if (filter.Page < 1)
+            if (filter.Page < 1 || filter.Page == null)
                 filter.Page = 1;
             if (filter.PageSize < 1)
                 filter.PageSize = 10;

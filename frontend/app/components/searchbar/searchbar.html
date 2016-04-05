@@ -1,9 +1,5 @@
-<form ng-submit="vm.search()" >
+<form >
     <div class="form-group">
-        <input class="form-control" ng-model="vm.term" type="text" placeholder="Search" />
+        <input ng-model-options="{debounce: 250}" ng-change="vm.search()" class="form-control" ng-model="vm.term" type="text" placeholder="Search" uib-popover-template="'view/app/components/searchbar/search-popover.html'" popover-trigger="focus" popover-placement="bottom" />
     </div>
 </form>
-
-<pre>
-    {{vm.results | json}}
-</pre>
