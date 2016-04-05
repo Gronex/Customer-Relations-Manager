@@ -3,8 +3,8 @@
     .module('CRM')
     .factory('navbar', Navbar);
 
-  Navbar.$inject = ['authorization'];
-  function Navbar(auth) {
+  Navbar.$inject = ['authorization', 'dataservice'];
+  function Navbar(auth, dataservice) {
     return {
       generate: generate
     };
@@ -36,6 +36,32 @@
           {
             link: "Activities.list",
             label: "Activities"
+          },
+          {
+            type: "search",
+            searchList: [
+              {
+                label: "People",
+                key: "people",
+                selector: "name",
+                link: "People.edit",
+                searchFun: function(term, items){ return dataservice.people.get({query: {find: term, pageSize: items}});}
+              },
+              {
+                label: "Companies",
+                key: "companies",
+                selector: "name",
+                link: "Companies.edit",
+                searchFun: function(term, items){ return dataservice.companies.get({query: {find: term, pageSize: items}});}
+              },
+              {
+                label: "Opportunities",
+                key: "opportunities",
+                selector: "name",
+                link: "Opportunity",
+                searchFun: function(term, items){ return dataservice.opportunities.get({query: {find: term, pageSize: items}});}
+              }
+            ]
           }
         ]);
       }

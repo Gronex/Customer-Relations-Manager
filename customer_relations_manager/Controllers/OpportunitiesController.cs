@@ -8,6 +8,7 @@ using customer_relations_manager.ViewModels.Opportunity;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
@@ -27,17 +28,16 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public PaginationEnvelope<OpportunityOverviewViewMode> GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<OpportunityOverviewViewMode> GetAll([FromUri]PagedSearchFilter filter)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-
-            var defaultOrder = new[] {"name"};
-            orderBy = (orderBy ?? defaultOrder)
+            filter = CorrectFilter(filter);
+            
+            filter.OrderBy = (filter.OrderBy.Any() ? filter.OrderBy : new[] { "name" })
                 .Select(o => o.ToLower()
                     .Replace("ownername", "owner.firstName")
                     .Replace("companyname", "company.name")).ToArray();
 
-            var data = _repo.GetAll(orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize);
+            var data = _repo.GetAll(filter);
             return data.MapData(_mapper.Map<OpportunityOverviewViewMode>);
         }
 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Exceptions;
 
@@ -27,9 +28,9 @@ namespace Infrastructure.DataAccess.Repositories
             return _repo.Get();
         }
 
-        public PaginationEnvelope<Person> GetAll(IEnumerable<string> orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<Person> GetAll(PagedSearchFilter filter)
         {
-            return _repo.GetPaged(orderBy, page, pageSize);
+            return _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: p => p.FirstName + p.LastName, find: filter.Find);
         }
 
         public Person GetById(int id)

@@ -12,6 +12,7 @@ using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using System.Data.Entity;
 using customer_relations_manager.ViewModels.Activity;
+using Core.DomainServices.Filters;
 
 namespace customer_relations_manager.Controllers
 {
@@ -31,13 +32,13 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public PaginationEnvelope<CompanyOverviewViewModel> GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<CompanyOverviewViewModel> GetAll([FromUri]PagedSearchFilter filter)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            
-            var data = _repo.GetPaged(orderBy == null || orderBy.Length < 1 
-                ? new[] { "name" } 
-                : orderBy, page, pageSize);
+            filter = CorrectFilter(filter);
+
+            filter.OrderBy = filter.OrderBy.Any() ? new[] {"name"} : filter.OrderBy;
+
+            var data = _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: c => c.Name, find: filter.Find);
             return data.MapData(_mapper.Map<CompanyOverviewViewModel>);
         }
 

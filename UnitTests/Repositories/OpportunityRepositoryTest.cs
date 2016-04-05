@@ -8,6 +8,7 @@ using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Exceptions;
 using Infrastructure.DataAccess.Repositories;
@@ -59,7 +60,7 @@ namespace UnitTests.Repositories
         [Fact]
         public void GetAllGetsPaged()
         {
-            _repo.GetAll(new List<string> { "name"} );
+            _repo.GetAll(new PagedSearchFilter());
             _generic
                 .ReceivedWithAnyArgs()
                 .GetPaged(Arg.Any<IEnumerable<string>>());

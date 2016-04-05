@@ -6,6 +6,7 @@ using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Exceptions;
 using Infrastructure.DataAccess.Extentions;
@@ -24,9 +25,9 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public PaginationEnvelope<Opportunity> GetAll(IEnumerable<string> orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<Opportunity> GetAll(PagedSearchFilter filter)
         {
-            return _repo.GetPaged(orderBy, page, pageSize);
+            return _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: o => o.Name, find: filter.Find);
         }
 
         public IEnumerable<Opportunity> GetAll()

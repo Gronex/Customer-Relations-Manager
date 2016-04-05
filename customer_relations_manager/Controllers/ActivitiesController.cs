@@ -9,6 +9,7 @@ using customer_relations_manager.ViewModels.Activity;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Microsoft.AspNet.Identity;
 
@@ -30,24 +31,23 @@ namespace customer_relations_manager.Controllers
 
         // GET: api/Activities
         public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(
-            [FromUri]string[] orderBy, 
-            int? page = null, 
-            int? pageSize = null, 
-            bool own = true, 
-            string find = null)
+            [FromUri]PagedSearchFilter filter,
+            bool own = true)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            var defaultOrder = new[] {"DueDate,DueTimeStart,DueTimeEnd"};
-            orderBy = (orderBy ?? defaultOrder)
+            filter = CorrectFilter(filter);
+            //CorrectPageInfo(ref filter.Page, ref pageSize);
+            var defaultOrder = new[] { "DueDate,DueTimeStart,DueTimeEnd" };
+            filter.OrderBy = (filter.OrderBy.Any() ? filter.OrderBy : defaultOrder)
                 .Select(o => o.ToLower()
                     .Replace("primarycontactname", "PrimaryContact.firstName")
                     .Replace("primaryresponsiblename", "PrimaryResponsible.firstName")
                     .Replace("companyname", "company.name")).ToArray();
 
             return _repo
-                .GetAll(own ? User.Identity.Name : null, orderBy.Length < 1 ? defaultOrder : orderBy, page, pageSize, find)
+                .GetAll(own ? User.Identity.Name : null, filter)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }
+
 
         // GET: api/Activities/5
         [ResponseType(typeof(ActivityViewModel))]

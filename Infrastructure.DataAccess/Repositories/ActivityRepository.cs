@@ -7,6 +7,7 @@ using Core.DomainModels.Activities;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Extentions;
 
@@ -23,11 +24,14 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public PaginationEnvelope<Activity> GetAll(string userName, IEnumerable<string> orderBy, int? page = null, int? pageSize = null, string find = null)
+        public PaginationEnvelope<Activity> GetAll(string userName, PagedSearchFilter filter)
         {
-            return string.IsNullOrWhiteSpace(userName) 
-                ? _repo.GetPaged(orderBy, page, pageSize, findSelector: a => a.Name, find: find) 
-                : _repo.GetPaged(orderBy, page, pageSize, a => a.PrimaryResponsible.UserName == userName, a => a.Name, find);
+            return string.IsNullOrWhiteSpace(userName)
+                ? _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: a => a.Name,
+                    find: filter.Find)
+                : _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize,
+                    a => a.PrimaryResponsible.UserName == userName, a => a.Name,
+                    filter.Find);
         }
 
         public IEnumerable<Activity> GetAll(int amount = 3, string userName = null, string find = null)
