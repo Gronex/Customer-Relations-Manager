@@ -1,16 +1,14 @@
 (function() {
   'use strict';
 
-  const dateFormatString = 'YYYY-MM-DD';
-
   angular
     .module('CRM')
     .controller('ProductionGraph', Controller);
 
-  Controller.$inject = ['$scope', 'graph', '$state', 'dataservice', '$uibModal', 'authorization', 'filter', 'stateCom'];
+  Controller.$inject = ['$scope', 'graph', '$state', 'dataservice', '$uibModal', 'authorization', 'filter', 'stateCom', 'dateFormat'];
 
   /* @ngInject */
-  function Controller($scope, graph, $state, dataservice, $modal, auth, filter, stateCom) {
+  function Controller($scope, graph, $state, dataservice, $modal, auth, filter, stateCom, dateFormat) {
     var vm = this;
 
     vm.getProductionGraph = getProductionGraph;
@@ -36,8 +34,12 @@
     }
 
     function getProductionGraph(){
+      var stringFilter = {
+        fromDate: moment(vm.filter.fromDate).format(dateFormat),
+        toDate: moment(vm.filter.toDate).format(dateFormat)
+      };
 
-      $state.go("Dashboard.production", filter, {notify: false});
+      $state.go("Dashboard.production", stringFilter, {notify: false});
       var config = {
         startDate: vm.filter.fromDate,
         endDate: vm.filter.toDate,

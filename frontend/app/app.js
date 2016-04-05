@@ -43,7 +43,8 @@
               fromDate: moment.utc(filter.fromDate).toDate(),
               toDate: moment.utc(filter.toDate).toDate()
             };
-          }
+          },
+          dateFormat: function(){return dateFormatString;}
         }
       })
       .state("Dashboard.production", {
