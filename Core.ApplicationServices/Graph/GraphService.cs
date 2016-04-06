@@ -55,7 +55,7 @@ namespace Core.ApplicationServices.Graph
                     Value = grp.Count(),
                     Label = grp.Key.Name,
                     Order = grp.Key.Value
-                });
+                }).OrderBy(a => a.Order);
         }
 
 

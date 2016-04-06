@@ -3,7 +3,7 @@
 
   angular
     .module('CRM')
-    .controller('ProductionGraph', Controller);
+    .controller('ActivityGraph', Controller);
 
   Controller.$inject = ['$scope', 'graph', '$state', 'dataservice', '$uibModal', 'authorization', 'filter', 'stateCom', 'dateFormat'];
 
@@ -25,41 +25,37 @@
       vm.owner = true;
       vm.filter = filter;
 
-      stateCom.setupFunction(getProductionGraph);
+      stateCom.setupFunction(getActivityGraph);
 
-      getProductionGraph();
+      getActivityGraph();
       getFilters();
       getFilterOptions();
     }
 
-    function getProductionGraph(){
-      var query = {
+    function getActivityGraph(){
+      var stringFilter = {
         fromDate: moment(vm.filter.fromDate).format(dateFormat),
-        toDate: moment(vm.filter.toDate).format(dateFormat),
-        state: "production"
+        toDate: moment(vm.filter.toDate).format(dateFormat)
       };
-      $state.go("Dashboard", query, {notify: false});
 
+      $state.go("Dashboard", stringFilter, {notify: false});
       var config = {
         startDate: vm.filter.fromDate,
         endDate: vm.filter.toDate,
         departments: _.map(vm.advancedFilter.departments, "id"),
-        stages: _.map(vm.advancedFilter.stages, "id"),
         userGroups: _.map(vm.advancedFilter.userGroups, "id"),
-        users: _.map(vm.advancedFilter.users, "email"),
-        categories: _.map(vm.advancedFilter.categories, "id"),
-        weighted: vm.advancedFilter.weighted
+        users: _.map(vm.advancedFilter.users, "email")
       };
 
-      graph.productionGraph(config)
+      graph.activityGraph(config)
         .then(function (result) {
-          graph.drawChart(result.data, result.graphOptions, "prod_chart");
-          graph.drawTable(result.data, result.tableOptions, "prod_table");
+          graph.drawChart(result.data, result.graphOptions, "activity_chart");
+          graph.drawTable(result.data, result.tableOptions, "activity_table");
         });
     }
 
     function getFilters(){
-      return dataservice.productionGraphFilters
+      return dataservice.activityGraphFilters
         .get()
         .then(function(filters){
           vm.savedFilters = filters;
@@ -74,7 +70,7 @@
         vm.owner = true;
         return true;
       }
-      return dataservice.productionGraphFilters
+      return dataservice.activityGraphFilters
         .get(vm.savedFilter.id)
         .then(function(f){
           vm.advancedFilter = f;
@@ -91,11 +87,6 @@
             .then(function(departments){
               vm.filterOptions.departments = departments;
             });
-      var stageTask = dataservice.stages
-            .get()
-            .then(function(stages){
-              vm.filterOptions.stages = stages;
-            });
       var userGroupTask = dataservice.userGroups
             .get()
             .then(function(userGroups){
@@ -106,12 +97,7 @@
             .then(function(users){
               vm.filterOptions.users = users.data;
             });
-      var categoryTask = dataservice.opportunityCategories
-            .get()
-            .then(function(categories){
-              vm.filterOptions.categories = categories;
-            });
-      return [departmentTask, stageTask, userGroupTask, userTask, categoryTask];
+      return [departmentTask, userGroupTask, userTask];
     }
 
     $scope.$watch('vm.advancedFilter', function(newValue, oldValue){
@@ -130,7 +116,7 @@
             save: function(){
               return function(name){
                 vm.advancedFilter.name = name;
-                dataservice.productionGraphFilters
+                dataservice.activityGraphFilters
                   .create(vm.advancedFilter)
                   .then(function(result){
                     var data = {id: result.location, name: result.data.name};
@@ -146,7 +132,7 @@
           }
         });
       } else {
-        dataservice.productionGraphFilters
+        dataservice.activityGraphFilters
           .update(vm.savedFilter.id, vm.advancedFilter)
           .then(function(f){
             vm.advancedFilterChanged = false;
@@ -156,7 +142,7 @@
     }
 
     function remove(){
-      dataservice.productionGraphFilters
+      dataservice.activityGraphFilters
         .remove(vm.savedFilter.id)
         .then(function(){
           _.remove(vm.savedFilters, function(f){return f.id === vm.savedFilter.id;});

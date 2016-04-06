@@ -16,6 +16,7 @@
 
     return {
       productionGraph: productionGraph,
+      activityGraph: activityGraph,
       drawChart: drawChart,
       drawTable: drawTable
     };
@@ -154,6 +155,32 @@
               vAxis: {title: "DKK"},
               seriesType: "steppedArea",
               series: goalSeries
+            },
+            tableOptions: {
+              width: '100%',
+              height: '100%'
+            }
+          };
+        });
+    }
+    function activityGraph(){
+      return dataservice.graph
+        .get("activities")
+        .then(function(result){
+          var headers = [{label: "Category", type: "string"}, {label: "Count", type: "number"}];
+          var data = _.map(result.data, function(a){ return {c: [{v: a.label}, {v: a.value}]}; });
+
+          return {
+            data: {
+              cols: headers,
+              rows: data
+            },
+            graphOptions: {
+              title: 'Activity',
+              legend: {position: 'top', maxLines: 3},
+              hAxis: {title: "Amount"},
+              vAxis: {title: "Category"},
+              seriesType: "bars"
             },
             tableOptions: {
               width: '100%',

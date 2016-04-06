@@ -14,7 +14,7 @@
 
       var navbar = {
         label: "CRM",
-        link: user ? "Dashboard.production" : "Home",
+        link: user ? "Dashboard" : "Home",
         left: [],
         right: []
       };

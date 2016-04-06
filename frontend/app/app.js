@@ -28,11 +28,7 @@
         controllerAs: "vm"
       })
       .state('Dashboard', {
-        url: "/dashboard?{fromDate:\\d{4}-\\d{2}-\\d{2}}&{toDate:\\d{4}-\\d{2}-\\d{2}}",
-        abstract: true,
-        templateUrl: "view/app/home/dashboard.html",
-        controller: "Dashboard",
-        controllerAs: "vm",
+        url: "/dashboard?{fromDate:\\d{4}-\\d{2}-\\d{2}}&{toDate:\\d{4}-\\d{2}-\\d{2}}&{state}",
         resolve: {
           filter: function($stateParams){
             var filter = _.merge({
@@ -44,20 +40,30 @@
               toDate: moment.utc(filter.toDate).toDate()
             };
           },
-          dateFormat: function(){return dateFormatString;}
+          dateFormat: function(){return dateFormatString;},
+          state: function($stateParams){
+            if($stateParams.state)
+              return $stateParams.state;
+            else return "production";
+          }
+        },
+        views: {
+          '': {
+            templateUrl: "view/app/home/dashboard.html",
+            controller: "Dashboard",
+            controllerAs: "vm"
+          },
+          'production@Dashboard': {
+            templateUrl: "view/app/home/dashboard/production.html",
+            controllerAs: "vm",
+            controller: "ProductionGraph"
+          },
+          'activity@Dashboard': {
+            templateUrl: "view/app/home/dashboard/activity.html",
+            controllerAs: "vm",
+            controller: "ActivityGraph"
+          }
         }
-      })
-      .state("Dashboard.production", {
-        url: "/production",
-        templateUrl: "view/app/home/dashboard/production.html",
-        controllerAs: "vm",
-        controller: "ProductionGraph"
-      })
-      .state("Dashboard.activities", {
-        url: "/activities",
-        templateUrl: "view/app/home/dashboard/activity.html",
-        Controller: "ActivityGraph",
-        controllerAs: "vm"
       })
       .state('Users', {
         url: "/users",
