@@ -34,11 +34,13 @@
     }
 
     function tabChange(tab){
+      vm.tab = tab.view;
       for(var t in vm.tabs){
         vm.tabs[t].active = false;
         tab.active = true;
       }
       updateUrl(tab.view);
+      stateCom.resend(tab.view);
     }
 
     function updateUrl(state){

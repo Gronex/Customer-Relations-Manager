@@ -163,9 +163,9 @@
           };
         });
     }
-    function activityGraph(){
+    function activityGraph(config){
       return dataservice.graph
-        .get("activities")
+        .get({id: "activities", query: config})
         .then(function(result){
           var headers = [{label: "Category", type: "string"}, {label: "Count", type: "number"}];
           var data = _.map(result.data, function(a){ return {c: [{v: a.label}, {v: a.value}]}; });

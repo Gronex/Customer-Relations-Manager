@@ -25,8 +25,7 @@
       vm.owner = true;
       vm.filter = filter;
 
-      stateCom.setupFunction(getProductionGraph);
-
+      stateCom.setupFunction("production", getProductionGraph);
       getProductionGraph();
       getFilters();
       getFilterOptions();

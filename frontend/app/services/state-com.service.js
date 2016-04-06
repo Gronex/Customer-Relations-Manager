@@ -7,31 +7,44 @@
 
   function service(){
 
-    var $worker = function(args){
-      throw "Not set, call 'SetupFunction' first.";
-    };
-    var $args = undefined;
+    var $workers = {};
+    var $args = {};
+    var $lastArgs = {};
 
     return {
       setupFunction: setupFunction,
       setArgs: setArgs,
-      invoke: invoke
+      invoke: invoke,
+      resend: resend,
+      isDefined: isDefined
     };
 
-    function setupFunction(func){
+    function isDefined(name){
+      return $workers[name] !== undefined;
+    }
+
+    function setupFunction(name, func){
       if(typeof(func) === "function")
-        $worker = func;
+        $workers[name] = func;
       else
         throw "argument has to be a function";
     }
 
-    function setArgs(args){
-      $args = args;
+    function setArgs(name, args){
+      $args[name] = args;
     }
 
-    function invoke(args){
-      var tempArgs = _.cloneDeep($args);
-      return $worker(_.merge(tempArgs, args));
+    function invoke(name, args){
+      var tempArgs = _.cloneDeep($args[name]);
+      var worker = $workers[name];
+      if(worker === undefined) throw "Worker '" + name + "' not defined, call 'setupFunction' first";
+      $lastArgs[name] = tempArgs;
+      return $workers[name](_.merge(tempArgs, args));
+    }
+
+    function resend(name){
+      if($lastArgs[name] !== undefined)
+        invoke(name, $lastArgs[name]);
     }
   }
 })();

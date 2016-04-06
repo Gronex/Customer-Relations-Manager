@@ -26,8 +26,8 @@
       activityCategories: createResource("api/activityCategories"),
       activities: createResource("api/activities"),
       activityComments: createResource("/api/activities/{activityId}/comments"),
-      productionGraphFilters: createResource("/api/productiongraphfilters"),
-      activityGraphFilters: createResource("/api/activitygraphfilters")
+      productionGraphFilters: createResource("/api/graphfilters/production"),
+      activityGraphFilters: createResource("/api/graphfilters/activity")
     };
 
     function createResource(url) {

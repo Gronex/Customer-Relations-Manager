@@ -25,7 +25,7 @@
       vm.owner = true;
       vm.filter = filter;
 
-      stateCom.setupFunction(getActivityGraph);
+      stateCom.setupFunction("activity", getActivityGraph);
 
       getActivityGraph();
       getFilters();
