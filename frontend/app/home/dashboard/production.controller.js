@@ -136,7 +136,7 @@
                     vm.savedFilters.push(data);
                     vm.advancedFilter = result.data;
                     vm.savedFilter = data;
-                    var user = auth.user;
+                    var user = auth.getUser();
                     vm.owner = user.roles.includes("Super") || user.email === result.ownerEmail;
                   });
               };

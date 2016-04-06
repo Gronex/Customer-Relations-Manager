@@ -522,6 +522,7 @@
     <Compile Include="Controllers\CrmApiController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\GraphController.cs" />
+    <Compile Include="Controllers\GraphFilters\ActivityController.cs" />
     <Compile Include="Controllers\OpportunitiesController.cs" />
     <Compile Include="Controllers\OpportunityCategoriesController.cs" />
     <Compile Include="Controllers\PersonsController.cs" />
@@ -555,7 +556,8 @@
     <Compile Include="ViewModels\Company\PersonViewModel.cs" />
     <Compile Include="ViewModels\CommentViewModel.cs" />
     <Compile Include="ViewModels\GoalViewModel.cs" />
-    <Compile Include="ViewModels\GraphFilter\ProductionGraph\ProductionGraphFilterOverviewViewModel.cs" />
+    <Compile Include="ViewModels\GraphFilter\ActivityGraph\ActivityGraphFilterViewModel.cs" />
+    <Compile Include="ViewModels\GraphFilter\GraphFilterOverviewViewModel.cs" />
     <Compile Include="ViewModels\GraphFilter\ProductionGraph\ProductionGraphFilterViewModel.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityOverviewViewMode.cs" />
     <Compile Include="ViewModels\Opportunity\OpportunityViewModel.cs" />

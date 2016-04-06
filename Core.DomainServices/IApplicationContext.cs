@@ -29,8 +29,9 @@ namespace Core.DomainServices
         DbSet<OpportunityComment> OpportunityComments { get; set; }
         DbSet<ActivityComment> ActivityComments { get; set; }
         DbSet<ProductionViewSettings> ProductionViewSettings { get; set; }
+        DbSet<ActivityViewSettings> ActivityViewSettings { get; set; }
 
-            // Identity stuff
+        // Identity stuff
         IDbSet<User> Users { get; set; }
         IDbSet<IdentityRole> Roles { get; set; }
 

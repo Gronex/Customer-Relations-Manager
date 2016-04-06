@@ -17,5 +17,6 @@ namespace Core.DomainModels.UserGroups
         
         public virtual ICollection<UserGroupOpportunity> UserGroupOpportunities { get; set; }
         public virtual ICollection<ProductionViewSettings> ProductionViewSettings { get; set; }
+        public virtual ICollection<ActivityViewSettings> ActivityViewSettingses{ get; set; }
     }
 }

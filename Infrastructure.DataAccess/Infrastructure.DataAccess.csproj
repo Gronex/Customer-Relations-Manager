@@ -121,10 +121,15 @@
     <Compile Include="Migrations\201603161115430_ProductionViewSettings.Designer.cs">
       <DependentUpon>201603161115430_ProductionViewSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604061127276_ActivityGraphFilter.cs" />
+    <Compile Include="Migrations\201604061127276_ActivityGraphFilter.Designer.cs">
+      <DependentUpon>201604061127276_ActivityGraphFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />
+    <Compile Include="Repositories\ActivityViewSettingsRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Migrations\201602091102004_Initial.cs" />
     <Compile Include="Migrations\201602091102004_Initial.Designer.cs">
@@ -211,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603161115430_ProductionViewSettings.resx">
       <DependentUpon>201603161115430_ProductionViewSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604061127276_ActivityGraphFilter.resx">
+      <DependentUpon>201604061127276_ActivityGraphFilter.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
