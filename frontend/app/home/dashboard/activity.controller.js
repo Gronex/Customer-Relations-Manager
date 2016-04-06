@@ -42,7 +42,6 @@
       var config = {
         startDate: vm.filter.fromDate,
         endDate: vm.filter.toDate,
-        departments: _.map(vm.advancedFilter.departments, "id"),
         userGroups: _.map(vm.advancedFilter.userGroups, "id"),
         users: _.map(vm.advancedFilter.users, "email")
       };
@@ -82,11 +81,6 @@
 
     function getFilterOptions(){
       vm.filterOptions = {};
-      var departmentTask = dataservice.departments
-            .get()
-            .then(function(departments){
-              vm.filterOptions.departments = departments;
-            });
       var userGroupTask = dataservice.userGroups
             .get()
             .then(function(userGroups){
@@ -97,7 +91,7 @@
             .then(function(users){
               vm.filterOptions.users = users.data;
             });
-      return [departmentTask, userGroupTask, userTask];
+      return [userGroupTask, userTask];
     }
 
     $scope.$watch('vm.advancedFilter', function(newValue, oldValue){
