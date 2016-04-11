@@ -120,7 +120,8 @@
     <Compile Include="Controllers\StagesControllerTest.cs" />
     <Compile Include="Controllers\UsersControllerTest.cs" />
     <Compile Include="Controllers\UsersGroupControllerTest.cs" />
-    <Compile Include="IntegrationTests\GoalDataTest.cs" />
+    <Compile Include="IntegrationTests\GraphTests.cs" />
+    <Compile Include="IntegrationTests\OpportunityTests.cs" />
     <Compile Include="Repositories\ActivityCommentRepositoryTest.cs" />
     <Compile Include="Repositories\ActivityRepositoryTest.cs" />
     <Compile Include="Repositories\GenericRepositoryTest.cs" />

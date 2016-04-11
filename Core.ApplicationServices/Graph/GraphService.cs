@@ -103,11 +103,17 @@ namespace Core.ApplicationServices.Graph
             var earningTimeList = new List<Tuple<DateTime, double>>();
             for (var i = 0; i < difference; i++)
             {
-                earningTimeList.Add(new Tuple<DateTime, double>(opportunity.StartDate.RoundToMonth().AddMonths(i), opportunity.Amount/difference));
+                earningTimeList
+                    .Add(new Tuple<DateTime, double>(
+                        opportunity.StartDate.RoundToMonth().AddMonths(i), 
+                        opportunity.Amount/difference));
             }
 
             if (difference == 0)
-                earningTimeList.Add(new Tuple<DateTime, double>(opportunity.StartDate.RoundToMonth(), opportunity.Amount));
+                earningTimeList
+                    .Add(new Tuple<DateTime, double>(
+                        opportunity.StartDate.RoundToMonth(), 
+                        opportunity.Amount));
             return earningTimeList;
         } 
         

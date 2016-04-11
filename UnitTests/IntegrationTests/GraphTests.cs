@@ -18,16 +18,16 @@ using Xunit;
 
 namespace UnitTests.IntegrationTests
 {
-    public class GoalDataTest
+    public class GraphTests
     {
         private readonly GraphController _controller;
-        private readonly IApplicationContext _context;
-        public GoalDataTest()
+
+        public GraphTests()
         {
-            _context = new AppContextStub();
-            var goalRepo = new GenericRepository<ProductionGoal>(_context);
-            var opportunityRepo = new GenericRepository<Opportunity>(_context);
-            var activityRepo = new GenericRepository<Activity>(_context);
+            var context = new AppContextStub();
+            var goalRepo = new GenericRepository<ProductionGoal>(context);
+            var opportunityRepo = new GenericRepository<Opportunity>(context);
+            var activityRepo = new GenericRepository<Activity>(context);
             var service = new GraphService();
 
             _controller = new GraphController(goalRepo, opportunityRepo, activityRepo, service);
@@ -60,7 +60,7 @@ namespace UnitTests.IntegrationTests
                 }
             };
 
-            _context.Goals.AddRange(data);
+            context.Goals.AddRange(data);
 
         }
 
