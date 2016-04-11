@@ -13,7 +13,9 @@ using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -101,13 +103,14 @@ namespace UnitTests.Controllers
         {
             var dataViewModel = new OpportunityViewModel { Name = "test"};
 
-            _repo.Create(Arg.Any<Opportunity>(), Arg.Any<string>()).Returns(r => null);
+            _repo.Create(Arg.Any<Opportunity>(), Arg.Any<string>()).Throws(new NotFoundException());
 
-            var result = _controller.Post(dataViewModel);
-
-            // Verify the result was in fact not found
-            Assert.IsType<NotFoundResult>(result);
-
+            try
+            {
+                _controller.Post(dataViewModel);
+            }
+            catch { /* ignored */ }
+            
             _uow.DidNotReceiveWithAnyArgs().Save();
         }
 

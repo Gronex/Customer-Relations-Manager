@@ -32,13 +32,13 @@ namespace UnitTests.Controllers
         }
 
         [Fact]
-        public void CorrectPageInfoDoesNothingOnNull()
+        public void CorrectPageInfoSetsTo1OnNull()
         {
             int? page = null;
             int? pageSize = null;
 
             _ctrl.CorrectPageInfoCall(ref page, ref pageSize);
-            Assert.Equal(new int?[] {null, null}, new int?[]{page, pageSize });
+            Assert.Equal(new int?[] {1, null}, new int?[]{page, pageSize });
         }
 
         private class Ctrl : CrmApiController
