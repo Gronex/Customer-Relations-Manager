@@ -46,7 +46,7 @@ namespace customer_relations_manager.Controllers
         {
             filter = CorrectFilter(filter);
 
-            if (!filter.OrderBy.Any()) filter.OrderBy = new [] {"user.FirstName", "user.LastName"};
+            if (!filter.OrderBy.Any()) filter.OrderBy = new [] {"FirstName", "LastName"};
 
             // Because identity is not implemented so it is easy to work with
             var orderByString = string

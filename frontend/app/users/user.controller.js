@@ -27,7 +27,7 @@
 
     function activate() {
       getGroups().then(function () {
-        if($stateParams.id !== "new")
+        if($state.is("Users.new"))
           getUser($stateParams.id).then(function () {
             vm.groups = _.differenceBy(vm.groups,vm.user.groups, function (r) {
               return r.id;
@@ -66,14 +66,14 @@
         dataservice.users
           .update($stateParams.id, vm.user)
           .then(function () {
-            $state.go("Users");
+            $state.go("Users.list");
           });
       }
       else{
         dataservice.users
           .create(vm.user)
           .then(function () {
-            $state.go("Users");
+            $state.go("Users.list");
           });
       }
     }
@@ -82,7 +82,7 @@
       dataservice.users
         .remove($stateParams.id)
         .then(function () {
-          $state.go("Users");
+          $state.go("Users.list");
         });
     }
 

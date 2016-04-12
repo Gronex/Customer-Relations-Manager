@@ -28,6 +28,11 @@
       {
         label: "Role",
         selector: "role"
+      },
+      {
+        icon: "fa fa-pencil-square-o",
+        type: "btn-link",
+        link: "Users.edit"
       }
     ];
 
