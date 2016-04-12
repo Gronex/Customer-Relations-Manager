@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('ActivityGraph', Controller);
 
-  Controller.$inject = ['$scope', 'graph', '$state', 'dataservice', '$uibModal', 'authorization', 'filter', 'stateCom', 'dateFormat'];
+  Controller.$inject = ['$scope', 'graph', '$state', 'dataservice', '$uibModal', 'authorization', 'filter', 'stateCom', 'dateFormat', 'warning'];
 
   /* @ngInject */
-  function Controller($scope, graph, $state, dataservice, $modal, auth, filter, stateCom, dateFormat) {
+  function Controller($scope, graph, $state, dataservice, $modal, auth, filter, stateCom, dateFormat, warning) {
     var vm = this;
 
     vm.getFilter = getFilter;
@@ -136,12 +136,14 @@
     }
 
     function remove(){
-      dataservice.activityGraphFilters
-        .remove(vm.savedFilter.id)
-        .then(function(){
-          _.remove(vm.savedFilters, function(f){return f.id === vm.savedFilter.id;});
-          resetFilter();
-        });
+      return warning.warn(["You are about to delete the filter '" + vm.savedFilter.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]).then(function(){
+        dataservice.activityGraphFilters
+          .remove(vm.savedFilter.id)
+          .then(function(){
+            _.remove(vm.savedFilters, function(f){return f.id === vm.savedFilter.id;});
+            resetFilter();
+          });
+      });
     }
 
     function resetFilter(){
