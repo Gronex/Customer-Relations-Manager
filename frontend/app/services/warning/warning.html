@@ -1,0 +1,12 @@
+<div class="modal-header">
+    {{vm.header || "Warning"}}
+</div>
+<div class="modal-body">
+    <p ng-repeat="msg in vm.msg">
+        {{msg}}
+    </p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" ng-click="vm.ok()">OK</button>
+    <button class="btn btn-danger" ng-click="vm.cancel()">Cancel</button>
+</div>

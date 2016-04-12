@@ -29,7 +29,7 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         public IEnumerable<ActivityCategoryViewModel> GetAll([FromUri] string[] orderBy)
         {
-            return _repo.GetOrderedByStrings(orderBy: orderBy ?? new [] {"name"})
+            return _repo.GetOrderedByStrings(orderBy: orderBy != null && orderBy.Any() ? orderBy : new [] {"value"})
                 .Select(_mapper.Map<ActivityCategoryViewModel>);
         }
 

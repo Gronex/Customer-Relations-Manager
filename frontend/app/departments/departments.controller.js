@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('Departments', Departments);
 
-  Departments.$inject = ['dataservice'];
+  Departments.$inject = ['dataservice', 'warning'];
 
   /* @ngInject */
-  function Departments(dataservice) {
+  function Departments(dataservice, warning) {
     var vm = this;
     vm.departments = [];
     vm.department = {};
@@ -53,13 +53,15 @@
         }, function (err) { handleError(err, department); });
     }
     function remove(id) {
-      dataservice.departments
-        .remove(id)
-        .then(function () {
-          _.remove(vm.departments, function (s) {
-            return s.id == id;
+      warning.warn(["This department may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]).then(function(){
+        dataservice.departments
+          .remove(id)
+          .then(function () {
+            _.remove(vm.departments, function (s) {
+              return s.id == id;
+            });
           });
-        });
+      });
     }
 
     function resetDepartment() {
