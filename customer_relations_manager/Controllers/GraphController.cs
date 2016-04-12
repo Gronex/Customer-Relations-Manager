@@ -49,6 +49,7 @@ namespace customer_relations_manager.Controllers
             SetupDates(ref startDate, ref endDate);
             
             var goals = _goalRepo.Get(g => 
+                g.User.Active &&
                 (g.StartDate <= endDate.Value) && 
                 (!users.Any() || users.Contains(g.User.Email)) &&
                 (!userGroups.Any() || g.User.Groups.Any(gr => userGroups.Contains(gr.UserGroupId))));

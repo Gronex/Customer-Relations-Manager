@@ -166,13 +166,15 @@ namespace customer_relations_manager.Controllers
         public void RemoveUser(string id)
         {
             var user = _userManager.FindById(id);
-            if (user == null) return;
+            if (user == null || !user.Active) return;
 
             user.Active = false;
             user.EndDate = DateTime.UtcNow.Date;
 
             var roles = _userManager.GetRoles(id).ToArray();
             _userManager.RemoveFromRoles(id, roles);
+            user.ActivityViewSettingsesFilter.Clear();
+            user.ProductionViewSettingsFilter.Clear();
 
             _uow.Save();
         }

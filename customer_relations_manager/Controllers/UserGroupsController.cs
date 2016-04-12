@@ -76,6 +76,10 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
+            var toDelete = _repo.GetByKey(id);
+            if (toDelete == null) return;
+            toDelete.ActivityViewSettingses.Clear();
+            toDelete.ProductionViewSettings.Clear();
             _repo.DeleteByKey(id);
             _uow.Save();
         }
