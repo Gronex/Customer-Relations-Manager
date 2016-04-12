@@ -71,7 +71,7 @@ namespace Infrastructure.DataAccess.Repositories
                 var newResponsibles = activity.SecondaryResponsibles.Select(c => c.Email);
                 var updatedResponsibles = _context.Users
                     .Where(p => newResponsibles.Any(c => p.Email == c));
-                Update(a.SecondaryResponsibles, updatedResponsibles);
+                a.SecondaryResponsibles.ReplaceCollection(updatedResponsibles);
 
 
                 if (a.CompanyId != activity.CompanyId)
@@ -91,7 +91,7 @@ namespace Infrastructure.DataAccess.Repositories
                     var updatedContacts = _context.Persons
                         .Where(p => p.CompanyId == a.CompanyId)
                         .Where(p => newContacts.Any(c => p.Id == c));
-                    Update(a.SecondaryContacts, updatedContacts);
+                    a.SecondaryContacts.ReplaceCollection(updatedContacts);
                 }
                 else
                 {
@@ -133,34 +133,24 @@ namespace Infrastructure.DataAccess.Repositories
 
             // Update secondary responsibles
             var newResponsibles = activity.SecondaryResponsibles.Select(c => c.Email);
-            var updatedResponsibles = _context.Users
-                .Where(p => newResponsibles.Any(c => p.Email == c));
-            activity.SecondaryResponsibles = new List<User>();
-            Update(activity.SecondaryResponsibles, updatedResponsibles);
+            activity.SecondaryResponsibles = _context.Users
+                .Where(p => newResponsibles.Any(c => p.Email == c)).ToList();
 
             // Update secondary contacts
             var newContacts = activity.SecondaryContacts.Select(c => c.Id);
-            var updatedContacts = _context.Persons
+            activity.SecondaryContacts = _context.Persons
                 .Where(p => p.CompanyId == activity.CompanyId)
-                .Where(p => newContacts.Any(c => p.Id == c));
-            activity.SecondaryContacts = new List<Person>();
-            Update(activity.SecondaryContacts, updatedContacts);
+                .Where(p => newContacts.Any(c => p.Id == c)).ToList();
 
             return _repo.Insert(activity);
         }
 
         public void DeleteByKey(int id)
         {
+            var activity = _repo.GetByKey(id);
+            activity.SecondaryResponsibles.Clear();
+            activity.SecondaryContacts.Clear();
             _repo.DeleteByKey(id);
-        }
-
-        private static void Update<T>(ICollection<T> inDb, IQueryable<T> updated)
-        {
-            var toRemove = inDb.Except(updated).ToList();
-            var toAdd = updated.ToList().Except(inDb).ToList();
-
-            toRemove.ForEach(p => inDb.Remove(p));
-            toAdd.ForEach(inDb.Add);
         }
     }
 }
