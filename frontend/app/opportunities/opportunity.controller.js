@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('Opportunity', Opportunity);
 
-  Opportunity.$inject = ['dataservice', '$stateParams', '$state'];
+  Opportunity.$inject = ['dataservice', '$stateParams', '$state', 'warning'];
 
   /* @ngInject */
-  function Opportunity(dataservice, $stateParams, $state) {
+  function Opportunity(dataservice, $stateParams, $state, warning) {
     var vm = this;
 
     vm.opportunity = {};
@@ -68,11 +68,13 @@
     }
 
     function remove() {
-      return dataservice.opportunities
-        .remove($stateParams.id)
-        .then(function () {
-          $state.go("Opportunities.list");
-        });
+      return warning.warn(["You are about to delete the opportunity '" + vm.opportunity.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]).then(function(){
+        return dataservice.opportunities
+          .remove($stateParams.id)
+          .then(function () {
+            $state.go("Opportunities.list");
+          });
+      });
     }
 
     function stageSelected() {

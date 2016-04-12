@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('EditCompany', Company);
 
-  Company.$inject = ['company', 'employees', 'dataservice', '$stateParams', '$state'];
+  Company.$inject = ['company', 'employees', 'dataservice', '$stateParams', '$state', 'warning'];
 
   /* @ngInject */
-  function Company(company, employees, dataservice, $stateParams, $state) {
+  function Company(company, employees, dataservice, $stateParams, $state, warning) {
     var vm = this;
     vm.editing = false;
 
@@ -42,11 +42,13 @@
     }
 
     function remove() {
-      dataservice.companies
-        .remove($stateParams.id)
-        .then(function () {
-          $state.go("Companies.list");
-        });
+      return warning.warn(["You are about to delete the company '" + vm.company.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]).then(function(){
+        dataservice.companies
+          .remove($stateParams.id)
+          .then(function () {
+            $state.go("Companies.list");
+          });
+      });
     }
 
 

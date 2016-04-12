@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('Activity', Activity);
 
-  Activity.$inject = ['person', 'company', 'activity', 'dataservice', '$stateParams', '$state', 'authorization'];
-  function Activity(person, company, activity, dataservice, $stateParams, $state, auth){
+  Activity.$inject = ['person', 'company', 'activity', 'dataservice', '$stateParams', '$state', 'authorization', 'warning'];
+  function Activity(person, company, activity, dataservice, $stateParams, $state, auth, warning){
     var vm = this;
 
     vm.categories = [];
@@ -105,11 +105,13 @@
     }
 
     function remove(){
-      return dataservice.activities
-        .remove($stateParams.id)
-        .then(function(){
-          $state.go("Activities.list");
-        });
+      return warning.warn(["You are about to delete the activity '" + vm.activity.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]).then(function(){
+        return dataservice.activities
+          .remove($stateParams.id)
+          .then(function(){
+            $state.go("Activities.list");
+          });
+      });
     }
 
     function updateCompany(company){
