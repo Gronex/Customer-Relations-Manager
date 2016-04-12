@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Extentions;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -50,13 +53,30 @@ namespace Infrastructure.DataAccess.Repositories
                 PageSize = pageSize ?? -1,
                 PageNumber = page ?? -1,
                 ItemCount = userCount,
-                Data = users.Select(u => new Core.DomainServices.DTOs.UserRole {RoleName = u.Role, User = u.User})
+                Data = users.ToList().Select(u => new Core.DomainServices.DTOs.UserRole {RoleName = (UserRole)Enum.Parse(typeof(UserRole), u.Role), User = u.User})
             };
         }
 
         public Core.DomainServices.DTOs.UserRole GetById(string id)
         {
-            throw new NotImplementedException();
+            var user = _context.Users.SingleOrExcept(u => u.Active && u.Id == id);
+            var roles = _context.Roles.Where(r => r.Users.Any(u => u.UserId == id));
+            var role = roles.OrderByDescending(SelectRole()).FirstOrExcept();
+            return new Core.DomainServices.DTOs.UserRole
+            {
+                User = user,
+                RoleName = role.Name.Parse<UserRole>()
+            };
+        }
+
+        private Expression<Func<IdentityRole, UserRole>> SelectRole()
+        {
+            return ur =>
+                nameof(UserRole.Super).ToLower() == ur.Name
+                    ? UserRole.Super
+                    : nameof(UserRole.Executive).ToLower() == ur.Name
+                        ? UserRole.Executive
+                        : UserRole.Standard;
         }
     }
 }

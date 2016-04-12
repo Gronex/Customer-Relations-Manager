@@ -27,7 +27,7 @@
 
     function activate() {
       getGroups().then(function () {
-        if($state.is("Users.new"))
+        if($state.is("Users.edit"))
           getUser($stateParams.id).then(function () {
             vm.groups = _.differenceBy(vm.groups,vm.user.groups, function (r) {
               return r.id;

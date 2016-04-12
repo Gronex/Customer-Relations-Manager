@@ -57,26 +57,18 @@ namespace customer_relations_manager.Controllers
             return Ok(_repo.GetAll(orderByString, filter.Page, filter.PageSize).MapData(u =>
             {
                 return _mapper.Map<User, UserOverviewViewModel>(u.User,
-                    opts => opts.AfterMap((_, res) => res.Role = (UserRole)Enum.Parse(typeof(UserRole), u.RoleName)));
+                    opts => opts.AfterMap((_, res) => res.Role = u.RoleName));
             }));
         }
 
         // GET: api/users/{id}
         [HttpGet]
         [Authorize(Roles = nameof(UserRole.Super))]
-        public async Task<IHttpActionResult> Get(string id)
+        public IHttpActionResult Get(string id)
         {
-            var user = _userManager.FindById(id);
-            if (user == null) return NotFound();
-
-            var roles = await _userManager.GetRolesAsync(id);
-            //Selects the highest value of the roles the user has, resulting in the most rights
-            var role = roles.Select(r => Enum.Parse(typeof(UserRole), r)).OfType<UserRole>().Max();
-
-            var userModel = _mapper.Map<User, UserViewModel>(user,
-                opts => opts.AfterMap((_, res) => res.Role = role));
-
-            return Ok(userModel);
+            var userRole = _repo.GetById(id);
+            return Ok(_mapper.Map<User, UserViewModel>(userRole.User,
+                opts => opts.AfterMap((_, res) => res.Role = userRole.RoleName)));
         }
 
         // POST: api/users

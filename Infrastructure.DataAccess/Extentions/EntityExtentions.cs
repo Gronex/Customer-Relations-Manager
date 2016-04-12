@@ -19,6 +19,20 @@ namespace Infrastructure.DataAccess.Extentions
             return result;
         }
 
+        public static T FirstOrExcept<T>(this IQueryable<T> query, Expression<Func<T, bool>> predicate)
+        {
+            var result = query.FirstOrDefault(predicate);
+            if (result == null) throw new NotFoundException();
+            return result;
+        }
+
+        public static T FirstOrExcept<T>(this IQueryable<T> query)
+        {
+            var result = query.FirstOrDefault();
+            if (result == null) throw new NotFoundException();
+            return result;
+        }
+
         public static IQueryable<T> Similar<T>(this IQueryable<T> list, Expression<Func<T, string>> selector, string term)
         {
             var stripedTerm = term.ToLower().RemoveSeperators();

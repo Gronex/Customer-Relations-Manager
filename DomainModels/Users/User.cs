@@ -17,8 +17,9 @@ namespace Core.DomainModels.Users
     {
         Standard,
         Executive,
-        Super,
+        Super
     }
+    
 
     public class User : IdentityUser
     {
