@@ -71,7 +71,7 @@ namespace UnitTests.Repositories
         {
             SeedData();
 
-            _generic.GetByKey().ReturnsForAnyArgs(i =>
+            _generic.GetByKeyThrows().ReturnsForAnyArgs(i =>
             {
                 var id = (int) i.Arg<object[]>()[0];
                 return _context.Opportunities.SingleOrDefault(o => o.Id == id);

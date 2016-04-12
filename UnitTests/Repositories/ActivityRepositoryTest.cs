@@ -48,10 +48,10 @@ namespace UnitTests.Repositories
             //Add some data
             _context.Activities.AddRange(new List<Activity>
             {
-                new Activity {Id = 0, Name = "0", PrimaryResponsible = new User()},
-                new Activity {Id = 1, Name = "1", PrimaryResponsible = new User()},
-                new Activity {Id = 2, Name = "2", PrimaryResponsible = new User()},
-                new Activity {Id = 3, Name = "3", PrimaryResponsible = new User()},
+                new Activity {Id = 0, Name = "0", PrimaryResponsible = new User(), SecondaryResponsibles = new List<User>(), SecondaryContacts = new List<Person>()},
+                new Activity {Id = 1, Name = "1", PrimaryResponsible = new User(), SecondaryResponsibles = new List<User>(), SecondaryContacts = new List<Person>()},
+                new Activity {Id = 2, Name = "2", PrimaryResponsible = new User(), SecondaryResponsibles = new List<User>(), SecondaryContacts = new List<Person>()},
+                new Activity {Id = 3, Name = "3", PrimaryResponsible = new User(), SecondaryResponsibles = new List<User>(), SecondaryContacts = new List<Person>()}
             });
 
             _context.Users.Add(new User { Id = "0", Email = "test"});
@@ -203,6 +203,26 @@ namespace UnitTests.Repositories
         {
             _repo.DeleteByKey(id);
             _generic.Received().DeleteByKey(Arg.Any<object[]>());
+        }
+
+        [Fact]
+        public void DeleteClears()
+        {
+            var toDelete = new Activity
+            {
+                Id = 10,
+                Name = "toDelete",
+                Done = false,
+                PrimaryResponsible = new User {Email = "test"},
+                Category = new ActivityCategory {Name = "test"},
+                SecondaryResponsibles = new List<User> {new User(), new User()},
+                SecondaryContacts = new List<Person>() {new Person(), new Person()}
+            };
+            _context.Activities.Add(toDelete);
+
+            _repo.DeleteByKey(10);
+            Assert.Empty(toDelete.SecondaryResponsibles);
+            Assert.Empty(toDelete.SecondaryContacts);
         }
     }
 }

@@ -45,8 +45,6 @@ namespace customer_relations_manager.Controllers
         public IHttpActionResult Get(int id)
         {
             var data = _repo.GetById(id);
-            if (data == null) return NotFound();
-
             return Ok(_mapper.Map<OpportunityViewModel>(data));
         }
 
@@ -66,12 +64,10 @@ namespace customer_relations_manager.Controllers
         [HttpPut]
         public IHttpActionResult Put(int id, OpportunityViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var data = _mapper.Map<Opportunity>(model);
             var dbModel = _repo.Update(id, data);
-            if (dbModel == null)
-                return NotFound();
 
             _uow.Save();
             return Ok(_mapper.Map<OpportunityViewModel>(dbModel));

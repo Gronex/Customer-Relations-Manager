@@ -9,6 +9,7 @@ using customer_relations_manager.Controllers;
 using customer_relations_manager.ViewModels;
 using customer_relations_manager.ViewModels.Opportunity;
 using Core.DomainModels.Opportunity;
+using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
@@ -147,6 +148,23 @@ namespace UnitTests.Controllers
         {
             _controller.Delete(1);
             _uow.ReceivedWithAnyArgs().Save();
+        }
+
+        [Fact]
+        public void DeleteClears()
+        {
+            var toDelete = new Stage
+            {
+                ProductionViewSettings = new List<ProductionViewSettings>
+                {
+                    new ProductionViewSettings(),
+                    new ProductionViewSettings()
+                }
+            };
+
+            _repo.GetByKey(1).ReturnsForAnyArgs(toDelete);
+            _controller.Delete(1);
+            Assert.Empty(toDelete.ProductionViewSettings);
         }
 
         [Fact]

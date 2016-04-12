@@ -37,7 +37,7 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Opportunity GetById(int id)
         {
-            return _repo.GetByKey(id);
+            return _repo.GetByKeyThrows(id);
         }
 
         public Opportunity Create(Opportunity model, string userName)

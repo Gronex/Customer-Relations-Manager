@@ -7,6 +7,7 @@ using customer_relations_manager.App_Start;
 using customer_relations_manager.Controllers;
 using customer_relations_manager.ViewModels;
 using Core.DomainModels.UserGroups;
+using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using NSubstitute;
@@ -124,6 +125,28 @@ namespace UnitTests.Controllers
         {
             _controller.Delete(1);
             _uow.ReceivedWithAnyArgs().Save();
+        }
+
+        [Fact]
+        public void DeleteClears()
+        {
+            var toDelete = new UserGroup
+            {
+                ActivityViewSettingses = new List<ActivityViewSettings>
+                {
+                    new ActivityViewSettings(),
+                    new ActivityViewSettings()
+                },
+                ProductionViewSettings = new List<ProductionViewSettings>
+                {
+                    new ProductionViewSettings(),
+                    new ProductionViewSettings()
+                }
+            };
+            _repo.GetByKey(1).ReturnsForAnyArgs(toDelete);
+            _controller.Delete(1);
+            Assert.Empty(toDelete.ActivityViewSettingses);
+            Assert.Empty(toDelete.ProductionViewSettings);
         }
 
         [Fact]

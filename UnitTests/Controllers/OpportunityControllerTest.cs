@@ -70,10 +70,8 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetById(Arg.Any<int>()).Returns(x => null);
-
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            _repo.GetById(Arg.Any<int>()).Throws(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]
@@ -141,12 +139,10 @@ namespace UnitTests.Controllers
         {
             var dataViewModel = new OpportunityViewModel { Name = "test" };
 
-            _repo.Update(1, Arg.Any<Opportunity>()).Returns(r => null);
+            _repo.Update(1, Arg.Any<Opportunity>()).Throws(new NotFoundException());
 
-            var result = _controller.Put(1, dataViewModel);
-
-            // Verify the result was in fact not found
-            Assert.IsType<NotFoundResult>(result);
+            try { _controller.Put(1, dataViewModel); }
+            catch { /* Do nothing */ }
 
             _uow.DidNotReceiveWithAnyArgs().Save();
         }

@@ -77,9 +77,8 @@ namespace customer_relations_manager.Controllers
         public void Delete(int id)
         {
             var toDelete = _repo.GetByKey(id);
-            if (toDelete == null) return;
-            toDelete.ActivityViewSettingses.Clear();
-            toDelete.ProductionViewSettings.Clear();
+            toDelete?.ActivityViewSettingses.Clear();
+            toDelete?.ProductionViewSettings.Clear();
             _repo.DeleteByKey(id);
             _uow.Save();
         }

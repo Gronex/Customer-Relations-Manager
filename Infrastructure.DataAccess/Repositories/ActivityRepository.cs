@@ -148,8 +148,8 @@ namespace Infrastructure.DataAccess.Repositories
         public void DeleteByKey(int id)
         {
             var activity = _repo.GetByKey(id);
-            activity.SecondaryResponsibles.Clear();
-            activity.SecondaryContacts.Clear();
+            activity?.SecondaryResponsibles.Clear();
+            activity?.SecondaryContacts.Clear();
             _repo.DeleteByKey(id);
         }
     }
