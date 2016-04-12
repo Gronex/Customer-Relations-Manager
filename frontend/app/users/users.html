@@ -2,18 +2,5 @@
 <a type="button" class="btn btn-default pull-right" ui-sref="User({id: 'new'})">New User</a>
 <br/>
 <br/>
-<table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Role</th>
-    <th></th>
-  </tr>
-  <tr ng-repeat="user in vm.users">
-    <td>{{user.name}}</td>
-    <td>{{user.email}}</td>
-    <td>{{user.role}}</td>
-    <td><a ui-sref="User({id: user.id})"class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
-  </tr>
-</table>
-<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getUsers()"></uib-pagination>
+<crm-table on-sort="vm.getUsers" sort-param="::vm.query.orderBy" headers="vm.headers" data="vm.users"></crm-table>
+<uib-pagination items-per-page="vm.query.pageSize" total-items="vm.itemCount" ng-model="vm.query.page" ng-change="vm.getUsers()"></uib-pagination>

@@ -95,6 +95,7 @@ namespace customer_relations_manager.App_Start
             kernel.Bind<IActivityCommentRepository>().To<ActivityCommentRepository>();
             kernel.Bind<IProductionViewSettingsRepository>().To<ProductionViewSettingsRepository>();
             kernel.Bind<IActivityViewSettingsRepository>().To<ActivityViewSettingsRepository>();
+            kernel.Bind<IUserRepository>().To<UserRepository>();
         }        
     }
 }

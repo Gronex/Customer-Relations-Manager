@@ -74,7 +74,7 @@
             contents: [
               {
                 label: "Users",
-                link: "Users"
+                link: "Users.list"
               },
               {
                 label: "Groups",

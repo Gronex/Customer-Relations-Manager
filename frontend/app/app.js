@@ -15,6 +15,11 @@
 
   function RouteConfig($stateProvider, $urlRouterProvider) {
     const dateFormatString = 'YYYY-MM-DD';
+    const defaultPaging = {
+      pageSize: 10,
+      page: 1
+    };
+
     //
     // For any unmatched url, redirect to /
     $urlRouterProvider.otherwise("/");
@@ -65,11 +70,32 @@
           }
         }
       })
-      .state('Users', {
+
+      .state("Users", {
+        abstract: true,
         url: "/users",
+        template: "<ui-view></ui-view>"
+      })
+      .state('Users.list', {
+        url: "?{pageSize:int}&{page:int}&{orderBy}",
         templateUrl: "view/app/users/users.html",
         controller: 'Users',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          users: function(dataservice, $stateParams){
+            var query = {
+              pageSize: defaultPaging.pageSize,
+              page: defaultPaging.page
+            };
+            _.merge(query, $stateParams);
+            return dataservice.users
+              .get({query: query})
+              .then(function (result) {
+                result.query = query;
+                return result;
+              });
+          }
+        }
       })
       .state("User", {
         url: "/users/{id}",
@@ -92,8 +118,8 @@
           activities: function(dataservice, $stateParams){
             var query = {
               own: true,
-              pageSize: 10,
-              page: 1
+              pageSize: defaultPaging.pageSize,
+              page: defaultPaging.page
             };
             _.merge(query, $stateParams);
             return dataservice.activities

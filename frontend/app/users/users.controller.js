@@ -5,33 +5,45 @@
     .module('CRM')
     .controller('Users', Users);
 
-  Users.$inject = ['dataservice', '$log'];
-  function Users(dataservice){
+  Users.$inject = ['users', '$state'];
+  function Users(users, $state){
     var vm = this;
     vm.users = [];
-    vm.pagination = {
-      pageSize: 5,
-      page: 1
-    };
     vm.itemCount = 0;
+
+    vm.headers = [
+      {
+        label: "First name",
+        selector: "firstName"
+      },
+      {
+        label: "Last name",
+        selector: "lastName"
+      },
+      {
+        label: "Email",
+        type: "email",
+        selector: "email"
+      },
+      {
+        label: "Role",
+        selector: "role"
+      }
+    ];
 
     vm.getUsers = getUsers;
 
     activate();
 
     function activate() {
-      getUsers();
+      vm.users = users.data;
+      vm.query = users.query;
+      vm.itemCount = users.itemCount;
     }
 
-    function getUsers() {
-      return dataservice.users
-        .get({query: vm.pagination})
-        .then(function (data) {
-          vm.itemCount = data.itemCount;
-          vm.users = data.data;
-          return vm.users;
-        });
+    function getUsers(sortParam){
+      _.merge(vm.query, {orderBy: sortParam});
+      $state.go(".", vm.query);
     }
-
   }
 })();

@@ -12,6 +12,7 @@ using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -24,53 +25,40 @@ namespace customer_relations_manager.Controllers
     {
         // Standard asp.net classes to manage users.
         private readonly ApplicationUserManager _userManager;
+        private readonly IUserRepository _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
         public UsersController(ApplicationUserManager userManager, 
+            IUserRepository repo,
             IUnitOfWork uow,
             IMapper mapper)
         {
             _userManager = userManager;
+            _repo = repo;
             _uow = uow;
             _mapper = mapper;
         }
 
         // GET: api/users
         [HttpGet]
-        public IHttpActionResult GetAll([FromUri]string[] orderBy, int? page = null, int? pageSize = null)
+        public IHttpActionResult GetAll([FromUri]PagedSearchFilter filter)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            var users = _userManager.Users.Where(u => u.Active);
-            var userCount = users.Count();
+            filter = CorrectFilter(filter);
 
-            if (orderBy == null) orderBy = new [] {"FirstName", "LastName"};
-            var orderByString = string.Join(",", orderBy).Replace("_", " ");
-            orderByString = string.IsNullOrEmpty(orderByString) ? "Id" : $"{orderByString},Id";
+            if (!filter.OrderBy.Any()) filter.OrderBy = new [] {"user.FirstName", "user.LastName"};
 
-            users = users.OrderBy(orderByString);
-            
-            if (page.HasValue && pageSize.HasValue)
-                users = users
-                    .Skip((page.Value - 1)*pageSize.Value)
-                    .Take(pageSize.Value);
-            var userModels = users.ToList()
-                .Select(u =>
-                {
-                    var roles = _userManager.GetRoles(u.Id);
-                    //Selects the highest value of the roles the user has, resulting in the most rights
-                    var role = roles.Select(r => Enum.Parse(typeof (UserRole), r)).OfType<UserRole>().Max();
-                    return _mapper.Map<User, UserOverviewViewModel>(u,
-                        opts => opts.AfterMap((_, res) => res.Role = role));
-                });
-            
-            return Ok(new PaginationEnvelope<UserOverviewViewModel>
+            // Because identity is not implemented so it is easy to work with
+            var orderByString = string
+                .Join(",", filter.OrderBy.Select(o => o.Contains("role") ? o : $"user.{o}"))
+                .Replace("_", " ");
+            orderByString = string.IsNullOrEmpty(orderByString) ? "user.Id" : $"{orderByString},user.Id";
+
+            return Ok(_repo.GetAll(orderByString, filter.Page, filter.PageSize).MapData(u =>
             {
-                Data = userModels,
-                ItemCount = userCount,
-                PageSize = pageSize ?? -1,
-                PageNumber = page ?? -1
-            });
+                return _mapper.Map<User, UserOverviewViewModel>(u.User,
+                    opts => opts.AfterMap((_, res) => res.Role = (UserRole)Enum.Parse(typeof(UserRole), u.RoleName)));
+            }));
         }
 
         // GET: api/users/{id}
