@@ -13,7 +13,9 @@ using Core.DomainModels.Opportunity;
 using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -55,7 +57,7 @@ namespace UnitTests.Controllers
         public void GetIsCorrectData()
         {
             var data = new OpportunityCategory { Id = 1, Name = "1" };
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
+            _repo.GetByKeyThrows(Arg.Any<int>()).Returns(x => data);
             var result = _controller.Get(1) as OkNegotiatedContentResult<CategoryViewModel>;
             // Only testing one, since there is no reason the 
             // system should have chosen the same string. 
@@ -66,10 +68,8 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => null);
-
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            _repo.GetByKeyThrows(Arg.Any<int>()).ThrowsForAnyArgs(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]
@@ -127,8 +127,8 @@ namespace UnitTests.Controllers
         public void UpdateReturnsNotFoundOnBadId()
         {
             var dataViewModel = new CategoryViewModel { Name = "1" };
-            Assert.IsType<NotFoundResult>(_controller.Put(1, dataViewModel));
-
+            _repo.Update(Arg.Any<Action<OpportunityCategory>>(), 1).ThrowsForAnyArgs(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Put(1, dataViewModel));
         }
 
         [Fact]

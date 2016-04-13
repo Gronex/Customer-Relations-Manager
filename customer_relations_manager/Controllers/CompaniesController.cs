@@ -12,11 +12,12 @@ using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using System.Data.Entity;
 using customer_relations_manager.ViewModels.Activity;
+using Core.DomainModels.Users;
 using Core.DomainServices.Filters;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     [RoutePrefix("api/companies")]
     public class CompaniesController : CrmApiController
     {
@@ -53,7 +54,7 @@ namespace customer_relations_manager.Controllers
         [HttpPost]
         public IHttpActionResult Post(CompanyViewModel model)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Insert(_mapper.Map<Company>(model));
             _uow.Save();
@@ -64,7 +65,7 @@ namespace customer_relations_manager.Controllers
         [HttpPut]
         public IHttpActionResult Put(int id, CompanyViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(company =>
             {

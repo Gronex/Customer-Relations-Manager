@@ -7,12 +7,13 @@ using System.Web.Http;
 using AutoMapper;
 using customer_relations_manager.ViewModels.Activity;
 using Core.DomainModels.Activities;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class ActivityCategoriesController : CrmApiController
     {
         private readonly IGenericRepository<ActivityCategory> _repo;
@@ -36,15 +37,15 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         public IHttpActionResult Get(int id)
         {
-            var data = _repo.GetByKey(id);
-            if (data == null) return NotFound();
+            var data = _repo.GetByKeyThrows(id);
             return Ok(_mapper.Map<ActivityCategoryViewModel>(data));
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(ActivityCategoryViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Insert(_mapper.Map<ActivityCategory>(model));
             _uow.Save();
@@ -53,9 +54,10 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, ActivityCategoryViewModel model)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(ac =>
             {
@@ -70,6 +72,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
             _repo.DeleteByKey(id);

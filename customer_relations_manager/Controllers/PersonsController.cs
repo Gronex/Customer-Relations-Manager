@@ -8,14 +8,15 @@ using AutoMapper;
 using customer_relations_manager.ViewModels.Activity;
 using customer_relations_manager.ViewModels.Company;
 using Core.DomainModels.Customers;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize(Roles = nameof(UserRole.Standard))]
     [RoutePrefix("api/persons")]
-    [Authorize]
     public class PersonsController : CrmApiController
     {
         private readonly IPersonRepository _repo;
@@ -51,7 +52,6 @@ namespace customer_relations_manager.Controllers
         {
             if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
             var dbModel = _repo.Create(_mapper.Map<Person>(model));
-            if(dbModel == null) return NotFound();
 
             _uow.Save();
             return Created(dbModel.Id.ToString(), _mapper.Map<PersonViewModel>(dbModel));

@@ -12,7 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class AccountController : CrmApiController
     {
         private readonly ApplicationUserManager _userManager;

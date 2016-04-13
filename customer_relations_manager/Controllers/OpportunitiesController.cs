@@ -13,7 +13,7 @@ using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class OpportunitiesController : CrmApiController
     {
         private readonly IOpportunityRepository _repo;
@@ -51,7 +51,7 @@ namespace customer_relations_manager.Controllers
         [HttpPost]
         public IHttpActionResult Post(OpportunityViewModel model)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var data = _mapper.Map<Opportunity>(model);
 

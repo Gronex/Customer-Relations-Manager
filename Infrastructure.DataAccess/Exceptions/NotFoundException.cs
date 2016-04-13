@@ -8,7 +8,7 @@ namespace Infrastructure.DataAccess.Exceptions
 {
     public class NotFoundException : Exception
     {
-        public NotFoundException()
+        public NotFoundException() : base("")
         {
             
         }

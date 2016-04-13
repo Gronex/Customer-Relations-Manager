@@ -15,7 +15,7 @@ using Microsoft.AspNet.Identity;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class ActivitiesController : CrmApiController
     {
         private readonly IUnitOfWork _uow;

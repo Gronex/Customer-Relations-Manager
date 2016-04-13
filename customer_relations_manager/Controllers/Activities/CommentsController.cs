@@ -8,12 +8,13 @@ using AutoMapper;
 using customer_relations_manager.ViewModels;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Comments;
+using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers.Activities
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     [Route("api/activities/{activityId}/comments")]
     public class CommentsController : CrmApiController
     {

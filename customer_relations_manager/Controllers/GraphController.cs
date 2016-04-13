@@ -16,6 +16,7 @@ using Core.DomainServices;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class GraphController : ApiController
     {
         private readonly IGenericRepository<ProductionGoal> _goalRepo;

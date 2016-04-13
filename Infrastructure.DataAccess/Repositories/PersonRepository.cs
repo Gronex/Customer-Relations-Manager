@@ -9,6 +9,7 @@ using Core.DomainServices;
 using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Exceptions;
+using Infrastructure.DataAccess.Extentions;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -40,6 +41,10 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Person Create(Person model)
         {
+            if (!model.CompanyId.HasValue) return _repo.Insert(model);
+
+            model.StartDate = DateTime.UtcNow;
+            model.Company = _context.Companies.SingleOrExcept(c => c.Id == model.CompanyId.Value);
             return _repo.Insert(model);
         }
 

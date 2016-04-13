@@ -20,7 +20,7 @@ using Microsoft.Owin.Security;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class UsersController : CrmApiController
     {
         // Standard asp.net classes to manage users.

@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http.Results;
 using customer_relations_manager.App_Start;
 using customer_relations_manager.Controllers;
 using customer_relations_manager.ViewModels;
-using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -123,8 +122,10 @@ namespace UnitTests.Controllers
         [Fact]
         public void UpdateReturnsNotFoundOnBadId()
         {
+            _repo.Update(Arg.Any<Action<Department>>(), 1).ThrowsForAnyArgs(new NotFoundException());
+
             var dataViewModel = new GroupViewModel { Name = "1" };
-            Assert.IsType<NotFoundResult>(_controller.Put(1, dataViewModel));
+            Assert.Throws<NotFoundException>(() => _controller.Put(1, dataViewModel));
 
         }
 

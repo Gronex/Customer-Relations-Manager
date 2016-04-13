@@ -4,6 +4,7 @@ using System.Web.Http;
 using AutoMapper;
 using customer_relations_manager.ViewModels.GraphFilter;
 using customer_relations_manager.ViewModels.GraphFilter.ProductionGraph;
+using Core.DomainModels.Users;
 using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
@@ -11,7 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace customer_relations_manager.Controllers.GraphFilters
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     [Route("api/graphfilters/production")]
     public class ProductionController : CrmApiController
     {

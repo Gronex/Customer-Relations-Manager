@@ -11,8 +11,10 @@ using Core.DomainModels.Activities;
 using Core.DomainModels.UserGroups;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
 using NSubstitute.Core.Arguments;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -54,7 +56,7 @@ namespace UnitTests.Controllers
         public void GetIsCorrectData()
         {
             var data = new ActivityCategory { Id = 1, Name = "1" };
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
+            _repo.GetByKeyThrows(Arg.Any<int>()).Returns(x => data);
             var result = _controller.Get(1) as OkNegotiatedContentResult<ActivityCategoryViewModel>;
             // Only testing one, since there is no reason the 
             // system should have chosen the same string. 
@@ -65,10 +67,8 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => null);
-
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            _repo.GetByKeyThrows(Arg.Any<int>()).Throws(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]

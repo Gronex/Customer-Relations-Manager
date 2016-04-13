@@ -54,7 +54,7 @@ namespace UnitTests.Controllers
         public void GetIsCorrectData()
         {
             var data = new Stage { Id = 1, Name = "1" };
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
+            _repo.GetByKeyThrows(Arg.Any<int>()).Returns(x => data);
             var result = _controller.Get(1) as OkNegotiatedContentResult<StageViewModel>;
             // Only testing one, since there is no reason the 
             // system should have chosen the same string. 
@@ -65,10 +65,9 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => null);
+            _repo.GetByKeyThrows(Arg.Any<int>()).Throws(new NotFoundException());
 
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]
