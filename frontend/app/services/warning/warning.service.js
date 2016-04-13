@@ -12,14 +12,21 @@
       warn: warn
     };
 
-    function warn(msg, header){
+    function warn(config){
       var instance = $modal.open({
         templateUrl: "view/app/services/warning/warning.html",
         controller: warningController,
         controllerAs: "vm",
         resolve: {
-          msg: function(){ return msg; },
-          header: function(){ return header; }
+          config: function(){
+            return _.merge({
+              type: "text",
+              text: [],
+              okText: "OK",
+              cancelText: "Cancel",
+              header: "Warning"
+            }, config);
+          }
         }
       });
 
@@ -31,13 +38,13 @@
     }
   }
 
-  function warningController(msg, header, $uibModalInstance){
+  function warningController(config, $uibModalInstance){
     var vm = this;
-    vm.msg = msg ? msg : ["Are you sure you want to continue this action?"];
-    vm.header = header;
+    vm.config = config;
 
     vm.ok = ok;
     vm.cancel = cancel;
+    vm.do = act;
 
     function ok(){
       $uibModalInstance.close("ok");
@@ -45,6 +52,11 @@
 
     function cancel(){
       $uibModalInstance.close("cancel");
+    }
+
+    function act(func){
+      func();
+      $uibModalInstance.close("redirect");
     }
   }
 })();

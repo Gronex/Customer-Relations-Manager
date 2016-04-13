@@ -1,12 +1,15 @@
 <div class="modal-header">
-    {{vm.header || "Warning"}}
+    {{vm.config.header}}
 </div>
 <div class="modal-body">
-    <p ng-repeat="msg in vm.msg">
-        {{msg}}
-    </p>
+    <ul ng-if="vm.config.type == 'list'">
+        <li ng-repeat="msg in vm.config.list">
+            <button class="btn btn-link" ng-click="vm.do(msg.action)">{{msg.text}}</button>
+        </li>
+    </ul>
+    <p ng-repeat="msg in vm.config.text">{{msg}}</p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-success" ng-click="vm.ok()">OK</button>
-    <button class="btn btn-danger" ng-click="vm.cancel()">Cancel</button>
+    <button class="btn btn-success" ng-click="vm.ok()">{{vm.config.okText}}</button>
+    <button class="btn btn-danger" ng-click="vm.cancel()">{{vm.config.cancelText}}</button>
 </div>

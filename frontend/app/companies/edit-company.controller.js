@@ -42,7 +42,7 @@
     }
 
     function remove() {
-      return warning.warn(["You are about to delete the company '" + vm.company.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]).then(function(){
+      return warning.warn({text: ["You are about to delete the company '" + vm.company.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]}).then(function(){
         dataservice.companies
           .remove($stateParams.id)
           .then(function () {

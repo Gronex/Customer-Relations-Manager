@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('User', User);
 
-  User.$inject = ['dataservice', "$log", "$stateParams", '$state', '$uibModal'];
-  function User(dataservice, $log, $stateParams, $state, $uibModal){
+  User.$inject = ['dataservice', "$log", "$stateParams", '$state', '$uibModal', 'warning'];
+  function User(dataservice, $log, $stateParams, $state, $uibModal, warning){
     var vm = this;
 
 
@@ -79,11 +79,13 @@
     }
 
     function remove() {
-      dataservice.users
-        .remove($stateParams.id)
-        .then(function () {
-          $state.go("Users.list");
-        });
+      return warning.warn({text: ["You are about to remove the user '" + vm.user.name + "'?.", "Are you sure you want to continue?"]}).then(function(){
+        dataservice.users
+          .remove($stateParams.id)
+          .then(function () {
+            $state.go("Users.list");
+          });
+      });
     }
 
     function removeGroup(group) {

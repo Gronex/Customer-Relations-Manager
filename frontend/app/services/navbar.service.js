@@ -44,14 +44,14 @@
                 label: "People",
                 key: "people",
                 selector: "name",
-                link: "People.edit",
+                link: "People.view",
                 searchFun: function(term, items){ return dataservice.people.get({query: {find: term, pageSize: items}});}
               },
               {
                 label: "Companies",
                 key: "companies",
                 selector: "name",
-                link: "Companies.edit",
+                link: "Companies.view",
                 searchFun: function(term, items){ return dataservice.companies.get({query: {find: term, pageSize: items}});}
               },
               {

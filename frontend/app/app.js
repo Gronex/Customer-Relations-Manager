@@ -97,14 +97,14 @@
           }
         }
       })
-      .state("Users.edit", {
-        url: "/users/{id}",
+      .state("Users.new", {
+        url: "/users/new",
         templateUrl: "view/app/users/user.html",
         controller: "User",
         controllerAs: 'vm'
       })
-      .state("Users.new", {
-        url: "/users/new",
+      .state("Users.edit", {
+        url: "/users/{id}",
         templateUrl: "view/app/users/user.html",
         controller: "User",
         controllerAs: 'vm'

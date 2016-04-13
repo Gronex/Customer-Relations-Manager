@@ -68,7 +68,7 @@
     }
 
     function remove() {
-      return warning.warn(["You are about to delete the opportunity '" + vm.opportunity.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]).then(function(){
+      return warning.warn({text: ["You are about to delete the opportunity '" + vm.opportunity.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]}).then(function(){
         return dataservice.opportunities
           .remove($stateParams.id)
           .then(function () {

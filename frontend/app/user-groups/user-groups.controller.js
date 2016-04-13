@@ -53,7 +53,7 @@
     }
 
     function remove(id) {
-      warning.warn(["This group may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]).then(function(){
+      warning.warn({text:["This group may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]}).then(function(){
         dataservice.userGroups
           .remove(id)
           .then(function () {

@@ -34,7 +34,6 @@
 
     function create() {
       vm.department.errMsg = undefined;
-      console.log(vm.department);
       dataservice.departments
         .create(vm.department)
         .then(function (data) {
@@ -53,7 +52,7 @@
         }, function (err) { handleError(err, department); });
     }
     function remove(id) {
-      warning.warn(["This department may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]).then(function(){
+      warning.warn({text: ["This department may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]}).then(function(){
         dataservice.departments
           .remove(id)
           .then(function () {

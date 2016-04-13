@@ -54,7 +54,7 @@
     }
 
     function remove(id) {
-      warning.warn(["This category may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]).then(function(){
+      warning.warn({text: ["This category may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]}).then(function(){
         dataservice.activityCategories
           .remove(id)
           .then(function () {
