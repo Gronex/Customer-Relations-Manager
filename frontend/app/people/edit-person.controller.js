@@ -46,13 +46,19 @@
             warning.warn({
               type: "list",
               list: _.map(result.data, function(d){
+                var name = d.name;
+                if(d.companyName) name = name + " - " + d.companyName;
                 return {
-                  text: d.name,
+                  text: name,
                   action: function(){ $state.go("People.edit", {id: d.id}); }
                 };
               }),
               okText: "Keep current",
-              header: "Did you mean?"
+              header: "Did you mean?",
+              text: [
+                "Based on the first name of the person the one you are creating could be one of these.",
+                "Click a link to go to editing that person instead, otherwise click 'Keep current'"
+              ]
             }).then($save);
           });
       }
