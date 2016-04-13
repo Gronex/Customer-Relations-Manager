@@ -78,29 +78,45 @@ namespace Infrastructure.DataAccess.Repositories
                 {
                     // if we get null that is fine, then we just remove the company
                     a.Company = _context.Companies.SingleOrDefault(c => c.Id == activity.CompanyId);
+                    a.CompanyId = activity.CompanyId;
                     if (a.Company == null) a.CompanyId = null;
                 }
 
                 if (a.CompanyId.HasValue)
                 {
-                    a.PrimaryContact = _context.Persons
-                        .Where(p => p.CompanyId == a.CompanyId && p.CompanyId.HasValue)
-                        .SingleOrDefault(p => p.Id == activity.PrimaryContactId);
-
-                    var newContacts = activity.SecondaryContacts.Select(c => c.Id);
+                    if (!activity.PrimaryContactId.HasValue)
+                    {
+                        a.PrimaryContact = null;
+                        a.PrimaryContactId = null;
+                    }
+                    else
+                    {
+                        a.PrimaryContact = _context.Persons
+                            .Where(p => p.CompanyId == a.CompanyId && p.CompanyId.HasValue)
+                            .SingleOrDefault(p => p.Id == activity.PrimaryContactId);
+                        a.PrimaryContactId = a.PrimaryContact?.Id;
+                    }
+                    
+                    var newContacts = activity.SecondaryContacts.Where(c => c.Id != a.PrimaryContactId).Select(c => c.Id);
                     var updatedContacts = _context.Persons
                         .Where(p => p.CompanyId == a.CompanyId)
                         .Where(p => newContacts.Any(c => p.Id == c));
+                    
+                    if (a.PrimaryContact == null)
+                    {
+                        a.PrimaryContact = updatedContacts.FirstOrDefault();
+                        a.PrimaryContactId = a.PrimaryContact?.Id;
+                    }
+
+                    updatedContacts = updatedContacts.Where(c => c.Id != a.PrimaryContactId);
+
                     a.SecondaryContacts.ReplaceCollection(updatedContacts);
                 }
                 else
                 {
                     a.PrimaryContact = null;
                     a.PrimaryContactId = null;
-                    foreach (var contact in a.SecondaryContacts)
-                    {
-                        a.SecondaryContacts.Remove(contact);
-                    }
+                    a.SecondaryContacts.Clear();
                 }
 
 

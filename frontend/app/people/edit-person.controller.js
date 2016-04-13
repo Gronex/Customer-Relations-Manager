@@ -33,7 +33,7 @@
         dataservice.people
         .create(vm.person)
         .then(function (data) {
-          $state.go("Person.view", {id: data.location});
+          $state.go("People.edit", {id: data.location});
         });
       }
     }

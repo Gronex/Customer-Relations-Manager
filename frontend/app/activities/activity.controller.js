@@ -20,6 +20,7 @@
     vm.removeInterest = removeInterest;
     vm.updateCompany = updateCompany;
     vm.removeCompany = removeCompany;
+    vm.removePrimaryContact = removePrimaryContact;
     vm.contactSelected = contactSelected;
     vm.primaryContactSelected = primaryContactSelected;
     vm.removeContact = removeContact;
@@ -41,7 +42,7 @@
         vm.activity = {
           responsibleEmail: user.email,
           responsibleName: user.name,
-          secondaryContactuns: [],
+          secondaryContacts: [],
           secondaryResponsibles: [],
           primaryContactId: person.id,
           primaryContactName: person.name,
@@ -118,10 +119,14 @@
       vm.activity.companyName = company.name;
       vm.activity.companyId = company.id;
       vm.activity.secondaryContacts = [];
+      vm.activity.primaryContactId = undefined;
+      vm.activity.primaryContactName = undefined;
       getEmployees();
     }
 
-    function removeCompany(company){
+    function removeCompany(){
+      vm.activity.primaryContactId = undefined;
+      vm.activity.primaryContactName = undefined;
       vm.activity.companyName = undefined;
       vm.activity.companyId = undefined;
       getEmployees();
@@ -169,6 +174,21 @@
     function handleRequestError(err){
       if(err.status === 400){
         vm.modelState = err.data;
+      }
+    }
+
+    function removePrimaryContact(){
+      if(vm.activity.secondaryContacts.length > 0){
+        var contact = vm.activity.secondaryContacts.splice(0,1)[0];
+        vm.activity.primaryContactName = contact.name;
+        vm.activity.primaryContactId = contact.id;
+        vm.employees.push({
+          name: vm.activity.primaryContactName,
+          id: vm.activity.primaryContactId
+        });
+      } else{
+        vm.activity.primaryContactName = undefined;
+        vm.activity.primaryContactId = undefined;
       }
     }
   }

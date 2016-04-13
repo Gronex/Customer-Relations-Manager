@@ -66,10 +66,9 @@ namespace customer_relations_manager.Controllers
             if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(id, _mapper.Map<Activity>(model));
-            if(dbModel == null) return NotFound();
             _uow.Save();
             
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(_mapper.Map<ActivityViewModel>(dbModel));
         }
 
         // POST: api/Activities

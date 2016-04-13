@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('ViewPerson', Person);
 
-  Person.$inject = ['person', 'activities', '$stateParams', '$state'];
+  Person.$inject = ['person', 'activities'];
 
   /* @ngInject */
-  function Person(person, activities, $stateParams, $state) {
+  function Person(person, activities) {
     var vm = this;
 
     activate();

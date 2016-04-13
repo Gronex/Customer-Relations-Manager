@@ -41,7 +41,13 @@
                 <crm-company-typeahead class="col-sm-6" on-remove="vm.removeCompany" on-select="vm.updateCompany" company-name="vm.activity.companyName"></crm-company-typeahead>
                 <div class="col-sm-6">
                     <label>Primary Contact</label>
-                    <input class="form-control" disabled ng-model="vm.activity.primaryContactName" /><br/>
+                    <div class="input-group">
+                        <input class="form-control" disabled ng-model="vm.activity.primaryContactName" /><br/>
+                        <div class="input-group-addon">
+                            <a href ng-click="vm.removePrimaryContact()"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <br/>
                     <input type="text" ng-model="vm.primaryContact" ng-disabled="!vm.activity.companyId" placeholder="Select Primary Contact" uib-typeahead="contact as contact.name for contact in vm.employees | filter:{name:$viewValue}" class="form-control" typeahead-on-select="vm.primaryContactSelected($item)">
                     <br/>
                 </div>
