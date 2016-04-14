@@ -213,10 +213,25 @@
         template: "<ui-view></ui-view>"
       })
       .state("People.list", {
-        url: "",
+        url: "?{pageSize:int}&{page:int}&{orderBy}",
         templateUrl: "view/app/people/people.html",
         controller: "People",
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          people: function(dataservice, $stateParams){
+            var query = {
+              pageSize: defaultPaging.pageSize,
+              page: defaultPaging.page
+            };
+            _.merge(query, $stateParams);
+            return dataservice.people
+              .get({query: query})
+              .then(function(result){
+                result.query = query;
+                return result;
+              });
+          }
+        }
       })
       .state("People.new", {
         url: "/new",

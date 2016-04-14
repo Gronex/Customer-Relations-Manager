@@ -2,5 +2,5 @@
 <a type="button" class="btn btn-default pull-right" ui-sref="People.new">New Person</a>
 <br/>
 <br/>
-<crm-table headers="vm.headers" data="vm.people" on-sort="vm.sort"></crm-table>
-<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getPeople()"></uib-pagination>
+<crm-table headers="vm.headers" data="vm.people" on-sort="vm.getPeople" sort-param="::vm.query.orderBy"></crm-table>
+<uib-pagination items-per-page="vm.query.pageSize" total-items="vm.itemCount" ng-model="vm.query.page" ng-change="vm.getPeople()"></uib-pagination>

@@ -5,17 +5,12 @@
       .module('CRM')
       .controller('People', People);
 
-  People.$inject = ['dataservice'];
+  People.$inject = ['$state', 'people'];
 
   /* @ngInject */
-  function People(dataservice) {
+  function People($state, people) {
     var vm = this;
-
-    vm.people = [];
-    vm.pagination = {
-      pageSize: 5,
-      page: 1
-    };
+    vm.query = {};
     vm.itemCount = 0;
     vm.headers = [
       {
@@ -47,31 +42,27 @@
     ];
 
     vm.getPeople = getPeople;
-    vm.sort = sort;
 
     activate();
 
     function activate() {
       getPeople();
+      setupData(people);
     }
 
-    function getPeople() {
-      dataservice.people
-        .get({query: vm.pagination})
-        .then(setupData);
+    function getPeople(sortParam) {
+      _.merge(vm.query, {orderBy: sortParam});
+      $state.go("People.list", vm.query);
     }
 
     function setupData(data) {
       vm.itemCount = data.itemCount;
       vm.people = data.data;
-    }
-
-    function sort(selector){
-      var cpy = angular.copy(vm.pagination);
-      cpy.orderBy = selector;
-      dataservice.people
-        .get({query: cpy})
-        .then(setupData);
+      _.merge(vm.query, {
+        pageSize: data.pageSize,
+        page: data.pageNumber,
+        orderBy: data.query.orderBy
+      });
     }
   }
 })();
