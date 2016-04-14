@@ -60,6 +60,8 @@
   <ItemGroup>
     <Compile Include="Activities\Activity.cs" />
     <Compile Include="Activities\ActivityCategory.cs" />
+    <Compile Include="Authorization\Client.cs" />
+    <Compile Include="Authorization\RefreshToken.cs" />
     <Compile Include="Comments\ActivityComment.cs" />
     <Compile Include="Comments\Comment.cs" />
     <Compile Include="Comments\OpportunityComment.cs" />

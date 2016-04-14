@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
+using Core.DomainModels.Authorization;
 using Core.DomainModels.Comments;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
@@ -47,6 +48,10 @@ namespace Infrastructure.DataAccess
         public DbSet<ActivityComment> ActivityComments { get; set; }
         public DbSet<ProductionViewSettings> ProductionViewSettings { get; set; }
         public DbSet<ActivityViewSettings> ActivityViewSettings { get; set; }
+
+        // redresh token
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

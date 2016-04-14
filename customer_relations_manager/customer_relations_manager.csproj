@@ -545,7 +545,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Providers\ApplicationOAutheProvider.cs" />
+    <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\ApplicationRefreshTokenProvider.cs" />
+    <Compile Include="Providers\Helpers.cs" />
     <Compile Include="ViewModels\Activity\ActivityCategoryViewModel.cs" />
     <Compile Include="ViewModels\Activity\ActivityOverviewViewModel.cs" />
     <Compile Include="ViewModels\Activity\ActivityViewModel.cs" />

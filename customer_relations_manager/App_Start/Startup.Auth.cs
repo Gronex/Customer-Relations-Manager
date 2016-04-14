@@ -29,6 +29,7 @@ namespace customer_relations_manager
                 TokenEndpointPath = new PathString("/api/token"),
                 Provider = new ApplicationOAuthProvider("self"),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
+                RefreshTokenProvider = new ApplicationRefreshTokenProvider(),
 #if DEBUG
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(365),
                 AllowInsecureHttp = true
