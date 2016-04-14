@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.UI.WebControls;
 using AutoMapper;
-using customer_relations_manager.ViewModels;
 using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
@@ -15,8 +12,6 @@ using Core.DomainServices;
 using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 
 namespace customer_relations_manager.Controllers
 {
