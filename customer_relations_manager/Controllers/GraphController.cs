@@ -8,6 +8,7 @@ using System.Web.Http;
 using Core.ApplicationServices.ExtentionMethods;
 using Core.ApplicationServices.Graph.DataHolders;
 using Core.ApplicationServices.ServiceInterfaces;
+using Core.DomainModels.Activities;
 using Core.DomainModels.Graph;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
@@ -15,16 +16,23 @@ using Core.DomainServices;
 
 namespace customer_relations_manager.Controllers
 {
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class GraphController : ApiController
     {
         private readonly IGenericRepository<ProductionGoal> _goalRepo;
         private readonly IGenericRepository<Opportunity> _opportunityRepo;
+        private readonly IGenericRepository<Activity> _activityRepo;
         private readonly IGraphService _graphService;
         
-        public GraphController(IGenericRepository<ProductionGoal> goalRepo, IGenericRepository<Opportunity> opportunityRepo, IGraphService graphService)
+        public GraphController(
+            IGenericRepository<ProductionGoal> goalRepo, 
+            IGenericRepository<Opportunity> opportunityRepo, 
+            IGenericRepository<Activity> activityRepo,
+            IGraphService graphService)
         {
             _goalRepo = goalRepo;
             _opportunityRepo = opportunityRepo;
+            _activityRepo = activityRepo;
             _graphService = graphService;
         }
 
@@ -36,21 +44,17 @@ namespace customer_relations_manager.Controllers
             [FromUri]DateTime? startDate = null,
             [FromUri]DateTime? endDate = null)
         {
-            var year = DateTime.UtcNow.Year;
-            if (!startDate.HasValue) startDate = new DateTime(year, 1, 1);
-            if (!endDate.HasValue) endDate = startDate.Value.AddYears(1);
-
-            if (startDate > endDate)
-            {
-                var temp = startDate;
-                startDate = endDate;
-                endDate = temp;
-            }
+            userGroups = userGroups ?? new int[0];
+            users = users ?? new string[0];
+            
+            SetupDates(ref startDate, ref endDate);
+            
             var goals = _goalRepo.Get(g => 
+                g.User.Active &&
                 (g.StartDate <= endDate.Value) && 
                 (!users.Any() || users.Contains(g.User.Email)) &&
                 (!userGroups.Any() || g.User.Groups.Any(gr => userGroups.Contains(gr.UserGroupId))));
-            return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
+            return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<DateUserGraphData>>>
             {
                 From = startDate.Value,
                 To = endDate.Value,
@@ -70,26 +74,61 @@ namespace customer_relations_manager.Controllers
             [FromUri]DateTime? endDate = null,
             [FromUri]bool weighted = false)
         {
-            var year = DateTime.UtcNow.Year;
-            if (!startDate.HasValue) startDate = new DateTime(year, 1, 1);
-            if (!endDate.HasValue) endDate = startDate.Value.AddYears(1);
-
-            if (startDate > endDate)
-            {
-                var temp = startDate;
-                startDate = endDate;
-                endDate = temp;
-            }
+            userGroups = userGroups ?? new int[0];
+            departments = departments ?? new int[0];
+            stages = stages ?? new int[0];
+            categories = categories ?? new int[0];
+            users = users ?? new string[0];
+            
+            SetupDates(ref startDate, ref endDate);
 
             var opportunities = _opportunityRepo.Get(
                 Opportunity.InTimeRange(startDate.Value.Date, endDate.Value.Date)
                 .AndAlso(Opportunity.ListFilter(departments, stages, categories, userGroups, users)));
-            return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<UserGraphData>>>
+            return Ok(new GraphEnvelope<IDictionary<string, IEnumerable<DateUserGraphData>>>
             {
                 From = startDate.Value,
                 To = endDate.Value,
                 Data = _graphService.GenerateProductionDataTable(opportunities, startDate.Value.Date, endDate.Value.Date, weighted)
             });
+        }
+
+        [HttpGet]
+        [Route("api/graph/activities")]
+        public IHttpActionResult Activities(
+            [FromUri]int[] userGroups,
+            [FromUri]string[] users,
+            [FromUri]DateTime? startDate = null,
+            [FromUri]DateTime? endDate = null)
+        {
+            userGroups = userGroups ?? new int[0];
+            users = users ?? new string[0];
+
+            SetupDates(ref startDate, ref endDate);
+
+            var activities = _activityRepo.Get(g =>
+                g.DueDate <= endDate.Value && g.DueDate >= startDate.Value &&
+                (!userGroups.Any() || g.PrimaryResponsible.Groups.Any(gr => userGroups.Contains(gr.UserGroupId))) &&
+                (!users.Any() || users.Contains(g.PrimaryResponsible.Email)));
+
+            return Ok(new GraphEnvelope<IEnumerable<GraphData>>
+            {
+                From = startDate.Value,
+                To = endDate.Value,
+                Data = _graphService.GenerateActivityGraph(activities)
+            });
+        }
+
+        public void SetupDates(ref DateTime? startDate, ref DateTime? endDate)
+        {
+            var year = DateTime.UtcNow.Year;
+            if (!startDate.HasValue) startDate = new DateTime(year, 1, 1);
+            if (!endDate.HasValue) endDate = startDate.Value.AddYears(1);
+
+            if (!(startDate > endDate)) return;
+            var temp = startDate;
+            startDate = endDate;
+            endDate = temp;
         }
     }
 }

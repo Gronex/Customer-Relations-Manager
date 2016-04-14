@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('Stages', Stages);
 
-  Stages.$inject = ['dataservice'];
+  Stages.$inject = ['dataservice','warning'];
 
   /* @ngInject */
-  function Stages(dataservice) {
+  function Stages(dataservice, warning) {
     var vm = this;
     vm.stages = [];
     vm.stage = {};
@@ -52,13 +52,15 @@
         }, function (err) { handleError(err, stage); });
     }
     function remove(id) {
-      dataservice.stages
-        .remove(id)
-        .then(function () {
-          _.remove(vm.stages, function (s) {
-            return s.id == id;
+      warning.warn({text: ["This stage may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]}).then(function(){
+        dataservice.stages
+          .remove(id)
+          .then(function () {
+            _.remove(vm.stages, function (s) {
+              return s.id == id;
+            });
           });
-        });
+      });
     }
 
     function resetStage() {

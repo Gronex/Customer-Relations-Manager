@@ -5,42 +5,87 @@
     .module('CRM')
     .controller('Activities', Activities);
 
-  Activities.$inject = ['dataservice'];
-  function Activities(dataservice){
+  Activities.$inject = ['activities', 'dataservice', '$state'];
+  function Activities(activities, dataservice, $state){
     var vm = this;
-    vm.pagination = {
-      page: 1,
-      pageSize: 10
-    };
+    vm.query = {};
     vm.itemCount = 0;
+    vm.headers = [
+      {
+        label: "Name",
+        selector: "name"
+      },
+      {
+        label: "Company",
+        selector: "companyName"
+      },
+      {
+        label: "Owner",
+        selector: "primaryResponsibleName"
+      },
+      {
+        label: "Contact",
+        selector: "primaryContactName"
+      },
+      {
+        label: "Due",
+        selector: "dueDate",
+        format: "date"
+      },
+      {
+        label: "From",
+        selector: "dueTimeStart",
+        format: "time"
+      },
+      {
+        label: "To",
+        selector: "dueTimeEnd",
+        format: "time"
+      },
+      {
+        icon: "fa fa-pencil-square-o",
+        type: "btn-link",
+        link: "Activities.edit"
+      }
+    ];
 
     vm.getActivities = getActivities;
 
     activate();
 
     function activate(){
-      getActivities();
+      setupData(activities);
+      $("#find").focus();
     }
 
-    function getActivities(){
-      return dataservice.activities
-        .get({query: vm.pagination})
-        .then(function(data){
-          vm.itemCount = data.itemCount;
-          vm.activities = _.map(data.data, function(a){
-            a.dueDate = moment.utc(a.dueDate);
-            a.dueDate.local();
-            if(a.dueTimeStart){
-              a.dueTimeStart = moment.utc(a.dueTimeStart);
-              a.dueTimeStart.local();
-            }
-            if(a.dueTimeEnd){
-              a.dueTimeEnd = moment.utc(a.dueTimeEnd);
-              a.dueTimeEnd.local();
-            }
-            return a;
-          });
-        });
+    function getActivities(sortParam){
+      _.merge(vm.query, {orderBy: sortParam});
+      $state.go("Activities.list", vm.query);
+    }
+
+    function setupData(data){
+      vm.itemCount = data.itemCount;
+      _.merge(vm.query, {
+        pageSize: data.pageSize,
+        page: data.pageNumber,
+        orderBy: data.query.orderBy,
+        own: data.query.own,
+        find: data.query.find
+      });
+
+      vm.activities = _.map(data.data, function(a){
+        a.dueDate = moment.utc(a.dueDate);
+        a.dueDate.local();
+        if(a.dueTimeStart){
+          a.dueTimeStart = moment.utc(a.dueTimeStart);
+          a.dueTimeStart.local();
+        }
+        if(a.dueTimeEnd){
+          a.dueTimeEnd = moment.utc(a.dueTimeEnd);
+          a.dueTimeEnd.local();
+        }
+        return a;
+      });
     }
   }
 })();

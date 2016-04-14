@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
@@ -8,10 +10,15 @@ using customer_relations_manager.ViewModels.Company;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using System.Data.Entity;
+using customer_relations_manager.ViewModels.Activity;
+using Core.DomainModels.Users;
+using Core.DomainServices.Filters;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
+    [RoutePrefix("api/companies")]
     public class CompaniesController : CrmApiController
     {
         private readonly IGenericRepository<Company> _repo;
@@ -26,12 +33,13 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public PaginationEnvelope<CompanyOverviewViewModel> GetAll(int? page = null, int? pageSize = null)
+        public PaginationEnvelope<CompanyOverviewViewModel> GetAll([FromUri]PagedSearchFilter filter)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            var data = _repo.GetPaged(c => c
-                .OrderBy(co => co.Name)
-                .ThenBy(co => co.Id), page, pageSize);
+            filter = CorrectFilter(filter);
+
+            filter.OrderBy = !filter.OrderBy.Any() ? new[] {"name"} : filter.OrderBy;
+
+            var data = _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: c => c.Name, find: filter.Find);
             return data.MapData(_mapper.Map<CompanyOverviewViewModel>);
         }
 
@@ -39,16 +47,14 @@ namespace customer_relations_manager.Controllers
         [ResponseType(typeof(CompanyViewModel))]
         public IHttpActionResult Get(int id)
         {
-            var data = _repo.GetByKey(id);
-            if(data == null) return NotFound();
-
+            var data = _repo.GetByKeyThrows(id);
             return Ok(_mapper.Map<CompanyViewModel>(data));
         }
 
         [HttpPost]
         public IHttpActionResult Post(CompanyViewModel model)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Insert(_mapper.Map<Company>(model));
             _uow.Save();
@@ -59,7 +65,7 @@ namespace customer_relations_manager.Controllers
         [HttpPut]
         public IHttpActionResult Put(int id, CompanyViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(company =>
             {
@@ -74,7 +80,6 @@ namespace customer_relations_manager.Controllers
                 company.WebSite = updated.WebSite;
             }, id);
             
-            if(dbModel == null) return NotFound();
             _uow.Save();
 
             return Ok(_mapper.Map<CompanyViewModel>(dbModel));
@@ -88,14 +93,22 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        [Route("api/companies/{id}/persons")]
-        public IHttpActionResult Persons(int id)
+        [Route("{id}/persons")]
+        public IEnumerable<PersonViewModel> Persons(int id)
         {
-            var company = _repo.GetByKey(id);
-            if(company == null) return NotFound();
+            var company = _repo.GetByKeyThrows(id);
 
             var employees = company.Employees;
-            return Ok(employees.Select(_mapper.Map<PersonViewModel>));
+            return employees.Select(_mapper.Map<PersonViewModel>);
         }
+
+        [HttpGet]
+        [Route("{id}/activities")]
+        public IEnumerable<ActivityOverviewViewModel> Activities(int id)
+        {
+            var activities = _repo.GetByKeyThrows(id).Activities;
+            return activities.Select(_mapper.Map<ActivityOverviewViewModel>);
+        }
+
     }
 }

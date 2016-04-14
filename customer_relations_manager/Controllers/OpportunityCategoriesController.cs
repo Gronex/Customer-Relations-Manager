@@ -12,7 +12,7 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class OpportunityCategoriesController : CrmApiController
     {
         private readonly IGenericRepository<OpportunityCategory> _repo;
@@ -35,9 +35,7 @@ namespace customer_relations_manager.Controllers
         [HttpGet]
         public IHttpActionResult Get(int id)
         {
-            var model = _repo.GetByKey(id);
-
-            if(model == null) return NotFound();
+            var model = _repo.GetByKeyThrows(id);
 
             return Ok(_mapper.Map<CategoryViewModel>(model));
         }
@@ -47,6 +45,7 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(CategoryViewModel model)
         {
+            if (model == null || !ModelState.IsValid) return BadRequest();
             var dbModel = _repo.Insert(_mapper.Map<OpportunityCategory>(model));
             _uow.Save();
 
@@ -57,12 +56,12 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, CategoryViewModel model)
         {
+            if(model == null || !ModelState.IsValid) return BadRequest();
+
             var dbModel = _repo.Update(oc =>
             {
                 oc.Name = model.Name;
             }, id);
-
-            if (dbModel == null) return NotFound();
             _uow.Save();
 
             return Ok(_mapper.Map<CategoryViewModel>(dbModel));
@@ -72,6 +71,8 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
+            var toDelete = _repo.GetByKey(id);
+            toDelete?.ProductionViewSettings.Clear();
             _repo.DeleteByKey(id);
             _uow.Save();
         }

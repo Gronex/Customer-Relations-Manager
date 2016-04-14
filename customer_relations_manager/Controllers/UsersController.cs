@@ -4,87 +4,66 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.UI.WebControls;
 using AutoMapper;
-using customer_relations_manager.ViewModels;
 using customer_relations_manager.ViewModels.User;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class UsersController : CrmApiController
     {
         // Standard asp.net classes to manage users.
         private readonly ApplicationUserManager _userManager;
+        private readonly IUserRepository _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
         public UsersController(ApplicationUserManager userManager, 
+            IUserRepository repo,
             IUnitOfWork uow,
             IMapper mapper)
         {
             _userManager = userManager;
+            _repo = repo;
             _uow = uow;
             _mapper = mapper;
         }
 
         // GET: api/users
         [HttpGet]
-        public IHttpActionResult GetAll(int? page = null, int? pageSize = null)
+        public IHttpActionResult GetAll([FromUri]PagedSearchFilter filter)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            var users = _userManager.Users.Where(u => u.Active);
-            var userCount = users.Count();
+            filter = CorrectFilter(filter);
 
-            users = users.OrderBy(u => u.FirstName)
-                .ThenBy(u => u.LastName)
-                .ThenBy(pe => pe.Id);
-            if (page.HasValue && pageSize.HasValue)
-                users = users
-                    .Skip((page.Value - 1)*pageSize.Value)
-                    .Take(pageSize.Value);
-            var userModels = users.ToList()
-                .Select(u =>
-                {
-                    var roles = _userManager.GetRoles(u.Id);
-                    //Selects the highest value of the roles the user has, resulting in the most rights
-                    var role = roles.Select(r => Enum.Parse(typeof (UserRole), r)).OfType<UserRole>().Max();
-                    return _mapper.Map<User, UserOverviewViewModel>(u,
-                        opts => opts.AfterMap((_, res) => res.Role = role));
-                });
-            
-            return Ok(new PaginationEnvelope<UserOverviewViewModel>
+            if (!filter.OrderBy.Any()) filter.OrderBy = new [] {"FirstName", "LastName"};
+
+            // Because identity is not implemented so it is easy to work with
+            var orderByString = string
+                .Join(",", filter.OrderBy.Select(o => o.Contains("role") ? o : $"user.{o}"))
+                .Replace("_", " ");
+            orderByString = string.IsNullOrEmpty(orderByString) ? "user.Id" : $"{orderByString},user.Id";
+
+            return Ok(_repo.GetAll(orderByString, filter.Page, filter.PageSize).MapData(u =>
             {
-                Data = userModels,
-                ItemCount = userCount,
-                PageSize = pageSize ?? -1,
-                PageNumber = page ?? -1
-            });
+                return _mapper.Map<User, UserOverviewViewModel>(u.User,
+                    opts => opts.AfterMap((_, res) => res.Role = u.Role));
+            }));
         }
 
         // GET: api/users/{id}
         [HttpGet]
         [Authorize(Roles = nameof(UserRole.Super))]
-        public async Task<IHttpActionResult> Get(string id)
+        public IHttpActionResult Get(string id)
         {
-            var user = _userManager.FindById(id);
-            if (user == null) return NotFound();
-
-            var roles = await _userManager.GetRolesAsync(id);
-            //Selects the highest value of the roles the user has, resulting in the most rights
-            var role = roles.Select(r => Enum.Parse(typeof(UserRole), r)).OfType<UserRole>().Max();
-
-            var userModel = _mapper.Map<User, UserViewModel>(user,
-                opts => opts.AfterMap((_, res) => res.Role = role));
-
-            return Ok(userModel);
+            var userRole = _repo.GetById(id);
+            return Ok(_mapper.Map<User, UserViewModel>(userRole.User,
+                opts => opts.AfterMap((_, res) => res.Role = userRole.Role)));
         }
 
         // POST: api/users
@@ -162,13 +141,15 @@ namespace customer_relations_manager.Controllers
         public void RemoveUser(string id)
         {
             var user = _userManager.FindById(id);
-            if (user == null) return;
+            if (user == null || !user.Active) return;
 
             user.Active = false;
             user.EndDate = DateTime.UtcNow.Date;
 
             var roles = _userManager.GetRoles(id).ToArray();
             _userManager.RemoveFromRoles(id, roles);
+            user.ActivityViewSettingsesFilter.Clear();
+            user.ProductionViewSettingsFilter.Clear();
 
             _uow.Save();
         }

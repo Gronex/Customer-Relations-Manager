@@ -8,6 +8,7 @@ using Core.DomainModels.Opportunity;
 using Core.DomainModels.UserGroups;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Exceptions;
 using Infrastructure.DataAccess.Repositories;
@@ -59,10 +60,10 @@ namespace UnitTests.Repositories
         [Fact]
         public void GetAllGetsPaged()
         {
-            _repo.GetAll(os => os.OrderBy(o => o.Name));
+            _repo.GetAll(new PagedSearchFilter());
             _generic
                 .ReceivedWithAnyArgs()
-                .GetPaged(Arg.Any<Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>>>());
+                .GetPaged(Arg.Any<IEnumerable<string>>());
         }
 
         [Fact]
@@ -70,7 +71,7 @@ namespace UnitTests.Repositories
         {
             SeedData();
 
-            _generic.GetByKey().ReturnsForAnyArgs(i =>
+            _generic.GetByKeyThrows().ReturnsForAnyArgs(i =>
             {
                 var id = (int) i.Arg<object[]>()[0];
                 return _context.Opportunities.SingleOrDefault(o => o.Id == id);

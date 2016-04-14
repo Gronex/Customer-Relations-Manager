@@ -6,6 +6,6 @@
   Home.$inject = ['authorization', '$state'];
   function Home(auth, $state) {
     var user = auth.getUser();
-    if(user) $state.go("Home.Dashboard");
+    if(user) $state.go("Dashboard");
   }
 })();

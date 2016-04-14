@@ -12,7 +12,7 @@ using Infrastructure.DataAccess.Exceptions;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class DepartmentsController : CrmApiController
     {
         private readonly IGenericRepository<Department> _repo;
@@ -53,7 +53,6 @@ namespace customer_relations_manager.Controllers
             if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(d => d.Name = model.Name, id);
-            if(dbModel == null) return NotFound();
             _uow.Save();
             return Ok(_mapper.Map<GroupViewModel>(dbModel));
         }
@@ -61,6 +60,8 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
+            var toDelete = _repo.GetByKey(id);
+            toDelete?.ProductionViewSettings.Clear();
             _repo.DeleteByKey(id);
             _uow.Save();
         }

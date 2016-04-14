@@ -13,7 +13,9 @@ using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -47,9 +49,9 @@ namespace UnitTests.Controllers
                 new Opportunity {Id = 4, StartDate = new DateTime(2016, 1, 1), Name = "4"},
             };
 
-            _repo.GetAll(Arg.Any<Func<IQueryable<Opportunity>, IOrderedQueryable<Opportunity>>>()).Returns(x => new PaginationEnvelope<Opportunity> {Data = data});
+            _repo.GetAll(null).ReturnsForAnyArgs(x => new PaginationEnvelope<Opportunity> {Data = data});
 
-            var result = _controller.GetAll();
+            var result = _controller.GetAll(null);
             Assert.Equal(4, result.Data.Count());
         }
 
@@ -68,10 +70,8 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetById(Arg.Any<int>()).Returns(x => null);
-
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            _repo.GetById(Arg.Any<int>()).Throws(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]
@@ -101,13 +101,14 @@ namespace UnitTests.Controllers
         {
             var dataViewModel = new OpportunityViewModel { Name = "test"};
 
-            _repo.Create(Arg.Any<Opportunity>(), Arg.Any<string>()).Returns(r => null);
+            _repo.Create(Arg.Any<Opportunity>(), Arg.Any<string>()).Throws(new NotFoundException());
 
-            var result = _controller.Post(dataViewModel);
-
-            // Verify the result was in fact not found
-            Assert.IsType<NotFoundResult>(result);
-
+            try
+            {
+                _controller.Post(dataViewModel);
+            }
+            catch { /* ignored */ }
+            
             _uow.DidNotReceiveWithAnyArgs().Save();
         }
 
@@ -138,12 +139,10 @@ namespace UnitTests.Controllers
         {
             var dataViewModel = new OpportunityViewModel { Name = "test" };
 
-            _repo.Update(1, Arg.Any<Opportunity>()).Returns(r => null);
+            _repo.Update(1, Arg.Any<Opportunity>()).Throws(new NotFoundException());
 
-            var result = _controller.Put(1, dataViewModel);
-
-            // Verify the result was in fact not found
-            Assert.IsType<NotFoundResult>(result);
+            try { _controller.Put(1, dataViewModel); }
+            catch { /* Do nothing */ }
 
             _uow.DidNotReceiveWithAnyArgs().Save();
         }

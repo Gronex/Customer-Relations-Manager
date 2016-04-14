@@ -1,0 +1,43 @@
+<uib-accordion>
+    <uib-accordion-group>
+        <uib-accordion-heading>
+            Advanced filter <small ng-if="vm.savedFilter.id">- {{vm.savedFilter.name}}<span ng-show="vm.advancedFilterChanged">*</span></small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </uib-accordion-heading>
+        <div class="row">
+            <div class="col-sm-12">
+                <label>Saved filters</label>
+            </div>
+            <div class="col-sm-11">
+                <select ng-change="vm.getFilter()" ng-model="vm.savedFilter" ng-options="filter.name for filter in vm.savedFilters track by filter.id" class="form-control"></select>
+            </div>
+            <div class="col-sm-1">
+                <button ng-click="vm.resetFilter()" class="btn btn-primary">Reset</button>
+            </div>
+        </div>
+        <hr/>
+        <form name="advancedFilter">
+            <div class="form-group col-sm-6">
+                <label>User Groups</label>
+                <select multiple ng-model="vm.advancedFilter.userGroups" ng-options="userGroup.name for userGroup in vm.filterOptions.userGroups track by userGroup.id" class="form-control"></select>
+            </div>
+            <div class="form-group col-sm-6">
+                <label>Users</label>
+                <select multiple ng-model="vm.advancedFilter.users" ng-options="user.name for user in vm.filterOptions.users track by user.email" class="form-control"></select>
+            </div>
+            <div class="form-group col-sm-12">
+                <div class="checkbox">
+                    <label>
+                        <input ng-model="vm.advancedFilter.private" type="checkbox"/>
+                        Private
+                    </label>
+                </div>
+            </div>
+            <button class="btn btn-success" ng-click="vm.save()" ng-disabled="!vm.savedFilter.id || !vm.advancedFilterChanged" ng-if="vm.owner">Save</button>
+            <button class="btn btn-primary" ng-click="vm.save('new')">Save As..</button>
+            <button ng-if="vm.owner" class="btn btn-danger pull-right" ng-click="vm.delete()" ng-disabled="!vm.savedFilter.id">Delete filter</button>
+        </form>
+    </uib-accordion-group>
+
+
+<div id="activity_chart"></div>
+<div id="activity_table"></div>

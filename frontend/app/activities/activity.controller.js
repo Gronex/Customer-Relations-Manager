@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('Activity', Activity);
 
-  Activity.$inject = ['dataservice', '$stateParams', '$state', 'authorization'];
-  function Activity(dataservice, $stateParams, $state, auth){
+  Activity.$inject = ['person', 'company', 'activity', 'dataservice', '$stateParams', '$state', 'authorization', 'warning'];
+  function Activity(person, company, activity, dataservice, $stateParams, $state, auth, warning){
     var vm = this;
 
     vm.categories = [];
@@ -20,6 +20,7 @@
     vm.removeInterest = removeInterest;
     vm.updateCompany = updateCompany;
     vm.removeCompany = removeCompany;
+    vm.removePrimaryContact = removePrimaryContact;
     vm.contactSelected = contactSelected;
     vm.primaryContactSelected = primaryContactSelected;
     vm.removeContact = removeContact;
@@ -30,51 +31,27 @@
     activate();
 
     function activate(){
-      if($stateParams.id !== "new")
+      if($state.is("Activities.edit"))
       {
         vm.editing = true;
-        getActivity($stateParams.id);
+        vm.activity = activity;
+        vm.time = activity.dueTimeStart !== null;
+        getEmployees();
       } else{
         var user = auth.getUser();
         vm.activity = {
           responsibleEmail: user.email,
           responsibleName: user.name,
-          secondaryContactuns: [],
-          secondaryResponsibles: []
+          secondaryContacts: [],
+          secondaryResponsibles: [],
+          primaryContactId: person.id,
+          primaryContactName: person.name,
+          companyId: company.id,
+          companyName: company.name
         };
-        getPerson($stateParams.contact);
       }
       getUsers();
       getCategories();
-    }
-
-    function getPerson(id){
-      if(id === undefined) return {};
-      return dataservice.people
-        .get(id)
-        .then(function(result){
-          vm.activity.primaryContactId = result.id;
-          vm.activity.primaryContactName = result.name;
-          return result;
-        })
-        .then(function(result){
-          dataservice.companies
-            .get(result.companyId)
-            .then(function(company){
-              vm.activity.companyId = result.companyId;
-              vm.activity.companyName = company.name;
-            });
-        });
-    }
-
-    function getActivity(id){
-      return dataservice.activities
-        .get(id)
-        .then(function(a){
-          vm.activity = a;
-          vm.time = a.dueTimeStart !== null;
-          getEmployees();
-        });
     }
 
     function getEmployees(){
@@ -95,13 +72,13 @@
         dataservice.activities
           .update($stateParams.id, vm.activity)
           .then(function(){
-            $state.go("Activities");
+            $state.go("Activities.list");
           }, handleRequestError);
       } else {
         dataservice.activities
           .create(vm.activity)
           .then(function(result){
-            $state.go("Activity", {id: result.location});
+            $state.go("Activities.edit", {id: result.location});
           }, handleRequestError);
       }
     }
@@ -129,21 +106,27 @@
     }
 
     function remove(){
-      return dataservice.activities
-        .remove($stateParams.id)
-        .then(function(){
-          $state.go("Activities");
-        });
+      return warning.warn({text: ["You are about to delete the activity '" + vm.activity.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]}).then(function(){
+        return dataservice.activities
+          .remove($stateParams.id)
+          .then(function(){
+            $state.go("Activities.list");
+          });
+      });
     }
 
     function updateCompany(company){
       vm.activity.companyName = company.name;
       vm.activity.companyId = company.id;
       vm.activity.secondaryContacts = [];
+      vm.activity.primaryContactId = undefined;
+      vm.activity.primaryContactName = undefined;
       getEmployees();
     }
 
-    function removeCompany(company){
+    function removeCompany(){
+      vm.activity.primaryContactId = undefined;
+      vm.activity.primaryContactName = undefined;
       vm.activity.companyName = undefined;
       vm.activity.companyId = undefined;
       getEmployees();
@@ -191,6 +174,21 @@
     function handleRequestError(err){
       if(err.status === 400){
         vm.modelState = err.data;
+      }
+    }
+
+    function removePrimaryContact(){
+      if(vm.activity.secondaryContacts.length > 0){
+        var contact = vm.activity.secondaryContacts.splice(0,1)[0];
+        vm.activity.primaryContactName = contact.name;
+        vm.activity.primaryContactId = contact.id;
+        vm.employees.push({
+          name: vm.activity.primaryContactName,
+          id: vm.activity.primaryContactId
+        });
+      } else{
+        vm.activity.primaryContactName = undefined;
+        vm.activity.primaryContactId = undefined;
       }
     }
   }

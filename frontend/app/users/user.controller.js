@@ -5,8 +5,8 @@
     .module('CRM')
     .controller('User', User);
 
-  User.$inject = ['dataservice', "$log", "$stateParams", '$state', '$uibModal'];
-  function User(dataservice, $log, $stateParams, $state, $uibModal){
+  User.$inject = ['dataservice', "$log", "$stateParams", '$state', '$uibModal', 'warning'];
+  function User(dataservice, $log, $stateParams, $state, $uibModal, warning){
     var vm = this;
 
 
@@ -27,7 +27,7 @@
 
     function activate() {
       getGroups().then(function () {
-        if($stateParams.id !== "new")
+        if($state.is("Users.edit"))
           getUser($stateParams.id).then(function () {
             vm.groups = _.differenceBy(vm.groups,vm.user.groups, function (r) {
               return r.id;
@@ -66,24 +66,26 @@
         dataservice.users
           .update($stateParams.id, vm.user)
           .then(function () {
-            $state.go("Users");
+            $state.go("Users.list");
           });
       }
       else{
         dataservice.users
           .create(vm.user)
           .then(function () {
-            $state.go("Users");
+            $state.go("Users.list");
           });
       }
     }
 
     function remove() {
-      dataservice.users
-        .remove($stateParams.id)
-        .then(function () {
-          $state.go("Users");
-        });
+      return warning.warn({text: ["You are about to remove the user '" + vm.user.name + "'?.", "Are you sure you want to continue?"]}).then(function(){
+        dataservice.users
+          .remove($stateParams.id)
+          .then(function () {
+            $state.go("Users.list");
+          });
+      });
     }
 
     function removeGroup(group) {

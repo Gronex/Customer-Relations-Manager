@@ -1,0 +1,13 @@
+<p ng-hide="vm.results">
+    Search
+</p>
+<ul ng-show="vm.results" class="list-group">
+    <div ng-repeat="result in vm.results">
+        <p>{{result.label}}:</p>
+        <a ng-click="vm.term = ''" class="list-group-item" ui-sref="{{result.link}}({id: item.id})" ng-repeat="item in result.data">
+            {{item | get:result.selector}}
+        </a>
+        <br/>
+    </div>
+</ul>
+

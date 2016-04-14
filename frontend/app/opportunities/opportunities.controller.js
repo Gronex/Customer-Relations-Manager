@@ -5,40 +5,73 @@
     .module('CRM')
     .controller('Opportunities', Opportunities);
 
-  Opportunities.$inject = ['dataservice'];
+  Opportunities.$inject = ['opportunities', '$state'];
 
   /* @ngInject */
-  function Opportunities(dataservice) {
+  function Opportunities(opportunities, $state) {
     var vm = this;
-    vm.opportunities = [];
-    vm.pagination = {
-      pageSize: 10,
-      page: 1
-    };
     vm.itemCount = 0;
+
+    vm.headers = [
+      {
+        label: "Name",
+        selector: "name"
+      },
+      {
+        label: "Stage",
+        selector: "stage.name"
+      },
+      {
+        label: "Likelihood",
+        selector: "percentage"
+      },
+      {
+        label: "Company",
+        selector: "companyName"
+      },
+      {
+        label: "Owner",
+        selector: "ownerName"
+      },
+      {
+        label: "Start",
+        selector: "startDate",
+        format: "date"
+      },
+      {
+        label: "End",
+        selector: "endDate",
+        format: "date"
+      },
+      {
+        label: "Close",
+        selector: "expectedClose",
+        format: "date"
+      },
+      {
+        label: "Amount",
+        selector: "amount"
+      },
+      {
+        icon: "fa fa-pencil-square-o",
+        type: "btn-link",
+        link: "Opportunities.edit"
+      }
+    ];
 
     vm.getOpportunities = getOpportunities;
 
     activate();
 
     function activate() {
-      getOpportunities();
+      vm.itemCount = opportunities.itemCount;
+      vm.opportunities = opportunities.data;
+      vm.query = opportunities.query;
     }
 
-    function getOpportunities() {
-      dataservice.opportunities
-        .get({query: vm.pagination})
-        .then(function (data) {
-          vm.itemCount = data.itemCount;
-          vm.opportunities = _.map(data.data, function (o) {
-            o.startDate = new Date(o.startDate).toLocaleDateString();
-            o.endDate = new Date(o.endDate).toLocaleDateString();
-            o.expectedClose = new Date(o.expectedClose).toLocaleDateString();
-            return o;
-          });
-          return data;
-        });
+    function getOpportunities(sortParam) {
+      _.merge(vm.query, {orderBy: sortParam});
+      $state.go(".", vm.query);
     }
-
   }
 })();

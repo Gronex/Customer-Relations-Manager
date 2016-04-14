@@ -7,6 +7,7 @@ using Core.DomainModels.Activities;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess.Extentions;
 
@@ -23,14 +24,24 @@ namespace Infrastructure.DataAccess.Repositories
             _repo = repo;
         }
 
-        public PaginationEnvelope<Activity> GetAll(Func<IQueryable<Activity>, IOrderedQueryable<Activity>> orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<Activity> GetAll(string userName, PagedSearchFilter filter)
         {
-            return _repo.GetPaged(orderBy, page, pageSize);
+            return string.IsNullOrWhiteSpace(userName)
+                ? _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: a => a.Name,
+                    find: filter.Find)
+                : _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize,
+                    a => a.PrimaryResponsible.UserName == userName, a => a.Name,
+                    filter.Find);
         }
 
-        public IEnumerable<Activity> GetAll()
+        public IEnumerable<Activity> GetAll(int amount = 3, string userName = null, string find = null)
         {
-            return _repo.Get();
+            var activities = _context.Activities.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(userName))
+                activities = activities.Where(a => a.PrimaryResponsible.UserName == userName);
+            if (!string.IsNullOrWhiteSpace(find))
+                activities = activities.Similar(a => a.Name, find);
+            return activities;
         }
 
         public Activity GetById(int id)
@@ -60,36 +71,52 @@ namespace Infrastructure.DataAccess.Repositories
                 var newResponsibles = activity.SecondaryResponsibles.Select(c => c.Email);
                 var updatedResponsibles = _context.Users
                     .Where(p => newResponsibles.Any(c => p.Email == c));
-                Update(a.SecondaryResponsibles, updatedResponsibles);
+                a.SecondaryResponsibles.ReplaceCollection(updatedResponsibles);
 
 
                 if (a.CompanyId != activity.CompanyId)
                 {
                     // if we get null that is fine, then we just remove the company
                     a.Company = _context.Companies.SingleOrDefault(c => c.Id == activity.CompanyId);
+                    a.CompanyId = activity.CompanyId;
                     if (a.Company == null) a.CompanyId = null;
                 }
 
                 if (a.CompanyId.HasValue)
                 {
-                    a.PrimaryContact = _context.Persons
-                        .Where(p => p.CompanyId == a.CompanyId && p.CompanyId.HasValue)
-                        .SingleOrDefault(p => p.Id == activity.PrimaryContactId);
-
-                    var newContacts = activity.SecondaryContacts.Select(c => c.Id);
+                    if (!activity.PrimaryContactId.HasValue)
+                    {
+                        a.PrimaryContact = null;
+                        a.PrimaryContactId = null;
+                    }
+                    else
+                    {
+                        a.PrimaryContact = _context.Persons
+                            .Where(p => p.CompanyId == a.CompanyId && p.CompanyId.HasValue)
+                            .SingleOrDefault(p => p.Id == activity.PrimaryContactId);
+                        a.PrimaryContactId = a.PrimaryContact?.Id;
+                    }
+                    
+                    var newContacts = activity.SecondaryContacts.Where(c => c.Id != a.PrimaryContactId).Select(c => c.Id);
                     var updatedContacts = _context.Persons
                         .Where(p => p.CompanyId == a.CompanyId)
                         .Where(p => newContacts.Any(c => p.Id == c));
-                    Update(a.SecondaryContacts, updatedContacts);
+                    
+                    if (a.PrimaryContact == null)
+                    {
+                        a.PrimaryContact = updatedContacts.FirstOrDefault();
+                        a.PrimaryContactId = a.PrimaryContact?.Id;
+                    }
+
+                    updatedContacts = updatedContacts.Where(c => c.Id != a.PrimaryContactId);
+
+                    a.SecondaryContacts.ReplaceCollection(updatedContacts);
                 }
                 else
                 {
                     a.PrimaryContact = null;
                     a.PrimaryContactId = null;
-                    foreach (var contact in a.SecondaryContacts)
-                    {
-                        a.SecondaryContacts.Remove(contact);
-                    }
+                    a.SecondaryContacts.Clear();
                 }
 
 
@@ -122,34 +149,24 @@ namespace Infrastructure.DataAccess.Repositories
 
             // Update secondary responsibles
             var newResponsibles = activity.SecondaryResponsibles.Select(c => c.Email);
-            var updatedResponsibles = _context.Users
-                .Where(p => newResponsibles.Any(c => p.Email == c));
-            activity.SecondaryResponsibles = new List<User>();
-            Update(activity.SecondaryResponsibles, updatedResponsibles);
+            activity.SecondaryResponsibles = _context.Users
+                .Where(p => newResponsibles.Any(c => p.Email == c)).ToList();
 
             // Update secondary contacts
             var newContacts = activity.SecondaryContacts.Select(c => c.Id);
-            var updatedContacts = _context.Persons
+            activity.SecondaryContacts = _context.Persons
                 .Where(p => p.CompanyId == activity.CompanyId)
-                .Where(p => newContacts.Any(c => p.Id == c));
-            activity.SecondaryContacts = new List<Person>();
-            Update(activity.SecondaryContacts, updatedContacts);
+                .Where(p => newContacts.Any(c => p.Id == c)).ToList();
 
             return _repo.Insert(activity);
         }
 
         public void DeleteByKey(int id)
         {
+            var activity = _repo.GetByKey(id);
+            activity?.SecondaryResponsibles.Clear();
+            activity?.SecondaryContacts.Clear();
             _repo.DeleteByKey(id);
-        }
-
-        private static void Update<T>(ICollection<T> inDb, IQueryable<T> updated)
-        {
-            var toRemove = inDb.Except(updated).ToList();
-            var toAdd = updated.ToList().Except(inDb).ToList();
-
-            toRemove.ForEach(p => inDb.Remove(p));
-            toAdd.ForEach(inDb.Add);
         }
     }
 }

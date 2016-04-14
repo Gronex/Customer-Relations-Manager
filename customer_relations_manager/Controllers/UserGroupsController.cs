@@ -44,8 +44,7 @@ namespace customer_relations_manager.Controllers
         [ResponseType(typeof(GroupViewModel))]
         public IHttpActionResult Get(int id)
         {
-            var group = _repo.GetByKey(id);
-            if(group == null) return NotFound();
+            var group = _repo.GetByKeyThrows(id);
             return Ok(_mapper.Map<GroupViewModel>(group));
         }
 
@@ -53,7 +52,7 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Post(GroupViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var result = _repo.Insert(_mapper.Map<UserGroup>(model));
             _uow.Save();
@@ -64,9 +63,8 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public IHttpActionResult Put(int id, GroupViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null|| !ModelState.IsValid) return BadRequest(ModelState);
             var updated = _repo.Update(group => group.Name = model.Name, id);
-            if(updated == null) return NotFound();
 
             _uow.Save();
             return Ok(_mapper.Map<GroupViewModel>(updated));
@@ -76,6 +74,9 @@ namespace customer_relations_manager.Controllers
         [Authorize(Roles = nameof(UserRole.Super))]
         public void Delete(int id)
         {
+            var toDelete = _repo.GetByKey(id);
+            toDelete?.ActivityViewSettingses.Clear();
+            toDelete?.ProductionViewSettings.Clear();
             _repo.DeleteByKey(id);
             _uow.Save();
         }

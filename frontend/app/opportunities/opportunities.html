@@ -1,35 +1,8 @@
 <h1>Opportunities</h1>
-<a type="button" class="btn btn-default pull-right" ui-sref="Opportunity({id: 'new'})")>New Opportunity</a>
+<a type="button" class="btn btn-default pull-right" ui-sref="Opportunities.new">New Opportunity</a>
 <br/>
 <br/>
-<table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Stage</th>
-    <th>Likelihood</th>
-    <th>Company</th>
-    <th>Owner</th>
-    <th>Start</th>
-    <th>End</th>
-    <th>Close</th>
-    <th>Amount</th>
-    <th></th>
-  </tr>
-  <tr ng-repeat="opportunity in vm.opportunities">
-    <td>{{opportunity.name}}</td>
-    <td>{{opportunity.stage.name}}</td>
-    <td>{{opportunity.percentage}} %</td>
-    <td>{{opportunity.companyName}}</td>
-    <td>{{opportunity.ownerName}}</td>
-    <td>{{opportunity.startDate}}</td>
-    <td>{{opportunity.endDate}}</td>
-    <td>{{opportunity.expectedClose}}</td>
-    <td>{{opportunity.amount}}</td>
-    <td>
-      <a ui-sref="Opportunity({id: opportunity.id})" class="btn btn-primary">
-        <i class="fa fa-pencil-square-o"></i>
-      </a>
-    </td>
-  </tr>
-</table>
-<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getOpportunities()"></uib-pagination>
+<crm-table on-sort="vm.getOpportunities" sort-param="::vm.query.orderBy" headers="vm.headers" data="vm.opportunities"></crm-table>
+<uib-pagination items-per-page="vm.query.pageSize" total-items="vm.itemCount" ng-model="vm.query.page" ng-change="vm.getOpportunities()"></uib-pagination>
+
+

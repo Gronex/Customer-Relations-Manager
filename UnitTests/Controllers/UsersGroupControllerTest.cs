@@ -7,10 +7,13 @@ using customer_relations_manager.App_Start;
 using customer_relations_manager.Controllers;
 using customer_relations_manager.ViewModels;
 using Core.DomainModels.UserGroups;
+using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
 using NSubstitute.Core.Arguments;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -52,7 +55,7 @@ namespace UnitTests.Controllers
         public void GetIsCorrectData()
         {
             var data = new UserGroup() { Id = 1, Name = "Grp1" };
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => data);
+            _repo.GetByKeyThrows(Arg.Any<int>()).Returns(x => data);
 
             var result = _controller.Get(1) as OkNegotiatedContentResult<GroupViewModel>;
             var dataViewModel = _mapper.Map<GroupViewModel>(data);
@@ -65,10 +68,9 @@ namespace UnitTests.Controllers
         [Fact]
         public void GetNotFount()
         {
-            _repo.GetByKey(Arg.Any<int>()).Returns(x => null);
+            _repo.GetByKeyThrows(Arg.Any<int>()).ThrowsForAnyArgs(new NotFoundException());
 
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]
@@ -124,6 +126,28 @@ namespace UnitTests.Controllers
         {
             _controller.Delete(1);
             _uow.ReceivedWithAnyArgs().Save();
+        }
+
+        [Fact]
+        public void DeleteClears()
+        {
+            var toDelete = new UserGroup
+            {
+                ActivityViewSettingses = new List<ActivityViewSettings>
+                {
+                    new ActivityViewSettings(),
+                    new ActivityViewSettings()
+                },
+                ProductionViewSettings = new List<ProductionViewSettings>
+                {
+                    new ProductionViewSettings(),
+                    new ProductionViewSettings()
+                }
+            };
+            _repo.GetByKey(1).ReturnsForAnyArgs(toDelete);
+            _controller.Delete(1);
+            Assert.Empty(toDelete.ActivityViewSettingses);
+            Assert.Empty(toDelete.ProductionViewSettings);
         }
 
         [Fact]

@@ -38,6 +38,7 @@ namespace UnitTests.Stubs
         public DbSet<OpportunityComment> OpportunityComments { get; set; } = new TestDbSet<OpportunityComment>();
         public DbSet<ActivityComment> ActivityComments { get; set; } = new TestDbSet<ActivityComment>();
         public DbSet<ProductionViewSettings> ProductionViewSettings { get; set; } = new TestDbSet<ProductionViewSettings>();
+        public DbSet<ActivityViewSettings> ActivityViewSettings { get; set; } = new TestDbSet<ActivityViewSettings>();
         public IDbSet<User> Users { get; set; } = new TestDbSet<User>();
         public IDbSet<IdentityRole> Roles { get; set; } = new TestDbSet<IdentityRole>();
         public DbSet<T> Set<T>() where T : class

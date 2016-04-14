@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('ActivityCategories', ActivityCategories);
 
-  ActivityCategories.$inject = ['dataservice'];
+  ActivityCategories.$inject = ['dataservice', 'warning'];
 
   /* @ngInject */
-  function ActivityCategories(dataservice) {
+  function ActivityCategories(dataservice, warning) {
     var vm = this;
     vm.activityCategories = [];
     vm.activityCategory = {};
@@ -41,6 +41,7 @@
           resetActivityCategory();
         }, function (err) { handleError(err, vm.activityCategory); });
     }
+
     function save(activityCategory) {
       activityCategory.errMsg = undefined;
       if(activityCategory.saved || activityCategory.saved == undefined) return;
@@ -51,18 +52,21 @@
           resetActivityCategory();
         }, function (err) { handleError(err, activityCategory); });
     }
+
     function remove(id) {
-      dataservice.activityCategories
-        .remove(id)
-        .then(function () {
-          _.remove(vm.activityCategories, function (s) {
-            return s.id == id;
+      warning.warn({text: ["This category may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]}).then(function(){
+        dataservice.activityCategories
+          .remove(id)
+          .then(function () {
+            _.remove(vm.activityCategories, function (s) {
+              return s.id == id;
+            });
           });
-        });
+      });
     }
 
     function resetActivityCategory() {
-      vm.activityCategories = _.orderBy(vm.activityCategories, ['name']);
+      vm.activityCategories = _.orderBy(vm.activityCategories, ['value']);
       vm.activityCategory = {
         value: 0,
         name: ""

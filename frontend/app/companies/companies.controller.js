@@ -5,33 +5,73 @@
     .module('CRM')
     .controller('Companies', Companies);
 
-  Companies.$inject = ['dataservice'];
+  Companies.$inject = ['companies', '$state'];
 
   /* @ngInject */
-  function Companies(dataservice) {
+  function Companies(companies, $state) {
     var vm = this;
-    vm.companies = [];
-    vm.pagination = {
-      pageSize: 5,
-      page: 1
-    };
+    vm.query = {};
     vm.itemCount = 0;
+    vm.headers = [
+      {
+        label: "Name",
+        selector: "name",
+        type: "link",
+        link: "Companies.view"
+      },
+      {
+        label: "PhoneNumber",
+        selector: "phoneNumber"
+      },
+      {
+        label: "Address",
+        selector: "address"
+      },
+      {
+        label: "City",
+        selector: "city"
+      },
+      {
+        label: "Postal Code",
+        selector: "postalCode"
+      },
+      {
+        label: "Country",
+        selector: "country"
+      },
+      {
+        label: "Website",
+        selector: "webSite",
+        type: "ext-link"
+      },
+      {
+        icon: "fa fa-pencil-square-o",
+        type: "btn-link",
+        link: "Companies.edit"
+      }
+    ];
 
     vm.getCompanies = getCompanies;
 
     activate();
 
     function activate() {
-      getCompanies();
+      setupData(companies);
     }
 
-    function getCompanies() {
-      dataservice.companies
-        .get({query: vm.pagination})
-        .then(function (data) {
-          vm.itemCount = data.itemCount;
-          vm.companies = data.data;
-        });
+    function getCompanies(sortParam) {
+      _.merge(vm.query, {orderBy: sortParam});
+      $state.go("Companies.list", vm.query);
+    }
+
+    function setupData(data) {
+      vm.itemCount = data.itemCount;
+      vm.companies = data.data;
+      _.merge(vm.query, {
+        pageSize: data.pageSize,
+        page: data.pageNumber,
+        orderBy: data.query.orderBy
+      });
     }
   }
 })();

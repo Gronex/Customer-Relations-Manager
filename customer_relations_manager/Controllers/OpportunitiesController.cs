@@ -8,11 +8,12 @@ using customer_relations_manager.ViewModels.Opportunity;
 using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class OpportunitiesController : CrmApiController
     {
         private readonly IOpportunityRepository _repo;
@@ -27,12 +28,16 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public PaginationEnvelope<OpportunityOverviewViewMode> GetAll(int? page = null, int? pageSize = null)
+        public PaginationEnvelope<OpportunityOverviewViewMode> GetAll([FromUri]PagedSearchFilter filter)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            var data = _repo.GetAll(o => o
-                .OrderBy(op => op.Name)
-                .ThenBy(op => op.Id), page, pageSize);
+            filter = CorrectFilter(filter);
+            
+            filter.OrderBy = (filter.OrderBy.Any() ? filter.OrderBy : new[] { "name" })
+                .Select(o => o.ToLower()
+                    .Replace("ownername", "owner.firstName")
+                    .Replace("companyname", "company.name")).ToArray();
+
+            var data = _repo.GetAll(filter);
             return data.MapData(_mapper.Map<OpportunityOverviewViewMode>);
         }
 
@@ -40,22 +45,17 @@ namespace customer_relations_manager.Controllers
         public IHttpActionResult Get(int id)
         {
             var data = _repo.GetById(id);
-            if (data == null) return NotFound();
-
             return Ok(_mapper.Map<OpportunityViewModel>(data));
         }
 
         [HttpPost]
         public IHttpActionResult Post(OpportunityViewModel model)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if(model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var data = _mapper.Map<Opportunity>(model);
 
             var dbModel = _repo.Create(data, User.Identity.Name);
-
-            if (dbModel == null)
-                return NotFound();
 
             _uow.Save();
             return Created(dbModel.Id.ToString(), _mapper.Map<OpportunityViewModel>(dbModel));
@@ -64,12 +64,10 @@ namespace customer_relations_manager.Controllers
         [HttpPut]
         public IHttpActionResult Put(int id, OpportunityViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var data = _mapper.Map<Opportunity>(model);
             var dbModel = _repo.Update(id, data);
-            if (dbModel == null)
-                return NotFound();
 
             _uow.Save();
             return Ok(_mapper.Map<OpportunityViewModel>(dbModel));

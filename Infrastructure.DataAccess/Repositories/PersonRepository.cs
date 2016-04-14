@@ -6,7 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
+using Infrastructure.DataAccess.Extentions;
 
 namespace Infrastructure.DataAccess.Repositories
 {
@@ -26,18 +29,22 @@ namespace Infrastructure.DataAccess.Repositories
             return _repo.Get();
         }
 
-        public PaginationEnvelope<Person> GetAll(Func<IQueryable<Person>, IOrderedQueryable<Person>> orderBy, int? page = null, int? pageSize = null)
+        public PaginationEnvelope<Person> GetAll(PagedSearchFilter filter)
         {
-            return _repo.GetPaged(orderBy, page, pageSize);
+            return _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: p => p.FirstName + p.LastName, find: filter.Find);
         }
 
         public Person GetById(int id)
         {
-            return _repo.GetByKey(id);
+            return _repo.GetByKeyThrows(id);
         }
 
         public Person Create(Person model)
         {
+            if (!model.CompanyId.HasValue) return _repo.Insert(model);
+
+            model.StartDate = DateTime.UtcNow;
+            model.Company = _context.Companies.SingleOrExcept(c => c.Id == model.CompanyId.Value);
             return _repo.Insert(model);
         }
 
@@ -61,9 +68,8 @@ namespace Infrastructure.DataAccess.Repositories
 
         public Person AddToCompany(int id, int companyId)
         {
-            var person = _repo.GetByKey(id);
-            if (person == null) return null;
-            if (!_context.Companies.Any(c => c.Id == companyId)) return null;
+            var person = _repo.GetByKeyThrows(id);
+            if (!_context.Companies.Any(c => c.Id == companyId)) throw new NotFoundException("Company");
             if (person.StartDate.HasValue) return null;
             
             person.CompanyId = companyId;
@@ -77,7 +83,6 @@ namespace Infrastructure.DataAccess.Repositories
         {
             var person = _repo.GetByKey(id);
             if (person == null) return;
-
             Unassign(person);
             
             _context.SetState(person, EntityState.Modified);

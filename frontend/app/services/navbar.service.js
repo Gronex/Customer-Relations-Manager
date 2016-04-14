@@ -3,8 +3,8 @@
     .module('CRM')
     .factory('navbar', Navbar);
 
-  Navbar.$inject = ['authorization'];
-  function Navbar(auth) {
+  Navbar.$inject = ['authorization', 'dataservice'];
+  function Navbar(auth, dataservice) {
     return {
       generate: generate
     };
@@ -14,7 +14,7 @@
 
       var navbar = {
         label: "CRM",
-        link: user ? "Home.Dashboard" : "Home",
+        link: user ? "Dashboard" : "Home",
         left: [],
         right: []
       };
@@ -22,20 +22,46 @@
       if(hasRole(user, "Standard")){
         navbar.left = navbar.left.concat([
           {
-            link: "Opportunities",
+            link: "Opportunities.list",
             label: "Opportunities"
           },
           {
-            link: "Companies",
+            link: "Companies.list",
             label: "Companies"
           },
           {
-            link: "People",
+            link: "People.list",
             label: "People"
           },
           {
-            link: "Activities",
+            link: "Activities.list",
             label: "Activities"
+          },
+          {
+            type: "search",
+            searchList: [
+              {
+                label: "People",
+                key: "people",
+                selector: "name",
+                link: "People.view",
+                searchFun: function(term, items){ return dataservice.people.get({query: {find: term, pageSize: items}});}
+              },
+              {
+                label: "Companies",
+                key: "companies",
+                selector: "name",
+                link: "Companies.view",
+                searchFun: function(term, items){ return dataservice.companies.get({query: {find: term, pageSize: items}});}
+              },
+              {
+                label: "Opportunities",
+                key: "opportunities",
+                selector: "name",
+                link: "Opportunities.edit",
+                searchFun: function(term, items){ return dataservice.opportunities.get({query: {find: term, pageSize: items}});}
+              }
+            ]
           }
         ]);
       }
@@ -48,7 +74,7 @@
             contents: [
               {
                 label: "Users",
-                link: "Users"
+                link: "Users.list"
               },
               {
                 label: "Groups",

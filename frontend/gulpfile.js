@@ -58,4 +58,4 @@ gulp.task("watch", ["build"], function () {
 
 gulp.task("build", ["move:js", "move:html", "move:css", "move:libs", "move:index"]);
 
-gulp.task("default", ['clean', 'watch']);
+gulp.task("default", ['watch']);

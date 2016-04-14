@@ -11,7 +11,9 @@ using Core.DomainModels.Activities;
 using Core.DomainModels.Customers;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace UnitTests.Controllers
@@ -42,9 +44,9 @@ namespace UnitTests.Controllers
                 new Person {Id = 3, FirstName = "3"},
                 new Person {Id = 4, FirstName = "4"}
             };
-            _repo.GetAll(Arg.Any<Func<IQueryable<Person>, IOrderedQueryable<Person>>>()).ReturnsForAnyArgs(a => new PaginationEnvelope<Person> { Data = data });
+            _repo.GetAll(null).ReturnsForAnyArgs(a => new PaginationEnvelope<Person> { Data = data });
 
-            var result = _controller.GetAll();
+            var result = _controller.GetAll(null);
             Assert.Equal(4, result.Data.Count());
         }
 
@@ -61,12 +63,12 @@ namespace UnitTests.Controllers
         }
 
         [Fact]
-        public void GetNotFount()
+        public void GetNotFound()
         {
-            _repo.GetById(Arg.Any<int>()).Returns(x => null);
+            _repo.GetById(Arg.Any<int>()).Throws(x => new NotFoundException());
 
-            var result = _controller.Get(1);
-            Assert.IsType<NotFoundResult>(result);
+            //A filter will convert NotFoundException into a NotFoundResult
+            Assert.Throws<NotFoundException>(() => _controller.Get(1));
         }
 
         [Fact]
@@ -109,8 +111,10 @@ namespace UnitTests.Controllers
         public void UpdateReturnsNotFoundOnBadId()
         {
             var dataViewModel = new PersonViewModel { FirstName = "1" };
-            Assert.IsType<NotFoundResult>(_controller.Put(1, dataViewModel));
-
+            _repo.Update(1, Arg.Any<Person>()).Throws(new NotFoundException());
+            try { _controller.Put(1, dataViewModel); }
+            catch { /* ignored */ }
+            _uow.DidNotReceiveWithAnyArgs().Save();
         }
 
         [Fact]
@@ -153,6 +157,16 @@ namespace UnitTests.Controllers
             _controller.AddToCompany(1, 1);
             _repo.ReceivedWithAnyArgs().AddToCompany(1, 1);
         }
-        
+
+
+        public void GetAllActivities()
+        {
+            _repo.GetById(1)
+                .Returns(
+                    i => new Person {Id = 1, FirstName = "test", Activities = new[] {new Activity {Id = 4}, new Activity {Id = 7} }});
+
+            var result = _controller.GetActivities(1);
+            Assert.Equal(new List<int> {4,7}, result.Select(r => r.Id));
+        }
     }
 }

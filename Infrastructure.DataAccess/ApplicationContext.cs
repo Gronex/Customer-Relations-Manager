@@ -46,6 +46,7 @@ namespace Infrastructure.DataAccess
         public DbSet<OpportunityComment> OpportunityComments { get; set; }
         public DbSet<ActivityComment> ActivityComments { get; set; }
         public DbSet<ProductionViewSettings> ProductionViewSettings { get; set; }
+        public DbSet<ActivityViewSettings> ActivityViewSettings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

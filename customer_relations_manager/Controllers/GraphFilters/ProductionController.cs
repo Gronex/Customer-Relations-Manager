@@ -1,27 +1,26 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
+using customer_relations_manager.ViewModels.GraphFilter;
 using customer_relations_manager.ViewModels.GraphFilter.ProductionGraph;
+using Core.DomainModels.Users;
 using Core.DomainModels.ViewSettings;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
-using Infrastructure.DataAccess.Exceptions;
 using Microsoft.AspNet.Identity;
 
-namespace customer_relations_manager.Controllers
+namespace customer_relations_manager.Controllers.GraphFilters
 {
-    [Authorize]
-    public class ProductionGraphFiltersController : CrmApiController
+    [Authorize(Roles = nameof(UserRole.Standard))]
+    [Route("api/graphfilters/production")]
+    public class ProductionController : CrmApiController
     {
         private readonly IProductionViewSettingsRepository _repo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public ProductionGraphFiltersController(IProductionViewSettingsRepository repo, IUnitOfWork uow, IMapper mapper)
+        public ProductionController(IProductionViewSettingsRepository repo, IUnitOfWork uow, IMapper mapper)
         {
             _repo = repo;
             _uow = uow;
@@ -29,12 +28,13 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ProductionGraphFilterOverviewViewModel> Get()
+        public IEnumerable<GraphFilterOverviewViewModel> Get()
         {
-            return _repo.GetAll(User.Identity.GetUserName()).Select(_mapper.Map<ProductionGraphFilterOverviewViewModel>);
+            return _repo.GetAll(User.Identity.GetUserName()).Select(_mapper.Map<GraphFilterOverviewViewModel>);
         }
 
         [HttpGet]
+        [Route("api/graphfilters/production/{id}")]
         public IHttpActionResult Get(int id)
         {
             return Ok(_mapper.Map<ProductionGraphFilterViewModel>(_repo.GetById(id)));
@@ -51,6 +51,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpPut]
+        [Route("api/graphfilters/production/{id}")]
         public IHttpActionResult Put(int id, ProductionGraphFilterViewModel model)
         {
             if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
@@ -60,6 +61,7 @@ namespace customer_relations_manager.Controllers
         }
 
         [HttpDelete]
+        [Route("api/graphfilters/production/{id}")]
         public void Delete(int id)
         {
             _repo.Delete(id, User.Identity.Name);

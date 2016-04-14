@@ -50,6 +50,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +65,7 @@
     <Compile Include="Exceptions\NotAllowedException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Extentions\EntityExtentions.cs" />
+    <Compile Include="Extentions\UtilExtentions.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.cs" />
     <Compile Include="Migrations\201602161303314_UniqueYearMonthUser.Designer.cs">
       <DependentUpon>201602161303314_UniqueYearMonthUser.cs</DependentUpon>
@@ -117,10 +122,15 @@
     <Compile Include="Migrations\201603161115430_ProductionViewSettings.Designer.cs">
       <DependentUpon>201603161115430_ProductionViewSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604061127276_ActivityGraphFilter.cs" />
+    <Compile Include="Migrations\201604061127276_ActivityGraphFilter.Designer.cs">
+      <DependentUpon>201604061127276_ActivityGraphFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />
+    <Compile Include="Repositories\ActivityViewSettingsRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Migrations\201602091102004_Initial.cs" />
     <Compile Include="Migrations\201602091102004_Initial.Designer.cs">
@@ -133,6 +143,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\GoalRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Repositories\OpportunityRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
     <Compile Include="Repositories\ProductionViewSettingsRepository.cs" />
@@ -207,6 +218,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603161115430_ProductionViewSettings.resx">
       <DependentUpon>201603161115430_ProductionViewSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604061127276_ActivityGraphFilter.resx">
+      <DependentUpon>201604061127276_ActivityGraphFilter.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

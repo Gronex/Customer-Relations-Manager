@@ -17,8 +17,9 @@ namespace Core.DomainModels.Users
     {
         Standard,
         Executive,
-        Super,
+        Super
     }
+    
 
     public class User : IdentityUser
     {
@@ -36,6 +37,8 @@ namespace Core.DomainModels.Users
 
         [InverseProperty(nameof(ViewSettings.ProductionViewSettings.Owner))]
         public virtual ICollection<ProductionViewSettings> ProductionViewSettings { get; set; }
+        [InverseProperty(nameof(ViewSettings.ActivityViewSettings.Owner))]
+        public virtual ICollection<ActivityViewSettings> ActivityViewSettings { get; set; }
 
         public virtual ICollection<ProductionGoal> Goals { get; set; }
         [InverseProperty(nameof(Activity.PrimaryResponsible))]
@@ -48,6 +51,7 @@ namespace Core.DomainModels.Users
 
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<ProductionViewSettings> ProductionViewSettingsFilter { get; set; }
+        public virtual ICollection<ActivityViewSettings> ActivityViewSettingsesFilter { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager, string authenticationType)
         {

@@ -5,7 +5,6 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
-using AutoMapper;
 using customer_relations_manager;
 using customer_relations_manager.App_Start;
 using customer_relations_manager.Controllers;
@@ -21,12 +20,11 @@ namespace UnitTests.Controllers
     {
         private readonly UsersController _controller;
         private readonly IEnumerable<UserRole> _allRoles;
-        private readonly IMapper _mapper;
 
         public UsersControllerTest()
         {
-            _mapper = AutomapperConfig.ConfigMappings().CreateMapper();
-            _controller = new UsersController(null, new UnitOfWorkStub(), _mapper);
+            var mapper = AutomapperConfig.ConfigMappings().CreateMapper();
+            _controller = new UsersController(null, null, new UnitOfWorkStub(), mapper);
             
             _allRoles = new List<UserRole>()
             {

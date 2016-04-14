@@ -5,10 +5,10 @@
     .module('CRM')
     .controller('Opportunity', Opportunity);
 
-  Opportunity.$inject = ['dataservice', '$stateParams', '$state'];
+  Opportunity.$inject = ['dataservice', '$stateParams', '$state', 'warning'];
 
   /* @ngInject */
-  function Opportunity(dataservice, $stateParams, $state) {
+  function Opportunity(dataservice, $stateParams, $state, warning) {
     var vm = this;
 
     vm.opportunity = {};
@@ -25,7 +25,7 @@
     activate();
 
     function activate() {
-      if($stateParams.id !== "new"){
+      if($state.is("Opportunities.edit")){
         getOpportunity()
         .then(function () {
           vm.editing = true;
@@ -56,23 +56,25 @@
         return dataservice.opportunities
         .update($stateParams.id, vm.opportunity)
         .then(function () {
-          $state.go("Opportunities");
+          $state.go("Opportunities.list");
         }, handleRequestError);
       } else {
         return dataservice.opportunities
         .create(vm.opportunity)
         .then(function () {
-          $state.go("Opportunities");
+          $state.go("Opportunities.list");
         }, handleRequestError);
       }
     }
 
     function remove() {
-      return dataservice.opportunities
-        .remove($stateParams.id)
-        .then(function () {
-          $state.go("Opportunities");
-        });
+      return warning.warn({text: ["You are about to delete the opportunity '" + vm.opportunity.name + "', this operation cannot be undone.", "Are you sure you want to continue?"]}).then(function(){
+        return dataservice.opportunities
+          .remove($stateParams.id)
+          .then(function () {
+            $state.go("Opportunities.list");
+          });
+      });
     }
 
     function stageSelected() {

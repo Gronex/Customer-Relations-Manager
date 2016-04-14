@@ -14,7 +14,6 @@ namespace Core.DomainModels.ViewSettings
 
         public bool Weighted { get; set; }
         public bool Private { get; set; }
-        [Index(IsUnique = true)]
         public string Name { get; set; }
         [ForeignKey(nameof(Owner))]
         public string OwnerId { get; set; }

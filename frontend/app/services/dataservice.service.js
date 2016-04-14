@@ -3,8 +3,8 @@
     .module('CRM')
     .factory('dataservice', dataservice);
 
-  dataservice.$inject = ["$http", '$q', '$log', 'authorization'];
-  function dataservice($http, $q, $log, authorization) {
+  dataservice.$inject = ["$http", '$q', '$log', 'authorization', '$state'];
+  function dataservice($http, $q, $log, authorization, $state) {
 
     var pathRegex = /\{(.*?)\}/g;
 
@@ -15,16 +15,19 @@
       goals: createResource("/api/users/{userId}/goals"),
       companies: createResource("/api/companies"),
       companyEmployees: genericGet("/api/companies/{companyId}/persons"),
+      companyActivities: genericGet("/api/companies/{companyId}/activities"),
       opportunities: createResource("api/opportunities"),
       stages: createResource("api/stages"),
       departments: createResource("api/departments"),
       opportunityCategories: createResource("api/opportunityCategories"),
       people:  createResource("api/persons"),
+      personActivities: genericGet("/api/persons/{personId}/activities"),
       graph: createResource("api/graph"),
       activityCategories: createResource("api/activityCategories"),
       activities: createResource("api/activities"),
       activityComments: createResource("/api/activities/{activityId}/comments"),
-      productionGraphFilters: createResource("/api/productiongraphfilters")
+      productionGraphFilters: createResource("/api/graphfilters/production"),
+      activityGraphFilters: createResource("/api/graphfilters/activity")
     };
 
     function createResource(url) {
@@ -37,32 +40,32 @@
     }
 
     function genericGet(url){
-      return function(args){
+      return function(args, redirect){
         return $http.get(getUrl(url, args), getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
     function genericCreate(url){
-      return function(data, args) {
+      return function(data, args, redirect) {
         // aparently it is not able to figure out it is a string unless i add extra quotes
         if(typeof(data) === "string") data = '"' + data + '"';
         return $http.post(getUrl(url, args), data, getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
     function genericUpdate(url){
-      return function update(args,data) {
+      return function update(args,data, redirect) {
         return $http.put(getUrl(url, args), data, getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
     function genericRemove(url){
-      return function remove(args) {
+      return function remove(args, redirect) {
         return $http.delete(getUrl(url, args), getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
@@ -72,7 +75,6 @@
     }
 
     function getUrl(urlToUpdate, args) {
-
       if(typeof(args) === "string" || typeof(args) === "number")
         return urlToUpdate + "/" + args;
 
@@ -84,12 +86,25 @@
       return urlToUpdate.replace(pathRegex, function (match, key) {
         return args[key];
       });
-
     }
 
-    function handleError(err) {
+    function handleError(err, redirect) {
+      if(typeof(redirect) === "undefined") redirect = true;
       $log.error("XHR Failed with code: '" + err.status + "' on '" + err.config.method + " " + err.config.url + "'");
-      if(err.status === 401) authorization.logout();
+      switch(err.status){
+      case 401:
+        authorization.logout();
+        if(redirect)
+          $state.go("Error.unauthorized");
+        break;
+      case 404:
+        if(redirect)
+          $state.go("Error.notFound");
+        break;
+      case 500:
+        $state.go("Error.internalError");
+        break;
+      }
       return $q.reject(err);
     }
 

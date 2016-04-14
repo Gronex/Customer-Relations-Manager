@@ -9,11 +9,13 @@ using customer_relations_manager.ViewModels.Activity;
 using Core.DomainModels.Activities;
 using Core.DomainModels.Users;
 using Core.DomainServices;
+using Core.DomainServices.Filters;
 using Core.DomainServices.Repositories;
+using Microsoft.AspNet.Identity;
 
 namespace customer_relations_manager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.Standard))]
     public class ActivitiesController : CrmApiController
     {
         private readonly IUnitOfWork _uow;
@@ -28,16 +30,24 @@ namespace customer_relations_manager.Controllers
         }
 
         // GET: api/Activities
-        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(int? page = null, int? pageSize = null)
+        public PaginationEnvelope<ActivityOverviewViewModel> GetActivities(
+            [FromUri]PagedSearchFilter filter,
+            bool own = true)
         {
-            CorrectPageInfo(ref page, ref pageSize);
-            return _repo.GetAll(a => a
-                .OrderBy(ac => ac.DueDate)
-                .ThenBy(ac => ac.DueTimeStart)
-                .ThenBy(ac => ac.DueTimeEnd)
-                .ThenBy(ac => ac.Id), page, pageSize)
+            filter = CorrectFilter(filter);
+            //CorrectPageInfo(ref filter.Page, ref pageSize);
+            var defaultOrder = new[] { "DueDate,DueTimeStart,DueTimeEnd" };
+            filter.OrderBy = (filter.OrderBy.Any() ? filter.OrderBy : defaultOrder)
+                .Select(o => o.ToLower()
+                    .Replace("primarycontactname", "PrimaryContact.firstName")
+                    .Replace("primaryresponsiblename", "PrimaryResponsible.firstName")
+                    .Replace("companyname", "company.name")).ToArray();
+
+            return _repo
+                .GetAll(own ? User.Identity.Name : null, filter)
                 .MapData(_mapper.Map<ActivityOverviewViewModel>);
         }
+
 
         // GET: api/Activities/5
         [ResponseType(typeof(ActivityViewModel))]
@@ -56,10 +66,9 @@ namespace customer_relations_manager.Controllers
             if (model == null || !ModelState.IsValid) return BadRequest(ModelState);
 
             var dbModel = _repo.Update(id, _mapper.Map<Activity>(model));
-            if(dbModel == null) return NotFound();
             _uow.Save();
             
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(_mapper.Map<ActivityViewModel>(dbModel));
         }
 
         // POST: api/Activities

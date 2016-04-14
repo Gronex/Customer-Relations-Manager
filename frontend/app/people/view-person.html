@@ -1,0 +1,22 @@
+<h1>{{vm.person.firstName}} {{vm.person.lastName}}</h1>
+<div class="col-md-6">
+    <h3>Base info</h3>
+    Email: <a href="mailto:{{vm.person.email}}">{{vm.person.email}}</a><br/>
+    Phone Number: <a href="tel:{{vm.person.phoneNumber}}">{{vm.person.phoneNumber}}</a><br/>
+    Company: <a ui-sref="Companies.view({id: vm.person.companyId})">{{vm.person.companyName}}</a><br/>
+    <br/>
+    <a role="button" class="btn btn-primary" ui-sref="People.list">Back <i class="fa fa-arrow-left"></i></a>
+</div>
+<div class="col-md-6">
+    <h3>Activities
+        <a class="btn btn-default pull-right" ui-sref="Activities.new({contact: vm.person.id})">New Activity</a>
+    </h3>
+    <div class="list-group">
+        <a ui-sref="Activities.edit({id: activity.id})" ng-repeat="activity in vm.activities" class="list-group-item">
+            <h4 class="list-group-item-heading">{{activity.name}} - <small>{{activity.dueDate | moment}}</small></h4>
+            <p class="list-group-item-text">Owner: {{activity.primaryResponsibleName}}</p>
+            <p class="list-group-item-text">Company: {{activity.companyName}}</p>
+        </a>
+    </div>
+</div>
+

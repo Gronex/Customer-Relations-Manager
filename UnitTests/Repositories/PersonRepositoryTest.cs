@@ -8,8 +8,10 @@ using Core.DomainModels.Customers;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using Infrastructure.DataAccess.Repositories;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using UnitTests.Stubs;
 using Xunit;
 
@@ -27,17 +29,18 @@ namespace UnitTests.Repositories
             _context = new AppContextStub();
             _generic = Substitute.For<IGenericRepository<Person>>();
 
+            _generic.GetByKeyThrows(Arg.Any<object[]>()).Returns(a =>
+            {
+                var pId = (int)a.Arg<object[]>()[0];
+                try { return _context.Persons.Single(p => p.Id == pId); }
+                catch{ throw new NotFoundException(); }
+            });
+
             _generic.GetByKey(Arg.Any<object[]>()).Returns(a =>
             {
                 var pId = (int)a.Arg<object[]>()[0];
-                try
-                {
-                    return _context.Persons.SingleOrDefault(p => p.Id == pId);
-                }
-                catch
-                {
-                    return null;
-                }
+                try { return _context.Persons.Single(p => p.Id == pId); }
+                catch { return null; }
             });
 
             _data = new Person { FirstName = "test", LastName = "testsen", Email = "test@test.test", PhoneNumber = "123123123"};
@@ -73,8 +76,8 @@ namespace UnitTests.Repositories
         [Fact]
         public void AddToFailsOnNoCompany()
         {
-            var result = _repo.AddToCompany(1, -1);
-            Assert.Null(result);
+            var msg = Assert.Throws<NotFoundException>(() => _repo.AddToCompany(1, -1)).Message;
+            Assert.Equal("Company", msg);
         }
 
         [Fact]
@@ -93,9 +96,7 @@ namespace UnitTests.Repositories
         public void AddToFailsOnNoPerson()
         {
             _context.Companies.Add(new Company { Id = 0});
-
-            var result = _repo.AddToCompany(-1, 0);
-            Assert.Null(result);
+            Assert.Throws<NotFoundException>(() => _repo.AddToCompany(-1, 0));
         }
 
         [Fact]
@@ -124,39 +125,34 @@ namespace UnitTests.Repositories
         [Theory]
         [InlineData(-1)]
         [InlineData(6)]
-        public void GetByIdReturnsNullOnNotFound(int id)
+        public void GetByIdThrowsOnNotFound(int id)
         {
-            var result = _repo.GetById(id);
-
-            Assert.Equal(result, null);
+            Assert.Throws<NotFoundException>(() => _repo.GetById(id));
         }
 
         [Theory]
         [InlineData(-1)]
         [InlineData(6)]
-        public void UpdateReturnsNullOnNotFound(int id)
+        public void UpdateThrowsOnNotFound(int id)
         {
-            var result = _repo.Update(id, _data);
-
-            Assert.Equal(result, null);
+            _generic.Update(Arg.Any<Action<Person>>()).ThrowsForAnyArgs(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _repo.Update(id, _data));
         }
 
         [Fact]
         public void UpdateReturnsUpdatesData()
         {
-            // Actual test is of the action updates what is expected
             _generic
                 .Update(Arg.Any<Action<Person>>(), Arg.Any<object[]>())
                 .Returns(ci =>
                 {
                     var action = ci.Arg<Action<Person>>();
-                    var oldData = new Person {FirstName = "OldFirstname", LastName = "OldLastname", Email = "oldEmail", PhoneNumber = "oldPhone", };
+                    var oldData = new Person { FirstName = "OldFirstname", LastName = "OldLastname", Email = "oldEmail", PhoneNumber = "oldPhone", };
                     action(oldData);
                     return oldData;
                 });
 
             var result = _repo.Update(1, _data);
-
             Assert.Equal(new { _data.FirstName, _data.LastName, _data.Email, _data.PhoneNumber }, new { result.FirstName, result.LastName, result.Email, result.PhoneNumber});
         }
 

@@ -5,13 +5,13 @@
     .module('CRM')
     .controller('OpportunityCategories', OpportunityCategories);
 
-  OpportunityCategories.$inject = ['dataservice'];
+  OpportunityCategories.$inject = ['dataservice', 'warning'];
 
   /* @ngInject */
-  function OpportunityCategories(dataservice) {
+  function OpportunityCategories(dataservice, warning) {
     var vm = this;
     vm.opportunityCategories = [];
-    vm.opportunityCategory;
+    vm.opportunityCategory = {};
 
     vm.create = create;
     vm.save = save;
@@ -52,12 +52,15 @@
         }, function (err) { handleError(err, opportunityCategory); });
     }
     function remove(id) {
-      dataservice.opportunityCategories
-        .remove(id)
-        .then(function () {
-          _.remove(vm.opportunityCategories, function (s) {
-            return s.id == id;
-          });
+      warning.warn({text: ["This category may be connected to other things, and deleting it will remove it from these as well.", "Are you sure you want to continue?"]})
+        .then(function(){
+          dataservice.opportunityCategories
+            .remove(id)
+            .then(function () {
+              _.remove(vm.opportunityCategories, function (s) {
+                return s.id == id;
+              });
+            });
         });
     }
 
