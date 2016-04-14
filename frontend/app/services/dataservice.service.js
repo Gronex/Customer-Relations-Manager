@@ -3,8 +3,8 @@
     .module('CRM')
     .factory('dataservice', dataservice);
 
-  dataservice.$inject = ["$http", '$q', '$log', 'authorization'];
-  function dataservice($http, $q, $log, authorization) {
+  dataservice.$inject = ["$http", '$q', '$log', 'authorization', '$state'];
+  function dataservice($http, $q, $log, authorization, $state) {
 
     var pathRegex = /\{(.*?)\}/g;
 
@@ -40,32 +40,32 @@
     }
 
     function genericGet(url){
-      return function(args){
+      return function(args, redirect){
         return $http.get(getUrl(url, args), getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
     function genericCreate(url){
-      return function(data, args) {
+      return function(data, args, redirect) {
         // aparently it is not able to figure out it is a string unless i add extra quotes
         if(typeof(data) === "string") data = '"' + data + '"';
         return $http.post(getUrl(url, args), data, getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
     function genericUpdate(url){
-      return function update(args,data) {
+      return function update(args,data, redirect) {
         return $http.put(getUrl(url, args), data, getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
     function genericRemove(url){
-      return function remove(args) {
+      return function remove(args, redirect) {
         return $http.delete(getUrl(url, args), getQuery(args))
-          .then(returnData, handleError);
+          .then(returnData, function(err){handleError(err, redirect);});
       };
     }
 
@@ -75,7 +75,6 @@
     }
 
     function getUrl(urlToUpdate, args) {
-
       if(typeof(args) === "string" || typeof(args) === "number")
         return urlToUpdate + "/" + args;
 
@@ -87,12 +86,23 @@
       return urlToUpdate.replace(pathRegex, function (match, key) {
         return args[key];
       });
-
     }
 
-    function handleError(err) {
+    function handleError(err, redirect) {
+      if(typeof(redirect) === "undefined") redirect = true;
       $log.error("XHR Failed with code: '" + err.status + "' on '" + err.config.method + " " + err.config.url + "'");
-      if(err.status === 401) authorization.logout();
+      switch(err.status){
+      case 401:
+        authorization.logout();
+        if(redirect)
+          $state.go("Error.unauthorized");
+        break;
+      case 404:
+        if(redirect)
+          $state.go("Error.notFound");
+      case 500:
+        $state.go("Error.internalError");
+      }
       return $q.reject(err);
     }
 

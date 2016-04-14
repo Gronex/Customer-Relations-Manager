@@ -374,6 +374,32 @@
         controller: "ResetPassword",
         controllerAs: "vm",
         templateUrl: "view/app/account/activate.html"
+      })
+
+      .state("Error", {
+        abstract: true,
+        url: "/errors",
+        template: "<ui-view></ui-view>"
+      })
+      .state("Error.unauthorized", {
+        url: "/unauthorized",
+        controller: "Unauthorized",
+        controllerAs: "vm",
+        templateUrl: "view/app/errors/error.html"
+      })
+      .state("Error.notFound", {
+        url: "/not-found",
+        controller: "NotFound",
+        controllerAs: "vm",
+        templateUrl: "view/app/errors/error.html"
+      })
+      .state("Error.internalError", {
+        url: "/internal-error",
+        controller: "InternalError",
+        controllerAs: "vm",
+        templateUrl: "view/app/errors/error.html"
       });
+
+
   }
 })();
