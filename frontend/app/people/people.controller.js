@@ -46,7 +46,6 @@
     activate();
 
     function activate() {
-      getPeople();
       setupData(people);
     }
 

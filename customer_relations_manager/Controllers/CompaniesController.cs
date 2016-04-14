@@ -37,7 +37,7 @@ namespace customer_relations_manager.Controllers
         {
             filter = CorrectFilter(filter);
 
-            filter.OrderBy = filter.OrderBy.Any() ? new[] {"name"} : filter.OrderBy;
+            filter.OrderBy = !filter.OrderBy.Any() ? new[] {"name"} : filter.OrderBy;
 
             var data = _repo.GetPaged(filter.OrderBy, filter.Page, filter.PageSize, findSelector: c => c.Name, find: filter.Find);
             return data.MapData(_mapper.Map<CompanyOverviewViewModel>);

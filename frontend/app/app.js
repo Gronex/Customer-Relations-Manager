@@ -275,10 +275,25 @@
         template: "<ui-view></ui-view>"
       })
       .state("Companies.list", {
-        url: "",
+        url: "?{page:int}&{pageSize:int}&{orderBy}",
         templateUrl: "view/app/companies/companies.html",
         controller: "Companies",
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          companies: function(dataservice, $stateParams){
+            var query = {
+              pageSize: defaultPaging.pageSize,
+              page: defaultPaging.page
+            };
+            _.merge(query, $stateParams);
+            return dataservice.companies
+              .get({query: query})
+              .then(function(result){
+                result.query = query;
+                return result;
+              });
+          }
+        }
       })
       .state("Companies.new", {
         url: "/companies/new",

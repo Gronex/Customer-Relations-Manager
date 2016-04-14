@@ -2,5 +2,5 @@
 <a type="button" class="btn btn-default pull-right" ui-sref="Companies.new">New Company</a>
 <br/>
 <br/>
-<crm-table headers="vm.headers" data="vm.companies" on-sort="vm.sort"></crm-table>
-<uib-pagination items-per-page="vm.pagination.pageSize" total-items="vm.itemCount" ng-model="vm.pagination.page" ng-change="vm.getCompanies()"></uib-pagination>
+<crm-table headers="vm.headers" data="vm.companies" on-sort="vm.getCompanies" sort-param="::vm.query.orderBy"></crm-table>
+<uib-pagination items-per-page="vm.query.pageSize" total-items="vm.itemCount" ng-model="vm.query.page" ng-change="vm.getCompanies()"></uib-pagination>

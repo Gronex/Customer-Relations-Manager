@@ -5,16 +5,12 @@
     .module('CRM')
     .controller('Companies', Companies);
 
-  Companies.$inject = ['dataservice'];
+  Companies.$inject = ['companies', '$state'];
 
   /* @ngInject */
-  function Companies(dataservice) {
+  function Companies(companies, $state) {
     var vm = this;
-    vm.companies = [];
-    vm.pagination = {
-      pageSize: 5,
-      page: 1
-    };
+    vm.query = {};
     vm.itemCount = 0;
     vm.headers = [
       {
@@ -56,31 +52,26 @@
     ];
 
     vm.getCompanies = getCompanies;
-    vm.sort = sort;
 
     activate();
 
     function activate() {
-      getCompanies();
+      setupData(companies);
     }
 
-    function getCompanies() {
-      dataservice.companies
-        .get({query: vm.pagination})
-        .then(setupData);
+    function getCompanies(sortParam) {
+      _.merge(vm.query, {orderBy: sortParam});
+      $state.go("Companies.list", vm.query);
     }
 
     function setupData(data) {
       vm.itemCount = data.itemCount;
       vm.companies = data.data;
-    }
-
-    function sort(selector){
-      var cpy = angular.copy(vm.pagination);
-      cpy.orderBy = selector;
-      dataservice.companies
-        .get({query: cpy})
-        .then(setupData);
+      _.merge(vm.query, {
+        pageSize: data.pageSize,
+        page: data.pageNumber,
+        orderBy: data.query.orderBy
+      });
     }
   }
 })();
