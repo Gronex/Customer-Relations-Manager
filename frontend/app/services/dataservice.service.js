@@ -100,8 +100,10 @@
       case 404:
         if(redirect)
           $state.go("Error.notFound");
+        break;
       case 500:
         $state.go("Error.internalError");
+        break;
       }
       return $q.reject(err);
     }
