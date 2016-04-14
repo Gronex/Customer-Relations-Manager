@@ -57,7 +57,7 @@ namespace customer_relations_manager.Controllers
             return Ok(_repo.GetAll(orderByString, filter.Page, filter.PageSize).MapData(u =>
             {
                 return _mapper.Map<User, UserOverviewViewModel>(u.User,
-                    opts => opts.AfterMap((_, res) => res.Role = u.RoleName));
+                    opts => opts.AfterMap((_, res) => res.Role = u.Role));
             }));
         }
 
@@ -68,7 +68,7 @@ namespace customer_relations_manager.Controllers
         {
             var userRole = _repo.GetById(id);
             return Ok(_mapper.Map<User, UserViewModel>(userRole.User,
-                opts => opts.AfterMap((_, res) => res.Role = userRole.RoleName)));
+                opts => opts.AfterMap((_, res) => res.Role = userRole.Role)));
         }
 
         // POST: api/users

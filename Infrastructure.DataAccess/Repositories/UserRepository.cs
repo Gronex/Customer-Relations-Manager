@@ -39,7 +39,17 @@ namespace Infrastructure.DataAccess.Repositories
                         ? UserRole.Super
                         : nameof(UserRole.Executive).ToLower() == ur.Role
                             ? UserRole.Executive
-                            : UserRole.Standard).FirstOrDefault())
+                            : UserRole.Standard)
+                            .FirstOrDefault())
+                .Select(ur => new Core.DomainServices.DTOs.UserRole
+                {
+                    User = ur.User,
+                    Role = nameof(UserRole.Super).ToLower() == ur.Role
+                        ? UserRole.Super
+                        : nameof(UserRole.Executive).ToLower() == ur.Role
+                            ? UserRole.Executive
+                            : UserRole.Standard
+                })
                 .OrderBy(orderBy);
 
             var userCount = users.Count();
@@ -53,7 +63,7 @@ namespace Infrastructure.DataAccess.Repositories
                 PageSize = pageSize ?? -1,
                 PageNumber = page ?? -1,
                 ItemCount = userCount,
-                Data = users.ToList().Select(u => new Core.DomainServices.DTOs.UserRole {RoleName = (UserRole)Enum.Parse(typeof(UserRole), u.Role), User = u.User})
+                Data = users
             };
         }
 
@@ -65,7 +75,7 @@ namespace Infrastructure.DataAccess.Repositories
             return new Core.DomainServices.DTOs.UserRole
             {
                 User = user,
-                RoleName = role.Name.Parse<UserRole>()
+                Role = role.Name.Parse<UserRole>()
             };
         }
 
