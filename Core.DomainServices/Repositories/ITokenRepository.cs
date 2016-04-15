@@ -9,8 +9,10 @@ namespace Core.DomainServices.Repositories
 {
     public interface ITokenRepository
     {
-        Task<RefreshToken> GetRefreshTokenAsync(string id);
+        RefreshToken GetRefreshToken(string id);
         RefreshToken AddRefreshToken(RefreshToken token);
-        Task<Client> GetClient(string id);
+        Client GetClient(string id);
+        void RemoveRefreshTokens(string subject);
+        void RemoveRefreshToken(RefreshToken token);
     }
 }

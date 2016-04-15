@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System.Web;
 using customer_relations_manager.App_Start;
 using Core.DomainModels.Authorization;
+using Core.DomainServices;
 using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess;
 using Microsoft.Owin.Security.Infrastructure;
+using Ninject;
 
 namespace customer_relations_manager.Providers
 {
@@ -27,30 +29,29 @@ namespace customer_relations_manager.Providers
                 return;
 
             var refreshTokenId = Guid.NewGuid().ToString("N");
+            
+            var kernel = NinjectWebCommon.Kernel;
+            var repo = (ITokenRepository)kernel.TryGet(typeof(ITokenRepository));
+            var uow = (IUnitOfWork)kernel.TryGet(typeof(IUnitOfWork));
+            var refreshTokenLifetime = context.OwinContext.Get<string>("as:clientRefreshTokenLifeTime");
 
-            //TODO: replace with injection
-            using (var _context = new ApplicationContext())
+            var token = new RefreshToken
             {
-                var refreshTokenLifetime = context.OwinContext.Get<string>("as:clientRefreshTokenLifeTime");
+                Id = Helpers.GetHash(refreshTokenId),
+                ClientId = clientId,
+                Subject = context.Ticket.Identity.Name,
+                IssuedUtc = DateTime.UtcNow,
+                ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble(refreshTokenLifetime))
+            };
 
-                var token = new RefreshToken
-                {
-                    Id = Helpers.GetHash(refreshTokenId),
-                    ClientId = clientId,
-                    Subject = context.Ticket.Identity.Name,
-                    IssuedUtc = DateTime.UtcNow,
-                    ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble(refreshTokenLifetime))
-                };
+            context.Ticket.Properties.IssuedUtc = token.IssuedUtc;
+            context.Ticket.Properties.ExpiresUtc = token.ExpiresUtc;
 
-                context.Ticket.Properties.IssuedUtc = token.IssuedUtc;
-                context.Ticket.Properties.ExpiresUtc = token.ExpiresUtc;
+            token.ProtectedTicket = context.SerializeTicket();
+            repo.AddRefreshToken(token);
+            await uow.SaveAsync();
 
-                token.ProtectedTicket = context.SerializeTicket();
-                var result = _context.RefreshTokens.Add(token);
-                await _context.SaveChangesAsync();
-
-                context.SetToken(refreshTokenId);
-            }
+            context.SetToken(refreshTokenId);
         }
 
         public void Receive(AuthenticationTokenReceiveContext context)
@@ -64,18 +65,17 @@ namespace customer_relations_manager.Providers
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
             var hashedTokenId = Helpers.GetHash(context.Token);
+            
+            var kernel = NinjectWebCommon.Kernel;
+            var repo = (ITokenRepository)kernel.TryGet(typeof(ITokenRepository));
+            var uow = (IUnitOfWork)kernel.TryGet(typeof(IUnitOfWork));
+            var refreshToken = repo.GetRefreshToken(hashedTokenId);
 
-            //TODO: replace with injection
-            using (var _context = new ApplicationContext())
+            if (refreshToken != null)
             {
-                var refreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x => x.Id == hashedTokenId);
-
-                if (refreshToken != null)
-                {
-                    context.DeserializeTicket(refreshToken.ProtectedTicket);
-                    var result = _context.RefreshTokens.Remove(refreshToken);
-                    await _context.SaveChangesAsync();
-                }
+                context.DeserializeTicket(refreshToken.ProtectedTicket);
+                repo.RemoveRefreshToken(refreshToken);
+                await uow.SaveAsync();
             }
         }
     }

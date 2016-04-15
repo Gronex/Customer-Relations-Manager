@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using customer_relations_manager.App_Start;
 using Core.DomainModels.Authorization;
+using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using Ninject;
 
 namespace customer_relations_manager.Providers
 {
@@ -68,7 +71,6 @@ namespace customer_relations_manager.Providers
         {
             string clientId;
             string clientSecret;
-            Client client;
 
             if (!context.TryGetBasicCredentials(out clientId, out clientSecret))
                 context.TryGetFormCredentials(out clientId, out clientSecret);
@@ -81,12 +83,10 @@ namespace customer_relations_manager.Providers
                 //context.SetError("invalid_clientId", "ClientId should be sent.");
                 return Task.FromResult<object>(null);
             }
-
-            //TODO: use injection
-            using (var _context = new ApplicationContext())
-            {
-                client = _context.Clients.SingleOrDefault(c => c.Id == clientId);
-            }
+            
+            var kernel = NinjectWebCommon.Kernel;
+            var repo = (ITokenRepository)kernel.TryGet(typeof(ITokenRepository));
+            var client = repo.GetClient(clientId);
 
             if (client == null)
             {
