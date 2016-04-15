@@ -72,6 +72,7 @@
     <Compile Include="Repositories\IPersonRepository.cs" />
     <Compile Include="Repositories\IActivityViewSettingsRepository.cs" />
     <Compile Include="Repositories\IProductionViewSettingsRepository.cs" />
+    <Compile Include="Repositories\ITokenRepository.cs" />
     <Compile Include="Repositories\IUserGroupRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />

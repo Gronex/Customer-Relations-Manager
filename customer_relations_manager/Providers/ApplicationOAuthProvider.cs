@@ -30,8 +30,7 @@ namespace customer_relations_manager.Providers
         {
             var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin") ?? "*";
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
-
-            // TODO: replace with injection
+            
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
             var user = await userManager.FindAsync(context.UserName, context.Password);
 

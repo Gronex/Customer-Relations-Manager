@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using customer_relations_manager.App_Start;
 using Core.DomainModels.Authorization;
+using Core.DomainServices.Repositories;
 using Infrastructure.DataAccess;
 using Microsoft.Owin.Security.Infrastructure;
 
@@ -57,7 +60,7 @@ namespace customer_relations_manager.Providers
 
         public async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
-            var allowedOrigin = context.OwinContext.Get<string>("as:ClientAllowedOrigin");
+            var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
             var hashedTokenId = Helpers.GetHash(context.Token);
