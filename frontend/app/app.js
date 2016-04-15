@@ -11,14 +11,16 @@
     'ui.router',
     'LocalStorageModule',
     'ngTagsInput'
-  ]).config(RouteConfig);
+  ]).config(config);
 
-  function RouteConfig($stateProvider, $urlRouterProvider) {
+  function config($stateProvider, $urlRouterProvider, $httpProvider) {
     const dateFormatString = 'YYYY-MM-DD';
     const defaultPaging = {
       pageSize: 10,
       page: 1
     };
+
+    $httpProvider.interceptors.push("tokenRefresher");
 
     //
     // For any unmatched url, redirect to /

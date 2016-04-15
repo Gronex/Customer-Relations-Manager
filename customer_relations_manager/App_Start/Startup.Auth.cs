@@ -31,7 +31,6 @@ namespace customer_relations_manager
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 RefreshTokenProvider = new ApplicationRefreshTokenProvider(),
 #if DEBUG
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(365),
                 AllowInsecureHttp = true
 #endif
             };
