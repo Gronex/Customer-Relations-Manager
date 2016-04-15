@@ -16,8 +16,10 @@
       var auth = $injector.get("authorization");
       if(auth.isExpired())
         return auth.refresh()
-        .then(function(){return config;},
-              function(){return config;});
+        .then(function(token){
+          config.headers["Authorization"] = token;
+          return config;
+        },function(){return config;});
       return config;
     }
   }

@@ -8,6 +8,7 @@
   Authorization.$inject = ['$rootScope', 'localStorageService', '$http', '$log', '$q'];
   function Authorization($scope, localStorageService, $http, $log, $q) {
 
+    var refreshTask;
     var user = null;
     var subscribed = [];
 
@@ -71,6 +72,7 @@
     function getUser() {
       if(user) return user;
       user = localStorageService.get("user");
+      configToken();
       $log.info("User loaded");
       return user;
     }
@@ -105,22 +107,27 @@
       var token = localStorageService.get("token");
       if(!token) return $q.reject();
       var refreshToken = token.refreshToken;
-
-      return $http({
-        method: 'POST',
-        url: "api/token",
-        data: $.param({
-          "grant_type": "refresh_token",
-          "client_id": "angular",
-          "refresh_token": refreshToken
-        }),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).then(function (response) {
-        var token = configToken(response.data);
-        configUser(response.data);
-        onChange();
-        return token;
-      });
+      if(!refreshTask){
+        refreshTask = $http({
+          method: 'POST',
+          url: "api/token",
+          data: $.param({
+            "grant_type": "refresh_token",
+            "client_id": "angular",
+            "refresh_token": refreshToken
+          }),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function (response) {
+          var token = configToken(response.data);
+          configUser(response.data);
+          onChange();
+          refreshTask = undefined;
+          return "Bearer " + token.accessToken;
+        });
+        return refreshTask;
+      } else {
+        return refreshTask;
+      }
     }
   }
 })();
