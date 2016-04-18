@@ -38,6 +38,7 @@
                    }));
       }
       $q.all(tasks).then(function(ts){
+        vm.results = undefined;
         for(var i in vm.searchData){
           if(ts[i].length < 1) continue;
           if(!vm.results) vm.results = {};

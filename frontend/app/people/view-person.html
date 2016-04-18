@@ -3,7 +3,7 @@
     <h3>Base info</h3>
     Email: <a href="mailto:{{vm.person.email}}">{{vm.person.email}}</a><br/>
     Phone Number: <a href="tel:{{vm.person.phoneNumber}}">{{vm.person.phoneNumber}}</a><br/>
-    Company: <a ui-sref="Companies.view({id: vm.person.companyId})">{{vm.person.companyName}}</a><br/>
+    Company: <a ng-if="vm.person.companyId" ui-sref="Companies.view({id: vm.person.companyId})">{{vm.person.companyName}}</a><br/>
     <br/>
     <a role="button" class="btn btn-primary" ui-sref="People.list">Back <i class="fa fa-arrow-left"></i></a>
 </div>
