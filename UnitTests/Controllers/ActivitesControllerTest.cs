@@ -13,7 +13,9 @@ using Core.DomainModels.Opportunity;
 using Core.DomainModels.Users;
 using Core.DomainServices;
 using Core.DomainServices.Repositories;
+using Infrastructure.DataAccess.Exceptions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using UnitTests.Stubs;
 using Xunit;
 
@@ -112,7 +114,8 @@ namespace UnitTests.Controllers
         public void UpdateReturnsNotFoundOnBadId()
         {
             var dataViewModel = new ActivityViewModel { Name = "1" };
-            Assert.IsType<NotFoundResult>(_controller.PutActivity(1, dataViewModel));
+            _repo.Update(1, Arg.Any<Activity>()).ThrowsForAnyArgs(new NotFoundException());
+            Assert.Throws<NotFoundException>(() => _controller.PutActivity(1, dataViewModel));
 
         }
 

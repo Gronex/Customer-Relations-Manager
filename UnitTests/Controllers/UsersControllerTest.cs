@@ -24,7 +24,7 @@ namespace UnitTests.Controllers
         public UsersControllerTest()
         {
             var mapper = AutomapperConfig.ConfigMappings().CreateMapper();
-            _controller = new UsersController(null, null, new UnitOfWorkStub(), mapper);
+            _controller = new UsersController(null, null, null, new UnitOfWorkStub(), mapper);
             
             _allRoles = new List<UserRole>()
             {

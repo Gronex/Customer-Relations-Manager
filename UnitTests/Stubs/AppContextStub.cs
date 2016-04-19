@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
+using Core.DomainModels.Authorization;
 using Core.DomainModels.Comments;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
@@ -39,6 +40,8 @@ namespace UnitTests.Stubs
         public DbSet<ActivityComment> ActivityComments { get; set; } = new TestDbSet<ActivityComment>();
         public DbSet<ProductionViewSettings> ProductionViewSettings { get; set; } = new TestDbSet<ProductionViewSettings>();
         public DbSet<ActivityViewSettings> ActivityViewSettings { get; set; } = new TestDbSet<ActivityViewSettings>();
+        public DbSet<RefreshToken> RefreshTokens { get; set; } = new TestDbSet<RefreshToken>();
+        public DbSet<Client> Clients { get; set; } = new TestDbSet<Client>();
         public IDbSet<User> Users { get; set; } = new TestDbSet<User>();
         public IDbSet<IdentityRole> Roles { get; set; } = new TestDbSet<IdentityRole>();
         public DbSet<T> Set<T>() where T : class
