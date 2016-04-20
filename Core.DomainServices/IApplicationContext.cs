@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using Core.DomainModels.Activities;
+using Core.DomainModels.Authorization;
 using Core.DomainModels.Comments;
 using Core.DomainModels.Customers;
 using Core.DomainModels.Opportunity;
@@ -30,6 +31,8 @@ namespace Core.DomainServices
         DbSet<ActivityComment> ActivityComments { get; set; }
         DbSet<ProductionViewSettings> ProductionViewSettings { get; set; }
         DbSet<ActivityViewSettings> ActivityViewSettings { get; set; }
+        DbSet<RefreshToken> RefreshTokens { get; set; }
+        DbSet<Client> Clients { get; set; }
 
         // Identity stuff
         IDbSet<User> Users { get; set; }

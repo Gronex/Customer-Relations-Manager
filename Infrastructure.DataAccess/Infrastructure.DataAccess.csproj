@@ -126,6 +126,14 @@
     <Compile Include="Migrations\201604061127276_ActivityGraphFilter.Designer.cs">
       <DependentUpon>201604061127276_ActivityGraphFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604150645205_RefreshToken.cs" />
+    <Compile Include="Migrations\201604150645205_RefreshToken.Designer.cs">
+      <DependentUpon>201604150645205_RefreshToken.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604150657028_RefreshTokenTicketLimitIncrease.cs" />
+    <Compile Include="Migrations\201604150657028_RefreshTokenTicketLimitIncrease.Designer.cs">
+      <DependentUpon>201604150657028_RefreshTokenTicketLimitIncrease.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ActivityCommentRepository.cs" />
     <Compile Include="Repositories\ActivityRepository.cs" />
     <Compile Include="ApplicationContext.cs" />
@@ -143,6 +151,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\GoalRepository.cs" />
+    <Compile Include="Repositories\TokenRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Repositories\OpportunityRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
@@ -221,6 +230,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604061127276_ActivityGraphFilter.resx">
       <DependentUpon>201604061127276_ActivityGraphFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604150645205_RefreshToken.resx">
+      <DependentUpon>201604150645205_RefreshToken.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604150657028_RefreshTokenTicketLimitIncrease.resx">
+      <DependentUpon>201604150657028_RefreshTokenTicketLimitIncrease.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

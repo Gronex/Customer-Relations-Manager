@@ -15,10 +15,10 @@
     activate();
 
     function activate() {
+      vm.navbar = navbar.generate();
       authorization.subscribe(function(){
         vm.navbar = navbar.generate();
       });
-      authorization.login();
     }
 
     function logout() {

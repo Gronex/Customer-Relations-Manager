@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,16 +22,19 @@ namespace customer_relations_manager.Controllers
         // Standard asp.net classes to manage users.
         private readonly ApplicationUserManager _userManager;
         private readonly IUserRepository _repo;
+        private readonly ITokenRepository _tokenRepo;
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
         public UsersController(ApplicationUserManager userManager, 
             IUserRepository repo,
+            ITokenRepository tokenRepo,
             IUnitOfWork uow,
             IMapper mapper)
         {
             _userManager = userManager;
             _repo = repo;
+            _tokenRepo = tokenRepo;
             _uow = uow;
             _mapper = mapper;
         }
@@ -151,6 +155,17 @@ namespace customer_relations_manager.Controllers
             user.ActivityViewSettingsesFilter.Clear();
             user.ProductionViewSettingsFilter.Clear();
 
+            _tokenRepo.RemoveRefreshTokens(user.UserName);
+            var logins = _userManager.GetLogins(user.Id);
+            var results = new List<IdentityResult>();
+            logins.Aggregate(results, (x, y) =>
+            {
+                x.Add(_userManager.RemoveLogin(user.Id, y));
+                return x;
+            });
+
+            if(results.Any(r => !r.Succeeded))
+                throw new BadRequestException(string.Join(", ", results.SelectMany(r => r.Errors)));
             _uow.Save();
         }
 

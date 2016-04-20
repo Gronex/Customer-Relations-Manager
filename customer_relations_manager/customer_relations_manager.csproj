@@ -126,6 +126,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
       <Private>True</Private>
@@ -545,7 +546,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Providers\ApplicationOAutheProvider.cs" />
+    <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\ApplicationRefreshTokenProvider.cs" />
+    <Compile Include="Providers\Helpers.cs" />
     <Compile Include="ViewModels\Activity\ActivityCategoryViewModel.cs" />
     <Compile Include="ViewModels\Activity\ActivityOverviewViewModel.cs" />
     <Compile Include="ViewModels\Activity\ActivityViewModel.cs" />
