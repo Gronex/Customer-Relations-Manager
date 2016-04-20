@@ -140,7 +140,7 @@
         }
       })
       .state("Activities.new", {
-        url: "/activities/new?{contact:int}&{company:int}",
+        url: "/new?{contact:int}&{company:int}",
         templateUrl: "view/app/activities/activity.html",
         controller: "Activity",
         controllerAs: 'vm',
@@ -153,11 +153,20 @@
           },
           company: function(dataservice, $stateParams){
             if($stateParams.company)
-              return dataservice.companies.get($stateParams.company);
+              return dataservice.companies
+                .get($stateParams.company)
+                .then(function(result){
+                  result.id = $stateParams.company;
+                  return result;
+                });
             else if($stateParams.contact)
               return dataservice.people.get($stateParams.contact)
               .then(function(result){
-                return dataservice.companies.get(result.companyId);
+                return dataservice.companies.get(result.companyId)
+                  .then(function(company){
+                    company.id = result.companyId;
+                    return company;
+                  });
               });
             else
               return {};
@@ -166,7 +175,7 @@
         }
       })
       .state("Activities.edit", {
-        url: "/activities/{id:int}",
+        url: "/{id:int}",
         templateUrl: "view/app/activities/activity.html",
         controller: "Activity",
         controllerAs: 'vm',
