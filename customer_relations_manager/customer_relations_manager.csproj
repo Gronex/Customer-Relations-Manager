@@ -576,6 +576,7 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="ClassDiagram.cd" />
     <None Include="Properties\PublishProfiles\Gronia.pubxml" />
     <Content Include="view\bower_components\angular-animate\angular-animate.min.js.map" />
     <Content Include="view\bower_components\angular-animate\bower.json" />
