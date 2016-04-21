@@ -1,0 +1,517 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="customer_relations_manager.App_Start.AutomapperConfig">
+    <Position X="30.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\AutomapperConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.App_Start.FilterConfig">
+    <Position X="23.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\FilterConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.App_Start.NinjectWebCommon">
+    <Position X="6.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAQACAAAAAAAAAAAAAAAAAAAAAAIAAAAgAAAAA=</HashCode>
+      <FileName>App_Start\NinjectWebCommon.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="bootstrapper" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.ApplicationUserManager">
+    <Position X="24.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\IdentityConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Startup">
+    <Position X="23.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\Startup.Auth.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.WebApiConfig">
+    <Position X="32.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\WebApiConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.WebApiApplication">
+    <Position X="18.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAABAAAAAAA=</HashCode>
+      <FileName>Global.asax.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.AccountController">
+    <Position X="31" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAABAAAAAAAAAAAAAAAAAAAAAIAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\AccountController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_userManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.ActivitiesController">
+    <Position X="4" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAEAAAABQAAAIAAIAAAAAAAAAIAAQAA=</HashCode>
+      <FileName>Controllers\ActivitiesController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.ActivityCategoriesController">
+    <Position X="8.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAgAAAAAAAAg=</HashCode>
+      <FileName>Controllers\ActivityCategoriesController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.CompaniesController">
+    <Position X="13" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAgAAAIEAAAg=</HashCode>
+      <FileName>Controllers\CompaniesController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.CrmApiController">
+    <Position X="19.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAgAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\CrmApiController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.DepartmentsController">
+    <Position X="19.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Controllers\DepartmentsController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.GraphController">
+    <Position X="14.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ARAAAAAAAAAAAAJAAAAAAAAAAAAAAAAIAAACAIAAAAQ=</HashCode>
+      <FileName>Controllers\GraphController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_activityRepo" />
+      <Field Name="_goalRepo" />
+      <Field Name="_graphService" />
+      <Field Name="_opportunityRepo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.OpportunitiesController">
+    <Position X="26.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAgAAAAAAAAg=</HashCode>
+      <FileName>Controllers\OpportunitiesController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.OpportunityCategoriesController">
+    <Position X="33.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Controllers\OpportunityCategoriesController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.PersonsController">
+    <Position X="6.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAgAAgIAAAAg=</HashCode>
+      <FileName>Controllers\PersonsController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.StagesController">
+    <Position X="10.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAgAAAAAAAAg=</HashCode>
+      <FileName>Controllers\StagesController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.UserGroupsController">
+    <Position X="15.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Controllers\UserGroupsController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.UsersController">
+    <Position X="17.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAMABAAAAAAAAABAAAABQAIACAAIBAAAAgAAAAAAAAg=</HashCode>
+      <FileName>Controllers\UsersController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_tokenRepo" />
+      <Field Name="_uow" />
+      <Field Name="_userManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.Activities.CommentsController">
+    <Position X="22" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABQAAACAAIAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Controllers\Activities\CommentsController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.GraphFilters.ActivityController">
+    <Position X="24.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Controllers\GraphFilters\ActivityController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.GraphFilters.ProductionController">
+    <Position X="28.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Controllers\GraphFilters\ProductionController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Controllers.Users.GoalsController">
+    <Position X="35.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAABQAAACAEIAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Controllers\Users\GoalsController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_mapper" />
+      <Field Name="_repo" />
+      <Field Name="_uow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="customer_relations_manager.Filters.DuplicateExceptionFilterAttribute">
+    <Position X="29" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Filters\DuplicateExceptionFilterAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Filters.NotAllowedExceptionFilterAttribute">
+    <Position X="25.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Filters\NotAllowedExceptionFilterAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Filters.NotFoundExceptionFilterAttribute">
+    <Position X="27.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Filters\NotFoundExceptionFilterAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Filters.ParseExceptionFilterAttribute">
+    <Position X="22" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Filters\ParseExceptionFilterAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.MessageServices.EmailService" BaseTypeListCollapsed="true">
+    <Position X="23.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MessageServices\EmailService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="customer_relations_manager.Properties.Settings">
+    <Position X="30.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Providers.ApplicationOAuthProvider">
+    <Position X="16.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAACAAAAAAAAAAAAAEAAEIAAAAABAAAAAgA=</HashCode>
+      <FileName>Providers\ApplicationOAuthProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.Providers.ApplicationRefreshTokenProvider" BaseTypeListCollapsed="true">
+    <Position X="25.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAQABAAAIAAAAA=</HashCode>
+      <FileName>Providers\ApplicationRefreshTokenProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="customer_relations_manager.Providers.Helpers">
+    <Position X="27.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Providers\Helpers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Activity.ActivityCategoryViewModel">
+    <Position X="32.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ViewModels\Activity\ActivityCategoryViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Activity.ActivityOverviewViewModel">
+    <Position X="20" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABCQCAAAAAAACAAAACAAAUAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Activity\ActivityOverviewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Activity.ActivityViewModel">
+    <Position X="16.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAQCAAAIIAgCAAAACAIAUAACAAAAAAAQAAAAAAAAI=</HashCode>
+      <FileName>ViewModels\Activity\ActivityViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.CategoryViewModel">
+    <Position X="22" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\CategoryViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.CommentViewModel">
+    <Position X="27.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAQAACAAAAAA=</HashCode>
+      <FileName>ViewModels\CommentViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.GoalViewModel">
+    <Position X="29" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQACAAAABAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\GoalViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.GroupViewModel">
+    <Position X="25.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\GroupViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Company.CompanyOverviewViewModel">
+    <Position X="30.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAIIIAAQAQAAAIAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Company\CompanyOverviewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Company.CompanyViewModel">
+    <Position X="20" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIIIAAQAQAAAIAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Company\CompanyViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Company.PersonOverviewViewModel">
+    <Position X="32.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACQEAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>ViewModels\Company\PersonOverviewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Company.PersonViewModel">
+    <Position X="22" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACQEAAACIAAAAAAAAAQAQAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>ViewModels\Company\PersonViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.GraphFilter.ActivityGraph.ActivityGraphFilterViewModel">
+    <Position X="27.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAQAAAAAAAQAEAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\GraphFilter\ActivityGraph\ActivityGraphFilterViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.GraphFilter.GraphFilterOverviewViewModel">
+    <Position X="22" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\GraphFilter\GraphFilterOverviewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.GraphFilter.ProductionGraph.ProductionGraphFilterViewModel">
+    <Position X="25.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAACAAAAAAAAQAACAAAAQAEAAAMAAAAAgAAAAAAAA=</HashCode>
+      <FileName>ViewModels\GraphFilter\ProductionGraph\ProductionGraphFilterViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Opportunity.OpportunityOverviewViewMode">
+    <Position X="29" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACQAAAAAAAAAAAAEAAAASgAggAAAAAAAgAAEAAAAA=</HashCode>
+      <FileName>ViewModels\Opportunity\OpportunityOverviewViewMode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Opportunity.OpportunityViewModel">
+    <Position X="18.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgECAAAAgAAAACEAAAASgEAgAAAAAAAgABEAACAA=</HashCode>
+      <FileName>ViewModels\Opportunity\OpportunityViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.Opportunity.StageViewModel">
+    <Position X="32.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ViewModels\Opportunity\StageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.User.UserCredentialsViewModel">
+    <Position X="30.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\User\UserCredentialsViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.User.UserOverviewViewModel">
+    <Position X="20" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAACAAAAAAEAAAAAQAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>ViewModels\User\UserOverviewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="customer_relations_manager.ViewModels.User.UserViewModel">
+    <Position X="23.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAACAAAAAAEAAAAAQAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>ViewModels\User\UserViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ninject.Web.Common.Bootstrapper" Collapsed="true">
+    <Position X="8.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="AutoMapper.IMapper" Collapsed="true">
+    <Position X="19.75" Y="6" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IActivityRepository" Collapsed="true">
+    <Position X="4" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.IUnitOfWork" Collapsed="true">
+    <Position X="16.75" Y="1" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IPersonRepository" Collapsed="true">
+    <Position X="6.25" Y="1" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.IGenericRepository&lt;T&gt;" Collapsed="true">
+    <Position X="14.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IUserRepository" Collapsed="true">
+    <Position X="17.5" Y="7" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.ITokenRepository" Collapsed="true">
+    <Position X="14.5" Y="1" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IActivityCommentRepository" Collapsed="true">
+    <Position X="22" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IActivityViewSettingsRepository" Collapsed="true">
+    <Position X="24.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IOpportunityRepository" Collapsed="true">
+    <Position X="26.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IProductionViewSettingsRepository" Collapsed="true">
+    <Position X="28.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.DomainServices.Repositories.IGoalRepository" Collapsed="true">
+    <Position X="35.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Core.ApplicationServices.ServiceInterfaces.IGraphService" Collapsed="true">
+    <Position X="14.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

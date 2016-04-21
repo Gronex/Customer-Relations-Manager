@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Core.DomainModels.Activities.Activity">
+    <Position X="2.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABCAAAAAAIAgiAAAACAAAUAAAAAACBAAQAABAAAKAI=</HashCode>
+      <FileName>Activities\Activity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Activities.ActivityCategory">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Activities\ActivityCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Authorization.Client">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABCAAAAAAAAAAAAAAAAAAQAAAAAAAAgAAAIIAAAAAA=</HashCode>
+      <FileName>Authorization\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Authorization.RefreshToken">
+    <Position X="0.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAgAAAAAAgIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Authorization\RefreshToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Comments.ActivityComment">
+    <Position X="2.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Comments\ActivityComment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Comments.Comment">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAAAAAAAAQAgAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Comments\Comment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Comments.OpportunityComment">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Comments\OpportunityComment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Customers.Company">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAIIIAAQAQACAIAAAACAAAIAIAAAAA=</HashCode>
+      <FileName>Customers\Company.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Customers.Contract">
+    <Position X="4.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACAAAAAAIAAAAEAAAAAAAgAAAAAAAAAAAABEAAAAA=</HashCode>
+      <FileName>Customers\Contract.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Customers.Person">
+    <Position X="6.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAACIAAAAAAAAAQAQAAAAAAAAAAAIIBMAAAAg=</HashCode>
+      <FileName>Customers\Person.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Graph.DataPoint">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Graph\DataPoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Graph.DataSet">
+    <Position X="8.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Graph\DataSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Opportunity.Department">
+    <Position X="10" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Opportunity\Department.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Opportunity.FileIndex">
+    <Position X="10" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Opportunity\FileIndex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Opportunity.Opportunity">
+    <Position X="4.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAACgACIAAIgggQACEAAAASgEAiAAAEAAAgABEAAKAA=</HashCode>
+      <FileName>Opportunity\Opportunity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Opportunity.OpportunityCategory">
+    <Position X="8.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Opportunity\OpportunityCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Opportunity.Stage">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Opportunity\Stage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.UserGroups.UserGroup">
+    <Position X="8.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACUAAAAAACAAAABAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserGroups\UserGroup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.UserGroups.UserGroupOpportunity">
+    <Position X="10" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABABEAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserGroups\UserGroupOpportunity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.UserGroups.UserGroupUser">
+    <Position X="8.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABEAAAAIAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserGroups\UserGroupUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Users.ProductionGoal">
+    <Position X="10" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQADAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Users\ProductionGoal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.Users.User">
+    <Position X="6.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAkAACAACAAAAAAAAQAQgAAAAAAAgAAKAAIAAIgg=</HashCode>
+      <FileName>Users\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.ViewSettings.ActivityViewSettings">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACCIAAAAAAQAAAAAAAQAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewSettings\ActivityViewSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Core.DomainModels.ViewSettings.ProductionViewSettings">
+    <Position X="11.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABACACCIAAAAAAQAACAAAAQAEAAAEAAAAAgAAAAAAAA=</HashCode>
+      <FileName>ViewSettings\ProductionViewSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Core.DomainModels.Authorization.ApplicationTypes">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Authorization\Client.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Core.DomainModels.Users.UserRole">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAJAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\User.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
