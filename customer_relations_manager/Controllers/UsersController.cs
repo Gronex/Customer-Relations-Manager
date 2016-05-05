@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.IdentityModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -85,7 +86,6 @@ namespace customer_relations_manager.Controllers
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
 
-            UpdateUserGroups(model, user);
 
             if (user.Active && inDbUser == null)
             {
@@ -95,6 +95,7 @@ namespace customer_relations_manager.Controllers
             }
             user.Active = true;
             
+            UpdateUserGroups(model, user);
             var roles = CalculateNewRoles(model.Role).Select(r => r.ToString()).ToList();
             roles.ForEach(role => _userManager.AddToRole(user.Id, role));
             _uow.Save();
